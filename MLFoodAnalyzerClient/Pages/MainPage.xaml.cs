@@ -208,15 +208,14 @@ public partial class MainPage : ContentPage
             response.Add((byte)bytesRead);
         }
 
-        if (!string.IsNullOrEmpty(Preferences.Get("SavedPasswordServer", "")))
+        string translation = Encoding.UTF8.GetString(response.ToArray());
+        if (translation[0] == '1')
         {
-            string translation = Encoding.UTF8.GetString(response.ToArray());
-            textFromServer = (DecryptText(translation)) + '\n';
+            textFromServer = (DecryptText(translation[1..])) + '\n';
         }
         else
         {
-            string translation = Encoding.UTF8.GetString(response.ToArray());
-            textFromServer = translation + '\n';
+            textFromServer = translation[1..] + '\n';
         }
 
         response.Clear();
