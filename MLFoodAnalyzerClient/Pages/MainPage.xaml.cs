@@ -119,11 +119,11 @@ public partial class MainPage : ContentPage
     private async Task<string> GetPicturePath()
     {
 #if ANDROID
-        bool result = await DisplayAlert("Подтвердить действие", "Вы хотите удалить элемент?", "Сфоткать", "Медиа");
+        bool result = await DisplayAlert(LocalizationResourceManager["AppName"].ToString(), LocalizationResourceManager["SelectAnAction"].ToString(), LocalizationResourceManager["TakeAPicture"].ToString(), LocalizationResourceManager["Gallery"].ToString());
         string res = (result) ? await GetPicture() : await GetMedia();
         return res;
 #elif IOS
-        bool result = await DisplayAlert("Подтвердить действие", "Вы хотите удалить элемент?", "Сфоткать", "Медиа");
+        bool result = await DisplayAlert(LocalizationResourceManager["AppName"].ToString(), LocalizationResourceManager["SelectAnAction"].ToString(), LocalizationResourceManager["TakeAPicture"].ToString(), LocalizationResourceManager["Gallery"].ToString());
         string res = (result) ? await GetPicture() : await GetMedia();
         return res;
 #else
