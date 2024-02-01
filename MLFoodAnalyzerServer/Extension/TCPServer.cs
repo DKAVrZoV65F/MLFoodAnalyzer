@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace MLFoodAnalyzerServer.Extension;
@@ -8,12 +9,13 @@ internal class TCPServer
 {
     private int port;
     private int timeout;
-    private readonly IPAddress ip;
+    private IPAddress ip;
     private TcpClient tcpClient;
     private NetworkStream stream;
-    private readonly TcpListener tcpListener;
+    private TcpListener tcpListener;
     // private readonly Settings settings;
-    private readonly Store store;
+    private const string SecurityKey = "QWERTY";
+    private Store store;
     private static DateTime startUserOperation;
     private readonly string success = "Settings applied sucessfully";
     private readonly string unsuccess = "Settings applied unsucessfully";
@@ -60,7 +62,7 @@ internal class TCPServer
     private async Task GetCommand()
     {
         int bytesRead;
-
+        store = MLFoodAnalyzerServer.store;
         var response = new List<byte>();
         // считываем данные до конечного символа
         while ((bytesRead = stream.ReadByte()) != '\0')
@@ -78,10 +80,21 @@ internal class TCPServer
             case "TEXT":
                 await ProcessText();
                 break;
+            case "PING":
+                await PingServer();
+                break;
             default:
                 Stop();
                 break;
         }
+    }
+
+    private async Task PingServer()
+    {
+        Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a ping");
+        string message = "SUCCESS\0";
+        await Send(message);
+        Stop();
     }
 
     private async Task ProcessImage(string folderPath)
@@ -102,7 +115,18 @@ internal class TCPServer
             // добавляем в буфер
             response.Add((byte)bytesRead);
         }
-        long sizeImage = long.Parse(Encoding.UTF8.GetString(response.ToArray()));
+        string word = Encoding.UTF8.GetString(response.ToArray());
+
+        if (word[0] == '1')
+        {
+            word = DecryptText(word[1..]);
+        }
+        else
+        {
+            word = word[1..];
+        }
+
+        long sizeImage = long.Parse(word);
 
 
         string filePath = @$"{folderPath}\{fileName}";
@@ -126,11 +150,37 @@ internal class TCPServer
 
     private async Task ProcessText()
     {
+        int bytesRead;
+        store = MLFoodAnalyzerServer.store;
+        List<byte> response = new List<byte>();
+        // считываем данные до конечного символа
+        while ((bytesRead = stream.ReadByte()) != '\0')
+        {
+            // добавляем в буфер
+            response.Add((byte)bytesRead);
+        }
+        string word = Encoding.UTF8.GetString(response.ToArray());
+        char code = word[0];
+        if (code == '1') 
+        {
+            word = DecryptText(word[1..]);
+        }
+
         MLFood mLFood = new();
         Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a text");
         // Text
-        string message = mLFood.SetText("Nothing)");
+
+        string message = mLFood.SetText(word);
         message += '\0';
+
+        if (code == '1')
+        {
+            message = EncryptText('1' + message);
+        }
+        else
+        {
+            message = '0' + message;
+        }
         await Send(message);
         Stop();
     }
@@ -161,6 +211,63 @@ internal class TCPServer
             }
         }
         return IPAddress.Any;
+    }
+
+    private static string DecryptText(string CipherText)
+    {
+        byte[] toEncryptArray = Convert.FromBase64String(CipherText);
+
+        MD5CryptoServiceProvider objMD5CryptoService = new();
+        //Gettting the bytes from the Security Key and Passing it to compute the Corresponding Hash Value.
+        byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(SecurityKey));
+        objMD5CryptoService.Clear();
+
+        using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
+        {
+            //Assigning the Security key to the TripleDES Service Provider.
+            Key = securityKeyArray,
+            //Mode of the Crypto service is Electronic Code Book.
+            Mode = CipherMode.ECB,
+            //Padding Mode is PKCS7 if there is any extra byte is added.
+            Padding = PaddingMode.PKCS7
+        };
+
+        var objCrytpoTransform = objTripleDESCryptoService.CreateDecryptor();
+        //Transform the bytes array to resultArray
+        byte[] resultArray = objCrytpoTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
+        objTripleDESCryptoService.Clear();
+
+        //Convert and return the decrypted data/byte into string format.
+        return UTF8Encoding.UTF8.GetString(resultArray);
+    }
+
+    private static string EncryptText(string PlainText)
+    {
+        // Getting the bytes of Input String.
+        byte[] toEncryptedArray = UTF8Encoding.UTF8.GetBytes(PlainText);
+
+        MD5CryptoServiceProvider objMD5CryptoService = new();
+        //Gettting the bytes from the Security Key and Passing it to compute the Corresponding Hash Value.
+        byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(SecurityKey));
+        //De-allocatinng the memory after doing the Job.
+        objMD5CryptoService.Clear();
+
+        using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
+        {
+            //Assigning the Security key to the TripleDES Service Provider.
+            Key = securityKeyArray,
+            //Mode of the Crypto service is Electronic Code Book.
+            Mode = CipherMode.ECB,
+            //Padding Mode is PKCS7 if there is any extra byte is added.
+            Padding = PaddingMode.PKCS7
+        };
+
+
+        var objCrytpoTransform = objTripleDESCryptoService.CreateEncryptor();
+        //Transform the bytes array to resultArray
+        byte[] resultArray = objCrytpoTransform.TransformFinalBlock(toEncryptedArray, 0, toEncryptedArray.Length);
+        objTripleDESCryptoService.Clear();
+        return Convert.ToBase64String(resultArray, 0, resultArray.Length);
     }
 
 

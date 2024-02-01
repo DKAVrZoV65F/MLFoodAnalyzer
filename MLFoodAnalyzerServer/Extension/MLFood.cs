@@ -43,18 +43,17 @@ internal class MLFood
 
     private static string PredictResults(IOrderedEnumerable<KeyValuePair<string, float>> sortedScoresWithLabel)
     {
-        StringBuilder message = new($"{"Class",-40}{"Score",-20}\n{"-----",-40}{"-----",-20}");
+        StringBuilder message = new($"{"\nClass",-40}{"Score",-20}\n{"-----",-40}{"-----",-20}\n");
 
         foreach (var score in sortedScoresWithLabel)
         {
-            if (score.Value * 100 >= 30) message.AppendLine($"{score.Key,-40}{score.Value * 100,-20}");
+            if (score.Value * 100 >= 30) message.AppendLine($"{score.Key,-40}{score.Value * 100,-20}\n");
             else break;
         }
-
         return message.ToString();
     }
 
-    private string PredictText() => text;
+    private string PredictText() => "Comming soon...)";
 }
 
 
