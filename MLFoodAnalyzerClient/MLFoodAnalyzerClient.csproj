@@ -25,7 +25,7 @@
 		<ApplicationTitle>MLFoodAnalyzerClient</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.mlfoodanalyzerclient</ApplicationId>
+		<ApplicationId>com.mlfoodanalyzerclient</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
