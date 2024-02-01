@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MLFoodAnalyzerClient.Pages.UpdatingStoragePage"
+             xmlns:customControls="clr-namespace:MLFoodAnalyzerClient.Pages"
+             xmlns:extension="clr-namespace:MLFoodAnalyzerClient.Extension"
+             xmlns:strings="clr-namespace:MLFoodAnalyzerClient.Resources.Strings"
+             xmlns:local="clr-namespace:MLFoodAnalyzerClient.Pages"
+             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
+
+    <Grid RowDefinitions="Auto, Auto, Auto, *, Auto"
+          Margin="20, 40, 20, 0">
+        
+        <!-- ID -->
+        <Label
+            x:Name="IDLabel"
+            Margin="0, 10"
+            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+            FontFamily="RegularFont"/>
+
+        <!-- Name -->
+        <Label
+            x:Name="NameLabel"
+            Grid.Row="1"
+            Margin="0, 10"
+            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+            FontFamily="RegularFont"/>
+
+        <!-- Description -->
+        <Label
+            x:Name="DescriptionLabel"
+            Grid.Row="2"
+            Text="{Binding LocalizationResourceManager[Description], Mode=OneWay}"
+            Margin="0, 10"
+            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+            FontFamily="RegularFont"/>
+
+        <Entry
+            x:Name="DescriptionEntry"
+            Grid.Row="3"
+            Margin="0, 10"
+            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White300}, Dark={StaticResource Gray970}}"
+            FontFamily="RegularFont"
+            Keyboard="Text"
+            IsSpellCheckEnabled="True"
+            IsTextPredictionEnabled="True"/>
+
+        <!-- Saving -->
+        <customControls:ButtonControl
+            x:Name="SavingButton"
+            Grid.Row="4"
+            Margin="0, 20"
+            Text="{Binding LocalizationResourceManager[Save], Mode=OneWay}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource Color100}, Dark={StaticResource Gray970}}"
+            MinimumHeightRequest="0"
+            Tapped="SavingData"
+            CornerRadius="26"/>
+
+    </Grid>
+</ContentPage>

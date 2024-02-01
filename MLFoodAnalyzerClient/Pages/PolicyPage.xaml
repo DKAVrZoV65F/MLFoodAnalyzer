@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MLFoodAnalyzerClient.Pages.PolicyPage"
+             xmlns:extension="clr-namespace:MLFoodAnalyzerClient.Extension"
+             xmlns:strings="clr-namespace:MLFoodAnalyzerClient.Resources.Strings">
+
+    <ContentPage.Resources>
+
+        <!-- Grid Styles -->
+        <Style TargetType="Grid">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="RowSpacing" Value="0"/>
+            <Setter Property="ColumnSpacing" Value="0"/>
+            <Setter Property="VerticalOptions" Value="Fill"/>
+            <Setter Property="HorizontalOptions" Value="Fill"/>
+            <Setter Property="BackgroundColor" Value="Black"/>
+        </Style>
+
+        <!-- Data Template -->
+        <DataTemplate x:Key="ImageTemplate">
+            <Image
+                Source="{Binding .}"
+                Aspect="AspectFill"
+                HorizontalOptions="Fill"
+                VerticalOptions="Fill"
+                WidthRequest="137"
+                HeightRequest="137">
+                <Image.Clip>
+                    <RoundRectangleGeometry
+                        Rect="0, 0, 137, 137"
+                        CornerRadius="16"/>
+                </Image.Clip>
+            </Image>
+        </DataTemplate>
+
+        <!-- CollectionView Styles -->
+        <Style TargetType="CollectionView">
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="ItemSizingStrategy" Value="MeasureFirstItem"/>
+            <Setter Property="VerticalOptions" Value="Fill"/>
+            <Setter Property="HorizontalOptions" Value="Fill"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Never"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Never"/>
+            <Setter Property="SelectionMode" Value="None"/>
+            <Setter Property="ItemTemplate" Value="{StaticResource ImageTemplate}"/>
+            <Setter Property="ItemsLayout">
+                <LinearItemsLayout
+                    Orientation="Horizontal"
+                    ItemSpacing="14"/>
+            </Setter>
+        </Style>
+
+    </ContentPage.Resources>
+
+    <Grid
+        IgnoreSafeArea="True"
+        RowDefinitions="{OnPlatform '590,Auto,*,110,76', Android='400,*,*,110,76'}"
+        Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
+
+        <!-- Main Image -->
+        <Image
+            Grid.Row="0"
+            Source="fruits.jpeg"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+            IsVisible="{OnPlatform iOS='False', WinUI='False', MacCatalyst='False'}"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill"/>
+
+        <!-- Main Grid -->
+        <Grid
+            Grid.Row="0"
+            Margin="-60, 0"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+            IgnoreSafeArea="True"
+            RowDefinitions="137, 14, 137, 14, 137, 14, 137"
+            Rotation="-10"
+            IsVisible="{OnPlatform Android='False'}">
+
+            <!-- Coll View 1 -->
+            <CollectionView
+                Grid.Row="0"
+                ItemsSource="{Binding ImageList1, Mode=OneWay}"/>
+
+            <!-- Coll View 2 -->
+            <CollectionView
+                Grid.Row="2"
+                ItemsSource="{Binding ImageList2, Mode=OneWay}" />
+
+            <!-- Coll View 3 -->
+            <CollectionView
+                Grid.Row="4"
+                ItemsSource="{Binding ImageList3, Mode=OneWay}"/>
+
+            <!-- Coll View 4 -->
+            <CollectionView
+                Grid.Row="6"
+                ItemsSource="{Binding ImageList4, Mode=OneWay}"/>
+
+        </Grid>
+
+        <!-- Top Gradient -->
+        <BoxView
+            Grid.Row="0"
+            HeightRequest="90"
+            HorizontalOptions="Fill"
+            VerticalOptions="Start">
+            <BoxView.Background>
+                <LinearGradientBrush
+                    StartPoint="0, 0"
+                    EndPoint="0, 1">
+                    <GradientStop
+                        Color="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+                        Offset="0.0"/>
+                    <GradientStop
+                        Color="Transparent"
+                        Offset="1.0"/>
+                </LinearGradientBrush>
+
+            </BoxView.Background>
+
+        </BoxView>
+
+        <!-- Bottom Gradient -->
+        <BoxView
+            Grid.Row="0"
+            HeightRequest="90"
+            HorizontalOptions="Fill"
+            VerticalOptions="End">
+            <BoxView.Background>
+                <LinearGradientBrush
+                    StartPoint="0, 0"
+                    EndPoint="0, 1">
+                    <GradientStop
+                        Color="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+                        Offset="1.0"/>
+                    <GradientStop
+                        Color="Transparent"
+                        Offset="0.0"/>
+                </LinearGradientBrush>
+            </BoxView.Background>
+        </BoxView>
+
+        <!-- Background -->
+        <BoxView
+            Grid.Row="1"
+            Grid.RowSpan="3"
+            Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill"/>
+
+        <!-- Info -->
+        <ScrollView
+            Grid.Row="1"
+            Grid.RowSpan="2">
+            <Label
+                x:Name="PolicyLabel"
+                Margin="48,12,48,0"
+                Text="{Binding LocalizationResourceManager[DescriptionPolicy], Mode=OneWay}"
+                TextColor="#A77979"
+                LineHeight="1.2"
+                FontFamily="RegularFont"
+                HorizontalTextAlignment="Start"
+                HorizontalOptions="Center"
+                VerticalOptions="Start"/>
+        </ScrollView>
+
+        <!-- Agree with policy -->
+        <StackLayout
+            Grid.Row="3"
+            Padding="32, 5, 8, 8"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill"
+            Orientation="Horizontal">
+            <CheckBox
+                x:Name="AgreeComboBox"
+                Color="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                CheckedChanged="Agree_Changed"/>
+            <Label
+                x:Name="InformationLabel"
+                Text="{Binding LocalizationResourceManager[PolicyAccept], Mode=OneWay}"
+                TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+                FontFamily="BoldFont"
+                VerticalTextAlignment="Center"/>
+
+        </StackLayout>
+
+        <!-- Button -->
+        <Button
+            x:Name="AcceptButton"
+            Grid.Row="4"
+            Margin="32, 0, 32, 24"
+            Text="{Binding LocalizationResourceManager[Accept], Mode=OneWay}"
+            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White100}, Dark={StaticResource Gray970}}"
+            FontFamily="BoldFont"
+            Clicked="Accept_Clicked"
+            CornerRadius="26"
+            IsEnabled="False"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill"/>
+
+    </Grid>
+    <!--FF5722-->
+    <!--F30A49-->
+    <!--DF7861-->
+
+    <!--9BA4B4-->
+    <!--A77979-->
+</ContentPage>

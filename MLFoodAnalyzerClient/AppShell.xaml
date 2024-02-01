@@ -3,11 +3,11 @@
     x:Class="MLFoodAnalyzerClient.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:MLFoodAnalyzerClient"
-    xmlns:extension="clr-namespace:MauiApp1.Extension"
-    xmlns:strings="clr-namespace:MauiApp1.Resources.Strings"
+    xmlns:local="clr-namespace:MLFoodAnalyzerClient.Pages"
+    xmlns:extension="clr-namespace:MLFoodAnalyzerClient.Extension"
+    xmlns:strings="clr-namespace:MLFoodAnalyzerClient.Resources.Strings"
     Shell.BackgroundColor="{AppThemeBinding Default={StaticResource Black}, Light={StaticResource Color100}, Dark={StaticResource Black}}"
-    FlyoutIcon="moon2.png"
+    FlyoutIcon="menu.png"
     Shell.FlyoutWidth="270">
 
     <Shell.FlyoutHeader>

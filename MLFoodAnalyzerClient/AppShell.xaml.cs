@@ -1,4 +1,4 @@
-﻿using MauiApp1.Extension;
+﻿using MLFoodAnalyzerClient.Extension;
 using System.Globalization;
 
 namespace MLFoodAnalyzerClient;

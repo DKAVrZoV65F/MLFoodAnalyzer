@@ -1,4 +1,4 @@
-﻿namespace MauiApp1.Pages;
+﻿namespace MLFoodAnalyzerClient.Pages;
 
 public class Food
 {

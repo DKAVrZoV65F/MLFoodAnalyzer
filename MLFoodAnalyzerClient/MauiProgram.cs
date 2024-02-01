@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Maui.LifecycleEvents;
 
 namespace MLFoodAnalyzerClient
 {
@@ -16,9 +17,15 @@ namespace MLFoodAnalyzerClient
                 });
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
+            builder.ConfigureLifecycleEvents(events =>
+            {
+#if ANDROID
+            events.AddAndroid(android => android.OnCreate((activity, bundle) => activity.Window?.SetStatusBarColor(Android.Graphics.Color.Black)));
+#endif
+            });
             return builder.Build();
         }
     }

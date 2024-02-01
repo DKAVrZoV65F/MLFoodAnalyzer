@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Frame xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       x:Class="MLFoodAnalyzerClient.Pages.ButtonControl"
+       x:Name="this"
+       Padding="10"
+       CornerRadius="5">
+    
+    <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
+        
+        <!-- Animated loading -->
+        <ActivityIndicator
+            HeightRequest="15"
+            WidthRequest="15"
+            Color="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+            IsRunning="True"
+            IsVisible="{Binding Source={x:Reference this}, Path=IsInProgress}"/>
+
+        <!-- Text loading -->
+        <Label
+            x:Name="lblButtonText"
+            Text="{Binding Source={x:Reference this},Path=Text}"
+            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+            FontSize="20"
+            FontFamily="RegularFont"
+            VerticalTextAlignment="Center"
+            HorizontalTextAlignment="Center"/>
+        
+    </HorizontalStackLayout>
+    
+    <!-- Binding progress -->
+    <Frame.Triggers>
+        <DataTrigger TargetType="Frame" Binding="{Binding Source={x:Reference this},Path=IsInProgress}" Value="True">
+            <Setter Property="IsEnabled" Value="False" />
+        </DataTrigger>
+        <DataTrigger TargetType="Frame" Binding="{Binding Source={x:Reference this},Path=IsInProgress}" Value="False">
+            <Setter Property="IsEnabled" Value="True" />
+        </DataTrigger>
+    </Frame.Triggers>
+
+    <!-- Tapped recognizer -->
+    <Frame.GestureRecognizers>
+        <TapGestureRecognizer Command="{Binding Source={x:Reference this},Path=Command}" Tapped="TapGestureRecognizer_Tapped" />
+    </Frame.GestureRecognizers>
+    
+</Frame>

@@ -1,8 +1,8 @@
-﻿using MauiApp1.Resources.Strings;
+﻿using MLFoodAnalyzerClient.Resources.Strings;
 using System.ComponentModel;
 using System.Globalization;
 
-namespace MauiApp1.Extension;
+namespace MLFoodAnalyzerClient.Extension;
 
 public class LocalizationResourceManager : INotifyPropertyChanged
 {
