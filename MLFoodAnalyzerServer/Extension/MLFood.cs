@@ -2,7 +2,7 @@
 
 namespace MLFoodAnalyzerServer.Extension;
 
-internal class MLFood
+public class MLFood
 {
     private string text;
     private string filePath;

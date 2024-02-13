@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MLFoodAnalyzerServer.Extension;
 
-internal class TCPServer
+public class TCPServer
 {
     private int port;
     private int timeout;

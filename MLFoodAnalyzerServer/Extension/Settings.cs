@@ -1,6 +1,6 @@
 ﻿namespace MLFoodAnalyzerServer.Extension;
 
-internal class Settings
+public class Settings
 {
     private readonly int version = 100;
     private readonly string title = "MLFoodServer";
