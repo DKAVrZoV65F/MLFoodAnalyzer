@@ -1,14 +1,14 @@
-name: Test console Apps
+name: Test console app
 
 on:
   push:
-    branches: [ "Server" ]
+    branches: [ "master" ]
     paths-ignore:
       - '**/*.md'
       - '**/*.gitignore'
       - '**/*.gitattributes'
   pull_request:
-    branches: [ "Server" ]
+    branches: [ "master" ]
   workflow_dispatch:
 
 env:
