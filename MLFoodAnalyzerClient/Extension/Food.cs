@@ -1,15 +1,12 @@
-﻿namespace MLFoodAnalyzerClient.Pages;
+﻿namespace MLFoodAnalyzerClient.Extension;
 
 public class Food
 {
-    public Food()
-    {
-
-    }
-    public Food(string name, int age, string description)
+    public Food() {}
+    public Food(string name, int id, string description)
     {
         Name = name;
-        Id = age;
+        Id = id;
         Description = description;
     }
 
