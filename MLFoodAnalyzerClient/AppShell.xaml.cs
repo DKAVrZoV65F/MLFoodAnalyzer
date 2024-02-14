@@ -17,7 +17,7 @@ public partial class AppShell : Shell
         CultureInfo cultureInfo = new(Preferences.Get("LanguageApp", "ru-RU"));
         LocalizationResourceManager.Instance.SetCulture(cultureInfo);
 
-        Application.Current.UserAppTheme = Preferences.Get("ThemeApp", "Default") switch
+        Application.Current!.UserAppTheme = Preferences.Get("ThemeApp", "Default") switch
         {
             "Light" => AppTheme.Light,
             "Dark" => AppTheme.Dark,

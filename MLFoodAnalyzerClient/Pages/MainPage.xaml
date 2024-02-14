@@ -5,7 +5,7 @@
              xmlns:extension="clr-namespace:MLFoodAnalyzerClient.Extension"
              xmlns:customControls="clr-namespace:MLFoodAnalyzerClient.Pages"
              xmlns:strings="clr-namespace:MLFoodAnalyzerClient.Resources.Strings"
-             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}">
 
     <Grid RowDefinitions="100, *, 150"
           ColumnDefinitions="*, Auto">
@@ -14,7 +14,7 @@
         <Label
             x:Name="InfoLabel"
             Grid.ColumnSpan="2"
-            Text="Danger!"
+            Text=""
             TextColor="{AppThemeBinding Light={StaticResource Red500}, Dark={StaticResource Red100}}"
             HorizontalTextAlignment="Center"
             FontFamily="RegularFont"
@@ -26,11 +26,12 @@
             Grid.ColumnSpan="2"
             VerticalScrollBarVisibility="Always"
             Margin="20, -40, 20, 0"
-            BackgroundColor="{AppThemeBinding Light={StaticResource White300}, Dark={StaticResource Gray970}}">
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}">
             <Label
                 x:Name="ResultEditor"
                 TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
-                FontFamily="RegularFont"/>
+                FontFamily="RegularFont"
+                ToolTipProperties.Text="{Binding LocalizationResourceManager[TipChat], Mode=OneWay}"/>
         </ScrollView>
 
         <!-- Writing text to server -->
@@ -40,17 +41,19 @@
             Margin="20,40,0,40"
             Placeholder="{Binding LocalizationResourceManager[EnterTheText], Mode=OneWay}"
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
-            BackgroundColor="{AppThemeBinding Light={StaticResource White300}, Dark={StaticResource Gray970}}"
+            PlaceholderColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray490}}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
             FontFamily="RegularFont"
             Keyboard="Text"
             IsSpellCheckEnabled="True"
             IsTextPredictionEnabled="True"
             TextChanged="QueryEditor_Changed"
             VerticalTextAlignment="Center"
-            HorizontalTextAlignment="Start">
+            HorizontalTextAlignment="Start"
+            ToolTipProperties.Text="{Binding LocalizationResourceManager[TipWriteOrPickImg], Mode=OneWay}">
             <Editor.Shadow>
                 <Shadow
-                    Brush="{AppThemeBinding Light={StaticResource Gray970}, Dark={StaticResource White100}}"
+                    Brush="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource White100}}"
                     Radius="40"
                     Opacity="0.24"/>
             </Editor.Shadow>
@@ -65,7 +68,7 @@
             Margin="20,40,20,40"
             Text="{Binding LocalizationResourceManager[SendPicture], Mode=OneWay}"
             LoadingText="{Binding LocalizationResourceManager[PleaseWait], Mode=OneWay}"
-            BackgroundColor="{AppThemeBinding Light={StaticResource White300}, Dark={StaticResource Gray970}}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
             Tapped="SendPicture_Tapped"
             CornerRadius="26"
             IsVisible="True"/>
@@ -78,7 +81,7 @@
             Margin="20,40,20,40"
             Text="{Binding LocalizationResourceManager[SendText], Mode=OneWay}"
             LoadingText="{Binding LocalizationResourceManager[PleaseWait], Mode=OneWay}"
-            BackgroundColor="{AppThemeBinding Light={StaticResource White300}, Dark={StaticResource Gray970}}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
             Tapped="SendText_Tapped"
             CornerRadius="26"
             IsVisible="False"/>

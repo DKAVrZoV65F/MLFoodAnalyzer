@@ -45,29 +45,17 @@
 
 
 
-    <Color x:Key="White100">#efefef</Color>
-    <Color x:Key="Gray970">#151515</Color>
-
-    <Color x:Key="White200">#fefefe</Color>
-    <Color x:Key="White300">#eef0f4</Color>
-    <Color x:Key="White400">#eaeaee</Color>
+    <!-- Custom colors -->
+    
     <Color x:Key="Red100">#FF7E67</Color>
-
-
-
-    
-    
-    
-    <!--FF5722-->
-    <!--F30A49-->
-    <!--DF7861-->
-    <!--9BA4B4-->
-    <!--A77979-->
     <Color x:Key="Red500">#F30A49</Color>
-    <Color x:Key="Color100">#e7e0f5</Color>
-    <Color x:Key="Color200">#F30A49</Color>
-    <Color x:Key="Color300">#06c258</Color>
-    <Color x:Key="Color400">#0000FF</Color>
-    <Color x:Key="Color500">#a0897c</Color>
-    <Color x:Key="Color600">#6a6a6a</Color>
+    <Color x:Key="Red600">#F30A49</Color>
+
+    <Color x:Key="White100">#efefef</Color>
+    <Color x:Key="White200">#f2f4f6</Color>
+
+    <Color x:Key="Gray470">#484b58</Color>
+    <Color x:Key="Gray490">#6a6a6a</Color>
+    <Color x:Key="Gray970">#151515</Color>
+    <Color x:Key="Gray980">#212121</Color>
 </ResourceDictionary>

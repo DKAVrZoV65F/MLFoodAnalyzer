@@ -127,7 +127,10 @@
     <value>Администрация</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>ML Анализатор Пищевых Продуктов(MLАПП)</value>
+    <value>MLFoodAnalyzer</value>
+  </data>
+  <data name="AttachedAPicture" xml:space="preserve">
+    <value>Вы прикрепили картинку </value>
   </data>
   <data name="ChatSettings" xml:space="preserve">
     <value>Настройки чата</value>
@@ -147,7 +150,7 @@
   <data name="DescriptionPolicy" xml:space="preserve">
     <value>В обиходе термин "фрукт" обычно означает мясистые структуры, связанные с семенами. Значимость этих проблем настолько очевидна, что постоянное информационно-техническое обеспечение нашей деятельности играет важную роль в формировании новых предложений? Значимость этих проблем настолько очевидна, что постоянное информационно-техническое обеспечение нашей деятельности играет важную роль в формировании новых предложений? Значимость этих проблем настолько очевидна, что постоянное информационно-техническое обеспечение нашей деятельности играет важную роль в формировании новых предложений?</value>
   </data>
-  <data name="DestHostUn" xml:space="preserve">
+  <data name="DestinationHostUn" xml:space="preserve">
     <value>Конечный узел недоступен</value>
   </data>
   <data name="EnterTheIp" xml:space="preserve">
@@ -164,6 +167,9 @@
   </data>
   <data name="EnterTheUserName" xml:space="preserve">
     <value>Введите логин</value>
+  </data>
+  <data name="ErrorConToServ" xml:space="preserve">
+    <value>Ошибка при подключении к серверу!</value>
   </data>
   <data name="ErrorWithIPOrPort" xml:space="preserve">
     <value>Ошибка с IP-Адресом или портом</value>
@@ -190,7 +196,7 @@
     <value>Светлая тема</value>
   </data>
   <data name="LogIn" xml:space="preserve">
-    <value>Авторизироватся</value>
+    <value>Авторизоваться</value>
   </data>
   <data name="Mail" xml:space="preserve">
     <value>Почта</value>
@@ -246,14 +252,38 @@
   <data name="SendText" xml:space="preserve">
     <value>Отправить текст</value>
   </data>
+  <data name="Server" xml:space="preserve">
+    <value>Сервер: </value>
+  </data>
   <data name="Settings" xml:space="preserve">
     <value>Настройки</value>
   </data>
-  <data name="Sucess" xml:space="preserve">
+  <data name="Success" xml:space="preserve">
     <value>Успех</value>
   </data>
   <data name="TakeAPicture" xml:space="preserve">
     <value>Сфотографировать</value>
+  </data>
+  <data name="TipChat" xml:space="preserve">
+    <value>Чат, общение с сервером</value>
+  </data>
+  <data name="TipDisplayPassword" xml:space="preserve">
+    <value>Отображает введенный вами пароль</value>
+  </data>
+  <data name="TipLogIn" xml:space="preserve">
+    <value>Укажите свой логин на который был зарегистрирован ваш аккаунт</value>
+  </data>
+  <data name="TipPassword" xml:space="preserve">
+    <value>Укажите свой пароль, который вы ввели при регистрации</value>
+  </data>
+  <data name="TipPasswordServer" xml:space="preserve">
+    <value>На некоторых серверах вам необходимо указать пароль для шифрования текста</value>
+  </data>
+  <data name="TipSaveLogIn" xml:space="preserve">
+    <value>Сохраняет ваше имя пользователя и пароль на вашем устройстве</value>
+  </data>
+  <data name="TipWriteOrPickImg" xml:space="preserve">
+    <value>Введите запрос или прикрепите изображение</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Название:</value>
@@ -263,5 +293,8 @@
   </data>
   <data name="Welcome" xml:space="preserve">
     <value>Добро пожаловать!</value>
+  </data>
+  <data name="You" xml:space="preserve">
+    <value>Вы: </value>
   </data>
 </root>

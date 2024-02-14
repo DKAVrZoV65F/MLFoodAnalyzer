@@ -6,13 +6,18 @@
     xmlns:local="clr-namespace:MLFoodAnalyzerClient.Pages"
     xmlns:extension="clr-namespace:MLFoodAnalyzerClient.Extension"
     xmlns:strings="clr-namespace:MLFoodAnalyzerClient.Resources.Strings"
-    Shell.BackgroundColor="{AppThemeBinding Default={StaticResource Black}, Light={StaticResource Color100}, Dark={StaticResource Black}}"
+    Shell.BackgroundColor="{AppThemeBinding Default={StaticResource Black}, Light={StaticResource White200}, Dark={StaticResource Black}}"
     FlyoutIcon="menu.png"
     Shell.FlyoutWidth="270">
 
     <Shell.FlyoutHeader>
         <Grid>
-            <Image Source="fruits.jpeg" />
+            <Border Stroke="{AppThemeBinding Default={StaticResource Black}, Light={StaticResource White200}, Dark={StaticResource Black}}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="0, 0, 20, 20" />
+                </Border.StrokeShape>
+                <Image Source="fruits.jpeg"/>
+            </Border>
         </Grid>
     </Shell.FlyoutHeader>
 

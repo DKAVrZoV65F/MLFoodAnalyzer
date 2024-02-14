@@ -4,7 +4,7 @@
              x:Class="MLFoodAnalyzerClient.Pages.ThemePage"
              xmlns:extension="clr-namespace:MLFoodAnalyzerClient.Extension"
              xmlns:strings="clr-namespace:MLFoodAnalyzerClient.Resources.Strings"
-             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}">
 
     <Grid RowDefinitions="50, Auto, *, 76, 50, 50, 50"
           ColumnDefinitions="*, 50"
@@ -28,9 +28,9 @@
             Minimum="10"
             Maximum="30"
             ValueChanged="FontSize_Changed"
-            MinimumTrackColor="{AppThemeBinding Light={StaticResource Red500}, Dark={StaticResource White100}}"
-            MaximumTrackColor="{AppThemeBinding Light={StaticResource Color400}, Dark={StaticResource White100}}"
-            ThumbColor="{AppThemeBinding Light={StaticResource Color400}, Dark={StaticResource White100}}"/>
+            MinimumTrackColor="{AppThemeBinding Light={StaticResource Gray470}, Dark={StaticResource White100}}"
+            MaximumTrackColor="{AppThemeBinding Light={StaticResource Gray980}, Dark={StaticResource White100}}"
+            ThumbColor="{AppThemeBinding Light={StaticResource Gray980}, Dark={StaticResource White100}}"/>
 
         <!-- Font Value -->
         <Label
@@ -39,7 +39,7 @@
             Grid.Column="1"
             Margin="0, 0, 0, 20"
             FontFamily="RegularFont"
-            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"/>
+            TextColor="{AppThemeBinding Light={StaticResource Gray980}, Dark={StaticResource White100}}"/>
 
         <!-- Text -->
         <ScrollView
@@ -49,7 +49,7 @@
                 x:Name="InfoLabel"
                 Padding="10, 40, 20, 10"
                 Text="{Binding LocalizationResourceManager[ExampleText], Mode=OneWay}"
-                TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+                TextColor="{AppThemeBinding Light={StaticResource Gray980}, Dark={StaticResource White100}}"
                 FontFamily="RegularFont"/>
         </ScrollView>
 
@@ -60,8 +60,8 @@
             Grid.ColumnSpan="2"
             Margin="32, 0, 32, 24"
             Text="{Binding LocalizationResourceManager[AcceptSettings], Mode=OneWay}"
-            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
-            BackgroundColor="{AppThemeBinding Light={StaticResource White100}, Dark={StaticResource Gray970}}"
+            TextColor="{AppThemeBinding Light={StaticResource Gray980}, Dark={StaticResource White100}}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
             FontFamily="BoldFont"
             Clicked="Accept_Clicked"
             CornerRadius="26"
@@ -74,7 +74,7 @@
             Grid.Row="4"
             Grid.ColumnSpan="2"
             Content="{Binding LocalizationResourceManager[LightTheme], Mode=OneWay}"
-            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+            TextColor="{AppThemeBinding Light={StaticResource Gray980}, Dark={StaticResource White100}}"
             FontFamily="RegularFont"
             Value="Light"
             CheckedChanged="Theme_Changed"/>
@@ -85,7 +85,7 @@
             Grid.Row="5"
             Grid.ColumnSpan="2"
             Content="{Binding LocalizationResourceManager[DarkTheme], Mode=OneWay}"
-            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+            TextColor="{AppThemeBinding Light={StaticResource Gray980}, Dark={StaticResource White100}}"
             FontFamily="RegularFont"
             Value="Dark"
             CheckedChanged="Theme_Changed"/>
@@ -96,7 +96,7 @@
             Grid.Row="6"
             Grid.ColumnSpan="2"
             Content="{Binding LocalizationResourceManager[DefaultTheme], Mode=OneWay}"
-            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+            TextColor="{AppThemeBinding Light={StaticResource Gray980}, Dark={StaticResource White100}}"
             FontFamily="RegularFont"
             Value="Default"
             CheckedChanged="Theme_Changed"/>

@@ -5,7 +5,7 @@
              xmlns:extension="clr-namespace:MLFoodAnalyzerClient.Extension"
              xmlns:customControls="clr-namespace:MLFoodAnalyzerClient.Pages"
              xmlns:strings="clr-namespace:MLFoodAnalyzerClient.Resources.Strings"
-             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}">
 
     <Grid RowDefinitions="50, 50, 50, 50, 150"
           ColumnDefinitions="Auto, *"
@@ -39,8 +39,8 @@
             Margin="10, 0"
             Placeholder="{Binding LocalizationResourceManager[EnterTheIp], Mode=OneWay}"
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
-            PlaceholderColor="{AppThemeBinding Light={StaticResource Color500}, Dark={StaticResource Color600}}"
-            BackgroundColor="{AppThemeBinding Light={StaticResource Color100}, Dark={StaticResource Gray970}}"
+            PlaceholderColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray490}}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
             FontFamily="RegularFont"
             Keyboard="Telephone"
             VerticalTextAlignment="Center"/>
@@ -63,8 +63,8 @@
             Margin="10, 0"
             Placeholder="{Binding LocalizationResourceManager[EnterThePort], Mode=OneWay}"
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
-            PlaceholderColor="{AppThemeBinding Light={StaticResource Color500}, Dark={StaticResource Color600}}"
-            BackgroundColor="{AppThemeBinding Light={StaticResource Color100}, Dark={StaticResource Gray970}}"
+            PlaceholderColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray490}}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
             FontFamily="RegularFont"
             Keyboard="Numeric"
             VerticalTextAlignment="Center"/>
@@ -87,11 +87,12 @@
             Margin="10,0"
             Placeholder="{Binding LocalizationResourceManager[EnterThePassword], Mode=OneWay}"
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
-            PlaceholderColor="{AppThemeBinding Light={StaticResource Color500}, Dark={StaticResource Color600}}"
-            BackgroundColor="{AppThemeBinding Light={StaticResource Color100}, Dark={StaticResource Gray970}}"
+            PlaceholderColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray490}}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
             FontFamily="RegularFont"
             IsPassword="True"
-            VerticalTextAlignment="Center"/>
+            VerticalTextAlignment="Center"
+            ToolTipProperties.Text="{Binding LocalizationResourceManager[TipPasswordServer], Mode=OneWay}"/>
 
         <!-- Ping -->
         <customControls:ButtonControl
@@ -100,7 +101,7 @@
             Grid.ColumnSpan="2"
             Margin="-10, 40"
             Text="{Binding LocalizationResourceManager[CheckTheConnection], Mode=OneWay}"
-            BackgroundColor="{AppThemeBinding Light={StaticResource Color100}, Dark={StaticResource Gray970}}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
             Tapped="PingServer"
             CornerRadius="26"/>
 

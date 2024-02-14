@@ -13,33 +13,36 @@ public partial class AdminStoragePage : ContentPage
     public AdminStoragePage()
     {
         InitializeComponent();
-        
+
         BindingContext = this;
 
         int getValue = Preferences.Get("FontSize", 20);
         SearchEntry.FontSize = getValue;
 
-        Foods = new ObservableCollection<Food>
-        {
-            new Food {Name="Tom", Id=1, Description = "Q" },
-            new Food {Name = "Bob", Id = 2, Description = "W"},
-            new Food {Name="Sam", Id = 3, Description = "E"},
-            new Food {Name = "Alice", Id = 4, Description = "R" }
-        };
-        
+        Foods =
+        [
+            new() {Name="Apple", Id=1, Description = "Q" },
+            new() {Name = "Banana", Id = 2, Description = "W"},
+            new() {Name="Orange", Id = 3, Description = "E"},
+            new() {Name = "Cherry", Id = 4, Description = "R" }
+        ];
+
         fruitsListView.ItemsSource = Foods;
     }
 
     private async void FruitsListView_ItemTapped(object sender, ItemTappedEventArgs e)
     {
-        var tappedUser = e.Item as Food;
-        Food user = new(tappedUser.Name, tappedUser.Id, tappedUser.Description);
-        await Navigation.PushAsync(new UpdatingStoragePage(user));
+        if (e.Item is Food tappedUser)
+        {
+            Food user = new(tappedUser.Name, tappedUser.Id, tappedUser.Description);
+            await Navigation.PushAsync(new UpdatingStoragePage(user));
+        }
     }
 
     private void SearchEntry_TextChanged(object sender, TextChangedEventArgs e)
     {
-        ObservableCollection<Food> Search = new(Foods.Where(x => x.Name.Contains(SearchEntry.Text) || x.Id.ToString().Contains(SearchEntry.Text)));
+
+        ObservableCollection<Food> Search = new(Foods.Where(x => string.Equals(x.Name, SearchEntry.Text, StringComparison.OrdinalIgnoreCase) || string.Equals(x.Id.ToString(), SearchEntry.Text, StringComparison.OrdinalIgnoreCase)));
         fruitsListView.ItemsSource = (Search.Count > 0) ? Search : Foods;
     }
 }

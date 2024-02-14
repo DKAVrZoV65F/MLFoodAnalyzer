@@ -43,7 +43,7 @@ public partial class ThemePage : ContentPage
         string? checkBoxValue = (selectedRadioButton.Value != null) ? selectedRadioButton.Value.ToString() : "";
         if (string.IsNullOrEmpty(checkBoxValue)) return;
 
-        Application.Current.UserAppTheme = checkBoxValue switch
+        Application.Current!.UserAppTheme = checkBoxValue switch
         {
             "Light" => AppTheme.Light,
             "Dark" => AppTheme.Dark,

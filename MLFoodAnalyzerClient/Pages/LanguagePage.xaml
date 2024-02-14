@@ -4,7 +4,7 @@
              x:Class="MLFoodAnalyzerClient.Pages.LanguagePage"
              xmlns:extension="clr-namespace:MLFoodAnalyzerClient.Extension"
              xmlns:strings="clr-namespace:MLFoodAnalyzerClient.Resources.Strings"
-             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}">
 
     <Grid RowDefinitions="50, 50, 50"
           Margin="20,40,20,0">

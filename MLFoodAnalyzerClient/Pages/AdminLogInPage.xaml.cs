@@ -9,7 +9,7 @@ public partial class AdminLogInPage : ContentPage
     private string SavedLogIn = "";
     private string SavedPassword = "";
 
-    public LocalizationResourceManager LocalizationResourceManager
+    public static LocalizationResourceManager LocalizationResourceManager
        => LocalizationResourceManager.Instance;
     public AdminLogInPage()
     {
@@ -67,6 +67,8 @@ public partial class AdminLogInPage : ContentPage
         {
             LoginEntry.Text = "";
             PasswordEntry.Text = "";
+            SavedLogIn = "";
+            SavedPassword = "";
             Preferences.Set("SavedLogIn", LoginEntry.Text);
             Preferences.Set("SavedPassword", PasswordEntry.Text);
         }

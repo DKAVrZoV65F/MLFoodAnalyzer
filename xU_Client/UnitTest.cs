@@ -32,7 +32,7 @@ public class UnitTest
     }
 
     [Fact]
-    public void TestChnageFoodParametr()
+    public void TestChangeFoodParameter()
     {
         Food food = new(name: "Apple", id: 1, description: "Sweet fruit");
         Assert.NotNull(food);
@@ -45,14 +45,14 @@ public class UnitTest
     }
 
     [Fact]
-    public void TestChnageFoodParametrs()
+    public void TestChangeFoodParameters()
     {
         Food food = new(name: "Apple", id: 1, description: "Sweet fruit");
         Assert.NotNull(food);
 
         Assert.Equal("Apple", food.Name);
         Assert.Equal(1, food.Id);
-        Assert.Equal("Sweet fruit and tasty", food.Description);
+        Assert.Equal("Sweet fruit", food.Description);
 
         food = new(name: "Apple_2", id: 1, description: "Sweet fruit and tasty");
         Assert.NotNull(food);

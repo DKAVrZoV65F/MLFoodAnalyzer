@@ -22,7 +22,7 @@
             Text="{Binding Source={x:Reference this},Path=Text}"
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
             FontSize="20"
-            FontFamily="RegularFont"
+            FontFamily="BoldFont"
             VerticalTextAlignment="Center"
             HorizontalTextAlignment="Center"/>
         

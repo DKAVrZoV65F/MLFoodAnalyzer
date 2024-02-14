@@ -5,7 +5,7 @@
              xmlns:extension="clr-namespace:MLFoodAnalyzerClient.Extension"
              xmlns:customControls="clr-namespace:MLFoodAnalyzerClient.Pages"
              xmlns:strings="clr-namespace:MLFoodAnalyzerClient.Resources.Strings"
-             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}">
 
     <Grid RowDefinitions="50, Auto, Auto, 50, 50, Auto"
           Margin="20, 40, 20, 0">
@@ -19,33 +19,46 @@
             FontFamily="RegularFont"/>
 
         <!-- UserName -->
-        <Entry
-            x:Name="LoginEntry"
-            Grid.Row="1"
-            Margin="20, 20"
-            Placeholder="{Binding LocalizationResourceManager[EnterTheUserName], Mode=OneWay}"
-            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
-            BackgroundColor="{AppThemeBinding Light={StaticResource White300}, Dark={StaticResource Gray970}}"
-            FontFamily="RegularFont"
-            Keyboard="Text"
-            IsSpellCheckEnabled="True"
-            IsTextPredictionEnabled="True"
-            VerticalTextAlignment="Center"/>
+        <Border Stroke="{AppThemeBinding Default={StaticResource Black}, Light={StaticResource White200}, Dark={StaticResource Black}}"
+                Grid.Row="1"
+                Margin="20, 20">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10" />
+            </Border.StrokeShape>
+            <Entry
+                x:Name="LoginEntry"
+                Placeholder="{Binding LocalizationResourceManager[EnterTheUserName], Mode=OneWay}"
+                TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+                BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
+                FontFamily="RegularFont"
+                Keyboard="Text"
+                IsSpellCheckEnabled="True"
+                IsTextPredictionEnabled="True"
+                VerticalTextAlignment="Center"
+                ToolTipProperties.Text="{Binding LocalizationResourceManager[TipLogIn], Mode=OneWay}"/>
+        </Border>
+        
 
         <!-- Password -->
-        <Entry
-            x:Name="PasswordEntry"
+        <Border Stroke="{AppThemeBinding Default={StaticResource Black}, Light={StaticResource White200}, Dark={StaticResource Black}}"
             Grid.Row="2"
-            Margin="20, 20"
-            Placeholder="{Binding LocalizationResourceManager[EnterThePassword], Mode=OneWay}"
-            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
-            BackgroundColor="{AppThemeBinding Light={StaticResource White300}, Dark={StaticResource Gray970}}"
-            FontFamily="RegularFont"
-            Keyboard="Text"
-            IsPassword="True"
-            IsSpellCheckEnabled="True"
-            IsTextPredictionEnabled="True"
-            VerticalTextAlignment="Center"/>
+            Margin="20, 20">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10" />
+            </Border.StrokeShape>
+            <Entry
+                x:Name="PasswordEntry"
+                Placeholder="{Binding LocalizationResourceManager[EnterThePassword], Mode=OneWay}"
+                TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+                BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
+                FontFamily="RegularFont"
+                Keyboard="Text"
+                IsPassword="True"
+                IsSpellCheckEnabled="True"
+                IsTextPredictionEnabled="True"
+                VerticalTextAlignment="Center"
+                ToolTipProperties.Text="{Binding LocalizationResourceManager[TipPassword], Mode=OneWay}"/>
+        </Border>
 
         <!-- Display password -->
         <HorizontalStackLayout
@@ -54,7 +67,7 @@
             VerticalOptions="Fill"
             HorizontalOptions="Fill">
             <CheckBox
-                Color="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource White100}}"
+                Color="{AppThemeBinding Light={StaticResource Gray470}, Dark={StaticResource White100}}"
                 CheckedChanged="DisplayPassword_Changed"/>
 
             <Label
@@ -62,7 +75,8 @@
                 Text="{Binding LocalizationResourceManager[ViewThePassword], Mode=OneWay}"
                 TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
                 FontFamily="BoldFont"
-                VerticalTextAlignment="Center"/>
+                VerticalTextAlignment="Center"
+                ToolTipProperties.Text="{Binding LocalizationResourceManager[TipDisplayPassword], Mode=OneWay}"/>
         </HorizontalStackLayout>
 
         <!-- Save Log In -->
@@ -73,14 +87,15 @@
             VerticalOptions="Fill">
             <CheckBox
                 x:Name="SavingCheckBox"
-                Color="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource White100}}"/>
+                Color="{AppThemeBinding Light={StaticResource Gray470}, Dark={StaticResource White100}}"/>
 
             <Label
                 x:Name="SavingLabel"
                 Text="{Binding LocalizationResourceManager[SaveLogin], Mode=OneWay}"
                 TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
                 FontFamily="BoldFont"
-                VerticalTextAlignment="Center"/>
+                VerticalTextAlignment="Center"
+                ToolTipProperties.Text="{Binding LocalizationResourceManager[TipSaveLogIn], Mode=OneWay}"/> 
         </HorizontalStackLayout>
 
         <!-- Log In -->
@@ -90,11 +105,10 @@
             Margin="32,0,32,24"
             CornerRadius="26"
             Text="{Binding LocalizationResourceManager[LogIn], Mode=OneWay}"
-            BackgroundColor="{AppThemeBinding Light={StaticResource White100}, Dark={StaticResource Gray970}}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
             VerticalOptions="Fill"
             HorizontalOptions="Fill"
             Tapped="LogIn_Tapped"/>
-
     </Grid>
 
 </ContentPage>

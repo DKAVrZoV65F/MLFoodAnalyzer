@@ -61,24 +61,4 @@ public partial class PolicyPage : ContentPage
         Preferences.Set("IsPolicyRead", false);
         await Navigation.PopModalAsync();
     }
-
-    /*await DisplayAlert(Title, LocalizationResourceManager["ErrorWithAlgorithm"].ToString(), "ОK");
-        string result = await DisplayActionSheet(LocalizationResourceManager["AppInfo"].ToString(), LocalizationResourceManager["Thanks"].ToString(), "GitHub", LocalizationResourceManager["Version"].ToString() + $" {AppInfo.Current.VersionString}", LocalizationResourceManager["Language"].ToString() + $"  {currentLanguage}", LocalizationResourceManager["Author"].ToString());
-
-        if (result == null) return;
-        else if (result == "GitHub") await Clipboard.SetTextAsync("https://github.com/DKAVrZoV65F/Digital-Terrain-Models");
-        else if (result.Contains(ENGLISH) || result.Contains(RUSSIAN))
-        {
-            var switchToCulture = AppResources.Culture.TwoLetterISOLanguageName.
-                Equals("en", StringComparison.InvariantCultureIgnoreCase) ?
-                new CultureInfo("ru-RU") : new CultureInfo("en-US");
-
-            LocalizationResourceManager.Instance.SetCulture(switchToCulture);
-
-            currentLanguage = (currentLanguage.Equals(ENGLISH)) ? RUSSIAN : ENGLISH;
-        }
-
-        var response = await FilePicker.PickAsync();
-        if (response == null) return;
-        await DisplayAlert(Title, response.FullPath, "OK");*/
 }

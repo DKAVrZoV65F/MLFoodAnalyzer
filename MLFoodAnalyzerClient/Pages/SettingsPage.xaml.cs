@@ -10,6 +10,7 @@ public partial class SettingsPage : ContentPage
 
     private int counter = 0;
     private bool IsFlag = false;
+    private readonly string email = "gw9ckwfsp@mozmail.com";
 
     public SettingsPage()
     {
@@ -54,7 +55,7 @@ public partial class SettingsPage : ContentPage
 
     private async void MailLabel_Tapped(object sender, TappedEventArgs e)
     {
-        await Clipboard.SetTextAsync("gw9ckwfsp@mozmail.com");
+        await Clipboard.SetTextAsync(email);
         await DisplayAlert(LocalizationResourceManager["AppName"].ToString(), LocalizationResourceManager["MailMessage"].ToString(), "OK");
     }
 

@@ -36,7 +36,7 @@
                 <TapGestureRecognizer Tapped="ChatSettingsLabel_Tapped" />
             </Label.GestureRecognizers>
         </Label>
-        <BoxView Grid.Row="2" Grid.ColumnSpan="2" HeightRequest="2" Color="{AppThemeBinding Light={StaticResource Color100}, Dark={StaticResource Black}}" Margin="40, 0, 0, 0" />
+        <BoxView Grid.Row="2" Grid.ColumnSpan="2" HeightRequest="2" Color="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}" Margin="40, 0, 0, 0" />
 
         <!-- Network -->
         <Label
@@ -53,7 +53,7 @@
                 <TapGestureRecognizer Tapped="NetworkLabel_Tapped"/>
             </Label.GestureRecognizers>
         </Label>
-        <BoxView Grid.Row="4" Grid.ColumnSpan="2" HeightRequest="2" Color="{AppThemeBinding Light={StaticResource Color100}, Dark={StaticResource Black}}" Margin="40, 0, 0, 0" />
+        <BoxView Grid.Row="4" Grid.ColumnSpan="2" HeightRequest="2" Color="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}" Margin="40, 0, 0, 0" />
 
         <!-- Language -->
         <Label
@@ -76,7 +76,7 @@
             Grid.Row="5"
             Grid.Column="1"
             Padding="40, 0, 40, 0"
-            TextColor="{AppThemeBinding Light={StaticResource Color200}, Dark={StaticResource Red100}}"
+            TextColor="{AppThemeBinding Light={StaticResource Red600}, Dark={StaticResource Red100}}"
             FontFamily="RegularFont"
             VerticalTextAlignment="Center"
             HorizontalTextAlignment="Start">
@@ -84,7 +84,7 @@
                 <TapGestureRecognizer Tapped="LanguageLabel_Tapped" />
             </Label.GestureRecognizers>
         </Label>
-        <BoxView Grid.Row="6" Grid.ColumnSpan="2" HeightRequest="10" Color="{AppThemeBinding Light={StaticResource Color100}, Dark={StaticResource Black}}"/>
+        <BoxView Grid.Row="6" Grid.ColumnSpan="2" HeightRequest="10" Color="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}"/>
 
         <!-- Help -->
         <Label
@@ -113,7 +113,7 @@
                 <TapGestureRecognizer Tapped="GitHubLabel_Tapped" />
             </Label.GestureRecognizers>
         </Label>
-        <BoxView Grid.Row="9" Grid.ColumnSpan="2" HeightRequest="2" Color="{AppThemeBinding Light={StaticResource Color100}, Dark={StaticResource Black}}" Margin="40, 0, 0, 0" />
+        <BoxView Grid.Row="9" Grid.ColumnSpan="2" HeightRequest="2" Color="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}" Margin="40, 0, 0, 0" />
 
         <!-- Mail -->
         <Label
@@ -130,7 +130,7 @@
                 <TapGestureRecognizer Tapped="MailLabel_Tapped" />
             </Label.GestureRecognizers>
         </Label>
-        <BoxView Grid.Row="11" Grid.ColumnSpan="2" HeightRequest="2" Color="{AppThemeBinding Light={StaticResource Color100}, Dark={StaticResource Black}}" Margin="40, 0, 0, 0" />
+        <BoxView Grid.Row="11" Grid.ColumnSpan="2" HeightRequest="2" Color="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}" Margin="40, 0, 0, 0" />
 
         <!-- Policy -->
         <Label
@@ -152,10 +152,9 @@
         <Label
             x:Name="AppVersionLabel"
             Grid.Row="13"
-            Grid.ColumnSpan="2" 
-            Padding="40 ,0, 0, 0"
-            TextColor="#9BA4B4"
-            Background="{AppThemeBinding Light={StaticResource Color100}, Dark={StaticResource Black}}"
+            Grid.ColumnSpan="2"
+            TextColor="{AppThemeBinding Light={StaticResource Gray470}, Dark={StaticResource White100}}"
+            Background="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}"
             FontFamily="BoldFont"
             VerticalOptions="Fill" 
             HorizontalOptions="Fill"

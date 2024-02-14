@@ -10,6 +10,7 @@ public partial class MainPage : ContentPage
     public LocalizationResourceManager LocalizationResourceManager
        => LocalizationResourceManager.Instance;
 
+    private const string errorServer = "ErrorConToServ";
     private string text = "";
     private string textFromServer = "";
     private bool IsFlag = true;
@@ -47,7 +48,7 @@ public partial class MainPage : ContentPage
         SendPictureButton.IsInProgress = true;
         QueryEditor.Text = "";
 
-        ResultEditor.Text += "You: ";
+        ResultEditor.Text += LocalizationResourceManager["You"].ToString();
         foreach (var item in text)
         {
             ResultEditor.Text += item;
@@ -56,7 +57,7 @@ public partial class MainPage : ContentPage
         ResultEditor.Text += '\n';
 
         await SendText(text);
-        ResultEditor.Text += "Server: ";
+        ResultEditor.Text += LocalizationResourceManager["Server"].ToString();
         foreach (var item in textFromServer)
         {
             ResultEditor.Text += item;
@@ -95,7 +96,7 @@ public partial class MainPage : ContentPage
             return;
         }
 
-        ResultEditor.Text += "You pick a photo \"";
+        ResultEditor.Text += LocalizationResourceManager["AttachedAPicture"].ToString() + '\"';
         foreach (var item in path)
         {
             ResultEditor.Text += item;
@@ -104,7 +105,7 @@ public partial class MainPage : ContentPage
         ResultEditor.Text += "\"\n";
         await SendPicture(path);
 
-        ResultEditor.Text += "Server: ";
+        ResultEditor.Text += LocalizationResourceManager["Server"].ToString();
         foreach (var item in textFromServer)
         {
             ResultEditor.Text += item;
@@ -118,11 +119,7 @@ public partial class MainPage : ContentPage
 
     private async Task<string> GetPicturePath()
     {
-#if ANDROID
-        bool result = await DisplayAlert(LocalizationResourceManager["AppName"].ToString(), LocalizationResourceManager["SelectAnAction"].ToString(), LocalizationResourceManager["TakeAPicture"].ToString(), LocalizationResourceManager["Gallery"].ToString());
-        string res = (result) ? await GetPicture() : await GetMedia();
-        return res;
-#elif IOS
+#if ANDROID || IOS
         bool result = await DisplayAlert(LocalizationResourceManager["AppName"].ToString(), LocalizationResourceManager["SelectAnAction"].ToString(), LocalizationResourceManager["TakeAPicture"].ToString(), LocalizationResourceManager["Gallery"].ToString());
         string res = (result) ? await GetPicture() : await GetMedia();
         return res;
@@ -132,9 +129,12 @@ public partial class MainPage : ContentPage
 #endif
     }
 
-    private async Task<string> GetPicture()
+    private async Task<string> GetPicture() => await GetPathToImage(await MediaPicker.Default.CapturePhotoAsync());
+
+    private async Task<string> GetMedia() => await GetPathToImage(await MediaPicker.Default.PickPhotoAsync());
+
+    private async Task<string> GetPathToImage(FileResult myPhoto)
     {
-        FileResult myPhoto = await MediaPicker.Default.CapturePhotoAsync();
         if (myPhoto == null) return "";
         string localFilePath = Path.Combine(FileSystem.CacheDirectory, myPhoto.FileName);
         using Stream sourceStream = await myPhoto.OpenReadAsync();
@@ -144,37 +144,27 @@ public partial class MainPage : ContentPage
         return localFilePath;
     }
 
-    private async Task<string> GetMedia()
-    {
-        FileResult myPhoto = await MediaPicker.Default.PickPhotoAsync();
-        if (myPhoto == null) return "";
-        string localFilePath = Path.Combine(FileSystem.CacheDirectory, myPhoto.FileName);
-        using Stream sourceStream = await myPhoto.OpenReadAsync();
-        using FileStream localFileStream = File.OpenWrite(localFilePath);
-        await sourceStream.CopyToAsync(localFileStream);
-        localFileStream.Close();
-        return localFilePath;
-    }
 
     private async Task SendPicture(string path)
     {
         using TcpClient tcpClient = new();
         ipServer = Preferences.Get("SavedIpServer", "");
-        if (string.IsNullOrEmpty(ipServer))
+        portServer = Preferences.Get("SavedPortServer", 0);
+        textFromServer = "";
+        if (string.IsNullOrEmpty(ipServer) || portServer == 0)
         {
-            textFromServer = "Error with server";
+            textFromServer += LocalizationResourceManager[errorServer].ToString();
             return;
         }
-        textFromServer = "";
 
         await tcpClient.ConnectAsync(ipServer, portServer);
         var stream = tcpClient.GetStream();
 
-        // буфер для входящих данных
+        //  Buffer for incoming data
         var response = new List<byte>();
         NetworkStream networkStream = tcpClient.GetStream();
 
-        int bytesRead = 10; // для считывания байтов из потока
+        int bytesRead = 10; //  To read bytes from a stream
         await stream.WriteAsync(Encoding.UTF8.GetBytes("IMAGE" + "\0"));
 
         string fileName = path;
@@ -183,8 +173,8 @@ public partial class MainPage : ContentPage
 
         if (!string.IsNullOrEmpty(Preferences.Get("SavedPasswordServer", "")))
         {
-            string encword = EncryptText(fileSize.ToString());
-            await stream.WriteAsync(Encoding.UTF8.GetBytes($"1{encword}\0"));
+            string encWord = EncryptText(fileSize.ToString());
+            await stream.WriteAsync(Encoding.UTF8.GetBytes($"1{encWord}\0"));
         }
         else
         {
@@ -202,21 +192,10 @@ public partial class MainPage : ContentPage
         }
         fileStream.Close();
 
-        while ((bytesRead = stream.ReadByte()) != '\0')
-        {
-            // добавляем в буфер
-            response.Add((byte)bytesRead);
-        }
+        while ((bytesRead = stream.ReadByte()) != '\0') response.Add((byte)bytesRead);  //  Adding to the buffer
 
         string translation = Encoding.UTF8.GetString(response.ToArray());
-        if (translation[0] == '1')
-        {
-            textFromServer = (DecryptText(translation[1..])) + '\n';
-        }
-        else
-        {
-            textFromServer = translation[1..] + '\n';
-        }
+        textFromServer = translation[0] == '1' ? DecryptText(translation[1..]) + '\n' : translation[1..] + '\n';
 
         response.Clear();
         networkStream.Close();
@@ -226,60 +205,43 @@ public partial class MainPage : ContentPage
     {
         using TcpClient tcpClient = new();
         ipServer = Preferences.Get("SavedIpServer", "");
+        textFromServer = "";
 
         if (string.IsNullOrEmpty(ipServer))
         {
-            textFromServer = "Error with server";
+            textFromServer += LocalizationResourceManager[errorServer].ToString();
             return;
         }
-        textFromServer = "";
         await tcpClient.ConnectAsync(ipServer, portServer);
         var stream = tcpClient.GetStream();
 
-        // буфер для входящих данных
+        //  Buffer for incoming data
         var response = new List<byte>();
         NetworkStream networkStream = tcpClient.GetStream();
 
-        int bytesRead = 10; // для считывания байтов из потока
+        int bytesRead = 10; //  To read bytes from a stream
         await stream.WriteAsync(Encoding.UTF8.GetBytes("TEXT\0"));
 
         if (!string.IsNullOrEmpty(Preferences.Get("SavedPasswordServer", "")))
         {
             text = EncryptText(text);
             await stream.WriteAsync(Encoding.UTF8.GetBytes($"1{text}\0"));
-            while ((bytesRead = stream.ReadByte()) != '\0')
-            {
-                // добавляем в буфер
-                response.Add((byte)bytesRead);
-            }
-
-            string translation = Encoding.UTF8.GetString(response.ToArray());
-            textFromServer = (DecryptText(translation))[1..] + '\n';
         }
         else
-        {
             await stream.WriteAsync(Encoding.UTF8.GetBytes($"0{text}\0"));
-            try
-            {
-                while ((bytesRead = stream.ReadByte()) != '\0')
-                {
-                    // добавляем в буфер
-                    response.Add((byte)bytesRead);
-                }
-            }
-            finally
-            {
-                textFromServer = "Error on server 2\n";
-            }
-            string translation = Encoding.UTF8.GetString(response.ToArray());
-            textFromServer = translation[1..] + '\n';
-        }
+
+        while ((bytesRead = stream.ReadByte()) != '\0')
+            response.Add((byte)bytesRead);  //  Adding to the buffer
+
+        string translation = Encoding.UTF8.GetString(response.ToArray());
+        textFromServer = (DecryptText(translation))[1..] + '\n';
 
         response.Clear();
         networkStream.Close();
     }
 
-
+    // Disable the warning.
+#pragma warning disable SYSLIB0021
     private static string DecryptText(string CipherText)
     {
         byte[] toEncryptArray = Convert.FromBase64String(CipherText);
@@ -294,8 +256,7 @@ public partial class MainPage : ContentPage
             Mode = CipherMode.ECB,
             Padding = PaddingMode.PKCS7
         };
-        var objCrytpoTransform = objTripleDESCryptoService.CreateDecryptor();
-        byte[] resultArray = objCrytpoTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
+        byte[] resultArray = objTripleDESCryptoService.CreateDecryptor().TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
         objTripleDESCryptoService.Clear();
         return UTF8Encoding.UTF8.GetString(resultArray);
     }
@@ -314,9 +275,10 @@ public partial class MainPage : ContentPage
             Mode = CipherMode.ECB,
             Padding = PaddingMode.PKCS7
         };
-        var objCrytpoTransform = objTripleDESCryptoService.CreateEncryptor();
-        byte[] resultArray = objCrytpoTransform.TransformFinalBlock(toEncryptedArray, 0, toEncryptedArray.Length);
+        byte[] resultArray = objTripleDESCryptoService.CreateEncryptor().TransformFinalBlock(toEncryptedArray, 0, toEncryptedArray.Length);
         objTripleDESCryptoService.Clear();
         return Convert.ToBase64String(resultArray, 0, resultArray.Length);
     }
+    // Re-enable the warning.
+#pragma warning restore SYSLIB0021
 }

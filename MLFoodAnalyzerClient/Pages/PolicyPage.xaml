@@ -58,7 +58,7 @@
     <Grid
         IgnoreSafeArea="True"
         RowDefinitions="{OnPlatform '590,Auto,*,110,76', Android='400,*,*,110,76'}"
-        Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
+        Background="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}">
 
         <!-- Main Image -->
         <Image
@@ -73,7 +73,7 @@
         <Grid
             Grid.Row="0"
             Margin="-60, 0"
-            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}"
             IgnoreSafeArea="True"
             RowDefinitions="137, 14, 137, 14, 137, 14, 137"
             Rotation="-10"
@@ -112,7 +112,7 @@
                     StartPoint="0, 0"
                     EndPoint="0, 1">
                     <GradientStop
-                        Color="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+                        Color="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}"
                         Offset="0.0"/>
                     <GradientStop
                         Color="Transparent"
@@ -134,7 +134,7 @@
                     StartPoint="0, 0"
                     EndPoint="0, 1">
                     <GradientStop
-                        Color="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+                        Color="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}"
                         Offset="1.0"/>
                     <GradientStop
                         Color="Transparent"
@@ -147,7 +147,7 @@
         <BoxView
             Grid.Row="1"
             Grid.RowSpan="3"
-            Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+            Background="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}"
             HorizontalOptions="Fill"
             VerticalOptions="Fill"/>
 
@@ -159,7 +159,7 @@
                 x:Name="PolicyLabel"
                 Margin="48,12,48,0"
                 Text="{Binding LocalizationResourceManager[DescriptionPolicy], Mode=OneWay}"
-                TextColor="#A77979"
+                TextColor="{AppThemeBinding Light={StaticResource Gray470}, Dark={StaticResource White100}}"
                 LineHeight="1.2"
                 FontFamily="RegularFont"
                 HorizontalTextAlignment="Start"
@@ -176,7 +176,7 @@
             Orientation="Horizontal">
             <CheckBox
                 x:Name="AgreeComboBox"
-                Color="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                Color="{AppThemeBinding Light={StaticResource Gray470}, Dark={StaticResource White100}}"
                 CheckedChanged="Agree_Changed"/>
             <Label
                 x:Name="InformationLabel"
@@ -194,7 +194,7 @@
             Margin="32, 0, 32, 24"
             Text="{Binding LocalizationResourceManager[Accept], Mode=OneWay}"
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
-            BackgroundColor="{AppThemeBinding Light={StaticResource White100}, Dark={StaticResource Gray970}}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
             FontFamily="BoldFont"
             Clicked="Accept_Clicked"
             CornerRadius="26"

@@ -129,6 +129,9 @@
   <data name="AppName" xml:space="preserve">
     <value>MLFoodAnalyzer</value>
   </data>
+  <data name="AttachedAPicture" xml:space="preserve">
+    <value>You have attached a picture </value>
+  </data>
   <data name="ChatSettings" xml:space="preserve">
     <value>Chat Settings</value>
   </data>
@@ -147,7 +150,7 @@
   <data name="DescriptionPolicy" xml:space="preserve">
     <value>In common language usage, fruit normally means the seed-associated fleshy structures. Excepteur sint occaecat cupidatat non proident, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, sunt in culpa qui officia deserunt mollit anim id est laborum.</value>
   </data>
-  <data name="DestHostUn" xml:space="preserve">
+  <data name="DestinationHostUn" xml:space="preserve">
     <value>Destination Host Unreachable</value>
   </data>
   <data name="EnterTheIp" xml:space="preserve">
@@ -164,6 +167,9 @@
   </data>
   <data name="EnterTheUserName" xml:space="preserve">
     <value>Enter your username</value>
+  </data>
+  <data name="ErrorConToServ" xml:space="preserve">
+    <value>Error connecting to the server!</value>
   </data>
   <data name="ErrorWithIPOrPort" xml:space="preserve">
     <value>Error With IP or port</value>
@@ -246,14 +252,38 @@
   <data name="SendText" xml:space="preserve">
     <value>Send text</value>
   </data>
+  <data name="Server" xml:space="preserve">
+    <value>Server: </value>
+  </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
   </data>
-  <data name="Sucess" xml:space="preserve">
-    <value>Sucess</value>
+  <data name="Success" xml:space="preserve">
+    <value>Success</value>
   </data>
   <data name="TakeAPicture" xml:space="preserve">
     <value>Take a picture</value>
+  </data>
+  <data name="TipChat" xml:space="preserve">
+    <value>Chat, communication with the server</value>
+  </data>
+  <data name="TipDisplayPassword" xml:space="preserve">
+    <value>Displays the password you entered</value>
+  </data>
+  <data name="TipLogIn" xml:space="preserve">
+    <value>Enter your username to which your account was registered</value>
+  </data>
+  <data name="TipPassword" xml:space="preserve">
+    <value>Enter your password that you entered during registration</value>
+  </data>
+  <data name="TipPasswordServer" xml:space="preserve">
+    <value>On some servers, you need to specify a password to encrypt the text</value>
+  </data>
+  <data name="TipSaveLogIn" xml:space="preserve">
+    <value>Saves your username and password on your device</value>
+  </data>
+  <data name="TipWriteOrPickImg" xml:space="preserve">
+    <value>Enter a request or attach an image</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Title:</value>
@@ -263,5 +293,8 @@
   </data>
   <data name="Welcome" xml:space="preserve">
     <value>Welcome!</value>
+  </data>
+  <data name="You" xml:space="preserve">
+    <value>You: </value>
   </data>
 </root>
