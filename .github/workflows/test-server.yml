@@ -1,4 +1,4 @@
-name: Test MAUI apps
+name: Test console app
 
 on:
   push:
@@ -29,13 +29,13 @@ jobs:
         dotnet-version: '8.0.x'
       
     - name: Test
-      run: dotnet test xU_Client --logger "trx;LogFileName=test-results-client.trx" || true
+      run: dotnet test xU_Server --logger "trx;LogFileName=test-results-server.trx" || true
 
     - name: Publish Test Result
       uses: dorny/test-reporter@v1
       if: always()
       with:
         name: Report Tests
-        path: "**/test-results-client.trx"                            
+        path: "**/test-results-server.trx"                            
         reporter: dotnet-trx
         fail-on-error: false

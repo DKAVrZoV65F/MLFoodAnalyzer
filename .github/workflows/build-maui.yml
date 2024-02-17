@@ -2,13 +2,13 @@ name: Build MAUI Apps
 
 on:
   push:
-    branches: [ "Client" ]
+    branches: [ "master" ]
     paths-ignore:
       - '**/*.md'
       - '**/*.gitignore'
       - '**/*.gitattributes'
   pull_request:
-    branches: [ "Client" ]
+    branches: [ "master" ]
   workflow_dispatch:
 
 permissions:
