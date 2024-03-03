@@ -74,7 +74,7 @@ jobs:
       uses: dorny/test-reporter@v1
       if: always()
       with:
-        name: Report Tests Windows 🚀
+        name: Report Tests 🚀
         path: "**/test-results-server-{{ matrix.os }}.trx"
         reporter: dotnet-trx
         fail-on-error: true
