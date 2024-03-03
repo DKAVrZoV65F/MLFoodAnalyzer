@@ -59,7 +59,17 @@ jobs:
     # if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
     - uses: actions/checkout@v4.1.1
-
+    - name: Cache 📂
+      id: cache-step
+      uses: action/cache@v4.0.1
+      with:
+        path: '.\.dotnet'
+        key: ${{ runner.os }}-cache-file-${{ hashFiles(runner.os) }}
+        restore-keys: ${{ runner.os }}-cache-file-${{ hashFiles(runner.os) }}
+        
+    - name: Display Cache
+      run: echo '${{ toJSON(steps.cache-step.outputs) }}'
+      
     - name: Setup .NET 📦
       uses: actions/setup-dotnet@v4.0.0
       with:
@@ -68,8 +78,7 @@ jobs:
     - name: Install dependencies 📂
       run: |
         dotnet workload restore
-        dotnet restore
-        ls
+        dotnet restore MLFoodAnalyzerServer/MLFoodAnalyzerServer.csproj
       
     - name: Build 🧱
       run: dotnet build -c Release --no-restore
