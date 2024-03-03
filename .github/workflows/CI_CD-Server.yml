@@ -16,6 +16,7 @@ env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Disable the .NET first time experience
   DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry
   DOTNET_VERSION: '8.0.x'                 # Version .NET
+  DOTNET_INSTALL_DIR: '.\.dotnet'
 
 
 jobs:
@@ -33,7 +34,7 @@ jobs:
       id: cache-dotnet
       uses: actions/cache@v4.0.1
       with:
-        path: '.\.dotnet'
+        path: ${{ env.DOTNET_INSTALL_DIR }}
         key: ${{ runner.os }}-dotnet-8
         restore-keys: ${{ runner.os }}-dotnet-8
         
@@ -45,6 +46,9 @@ jobs:
       uses: actions/setup-dotnet@v4.0.0
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Set installed/cached dotnet path [${{ env.DOTNET_INSTALL_DIR }}]
+      run: echo "${{ env.DOTNET_INSTALL_DIR }}" | Out-File -FilePath $ENV:GITHUB_PATH -Encoding utf8 -Append
         
     - name: Install dependencies 📂
       run: |
@@ -52,10 +56,10 @@ jobs:
         dotnet restore MLFoodAnalyzerServer/MLFoodAnalyzerServer.csproj
         
     - name: Build 🧱
-      run: dotnet build -c Release --no-restore
+      run: dotnet build
       
     - name: Test 🧪
-      run: dotnet test xU_Server -c Release --no-build --logger "trx;LogFileName=test-results-server-{{ matrix.os }}.trx" || true
+      run: dotnet test xU_Server --logger "trx;LogFileName=test-results-server-{{ matrix.os }}.trx" || true
 
     - name: Publish Test Result 🚀
       uses: dorny/test-reporter@v1
