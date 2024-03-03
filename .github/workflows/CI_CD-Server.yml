@@ -31,7 +31,7 @@ jobs:
     - uses: actions/checkout@v4.1.1
     - name: Cache 📂
       id: cache-step
-      uses: action/cache@v4.0.1
+      uses: actions/cache@v4.0.1
       with:
         path: '.\.dotnet'
         key: ${{ runner.os }}-cache-file-${{ hashFiles(runner.os) }}
