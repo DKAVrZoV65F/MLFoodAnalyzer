@@ -19,7 +19,6 @@ env:
 
 
 jobs:
-  max-parallel: 2
   CI-ubuntu:
     runs-on: ubuntu-latest
     steps:
