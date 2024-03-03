@@ -17,6 +17,7 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry
   DOTNET_VERSION: '8.0.x'                 # Version .NET
   DOTNET_INSTALL_DIR: '.\.dotnet'
+  DOTNET_DEPENDENCIES_DIR: '.\nuget\packages'
 
 
 jobs:
@@ -30,7 +31,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4.1.1
-    - name: Cache .NET 📂
+    - name: Cache .NET 📦
       id: cache-dotnet
       uses: actions/cache@v4.0.1
       with:
@@ -38,22 +39,33 @@ jobs:
         key: ${{ runner.os }}-dotnet-8
         restore-keys: ${{ runner.os }}-dotnet-8
         
-    - name: Display Cache 📂
+    - name: Display Cache .NET 📦
       run: echo '${{ toJSON(steps.cache-dotnet.outputs) }}'
-      
     - name: Setup .NET 📦
       if: ${{ steps.cache-dotnet.outputs.cache-hit != 'true' }}
       uses: actions/setup-dotnet@v4.0.0
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
-
-    - name: Set installed/cached dotnet path [${{ env.DOTNET_INSTALL_DIR }}]
+    - name: Set installed/cached dotnet path [${{ env.DOTNET_INSTALL_DIR }}] 💾
       run: echo "${{ env.DOTNET_INSTALL_DIR }}" | Out-File -FilePath $ENV:GITHUB_PATH -Encoding utf8 -Append
-        
-    - name: Install dependencies 📂
+
+
+
+
+    - name: Cache Dependencies 📂
+      id: cache-dependencies-server
+      uses: actions/cache@v4.0.1
+      with:
+        path: ${{ env.DOTNET_DEPENDENCIES_DIR }}
+        key: ${{ runner.os }}-dotnet-dependencies-server
+        restore-keys: ${{ runner.os }}-dotnet-dependencies-server
+    - name: Install Dependencies 📂
+      if: ${{ steps.cache-dependencies-server.outputs.cache-hit != 'true' }}
       run: |
         dotnet workload restore
         dotnet restore MLFoodAnalyzerServer/MLFoodAnalyzerServer.csproj
+    - name: Set installed/cached dependencies path [${{ env.DOTNET_DEPENDENCIES_DIR }}] 💾
+      run: echo "${{ env.DOTNET_DEPENDENCIES_DIR }}" | Out-File -FilePath $ENV:GITHUB_PATH -Encoding utf8 -Append
         
     - name: Build 🧱
       run: dotnet build
@@ -69,7 +81,3 @@ jobs:
         path: "**/test-results-server-{{ matrix.os }}.trx"
         reporter: dotnet-trx
         fail-on-error: true
-
-
-
-        
