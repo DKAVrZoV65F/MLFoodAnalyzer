@@ -19,6 +19,7 @@ env:
 
 
 jobs:
+  max-parallel: 2
   CI-ubuntu:
     runs-on: ubuntu-latest
     steps:
@@ -36,20 +37,22 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
         
     - name: Install dependencies 📂
-      run: dotnet restore
+      run: |
+        dotnet restore
+        dotnet workload restore
 
     - name: Build 🧱
       run: dotnet build -c Release --no-restore
       
     - name: Test 🧪
-      run: dotnet test xU_Server -c Release --no-build --logger "trx;LogFileName=test-results-server.trx" || true
+      run: dotnet test xU_Server -c Release --no-build --logger "trx;LogFileName=test-results-server-ubuntu.trx" || true
 
     - name: Publish Test Result 🚀
       uses: dorny/test-reporter@v1
       if: always()
       with:
-        name: Report Tests
-        path: "**/test-results-server.trx"
+        name: Report Tests Ubuntu
+        path: "**/test-results-server-ubuntu.trx"
         reporter: dotnet-trx
         fail-on-error: false
         
@@ -65,20 +68,22 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
         
     - name: Install dependencies 📂
-      run: dotnet restore
+      run: |
+        dotnet restore
+        dotnet workload restore
 
     - name: Build 🧱
       run: dotnet build -c Release --no-restore
       
     - name: Test 🧪
-      run: dotnet test xU_Server -c Release --no-build --logger "trx;LogFileName=test-results-server.trx" || true
+      run: dotnet test xU_Server -c Release --no-build --logger "trx;LogFileName=test-results-server-windows.trx" || true
 
     - name: Publish Test Result 🚀
       uses: dorny/test-reporter@v1
       if: always()
       with:
-        name: Report Tests
-        path: "**/test-results-server.trx"
+        name: Report Tests Windows
+        path: "**/test-results-server-windows.trx"
         reporter: dotnet-trx
         fail-on-error: false
 
@@ -94,20 +99,22 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
         
     - name: Install dependencies 📂
-      run: dotnet restore
+      run: |
+        dotnet restore
+        dotnet workload restore
 
     - name: Build 🧱
       run: dotnet build -c Release --no-restore
       
     - name: Test 🧪
-      run: dotnet test xU_Server -c Release --no-build --logger "trx;LogFileName=test-results-server.trx" || true
+      run: dotnet test xU_Server -c Release --no-build --logger "trx;LogFileName=test-results-server-macos.trx" || true
 
     - name: Publish Test Result 🚀
       uses: dorny/test-reporter@v1
       if: always()
       with:
-        name: Report Tests
-        path: "**/test-results-server.trx"
+        name: Report Tests Macos
+        path: "**/test-results-server-macos.trx"
         reporter: dotnet-trx
         fail-on-error: false
 
