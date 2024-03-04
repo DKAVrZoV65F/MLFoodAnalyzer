@@ -46,7 +46,7 @@ jobs:
         - name: Install Dependencies 📂
           run: |
             dotnet workload restore
-            dotnet restore
+            dotnet restore MLFoodAnalyzerServer/MLFoodAnalyzerServer.csproj
           
         - name: Build 🧱
           run: dotnet build -c release --no-restore
