@@ -49,7 +49,7 @@ jobs:
             dotnet restore MLFoodAnalyzerServer/MLFoodAnalyzerServer.csproj
           
         - name: Build 🧱
-          run: dotnet build -c release --no-restore
+          run: dotnet build MLFoodAnalyzerServer/MLFoodAnalyzerServer.csproj -c release --no-restore
 
         - name: Test 🧪
           run: dotnet test xU_Server --logger "trx;LogFileName=test-results-server-{{ matrix.os }}.trx" || true
