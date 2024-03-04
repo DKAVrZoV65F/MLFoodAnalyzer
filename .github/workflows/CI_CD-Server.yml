@@ -44,9 +44,7 @@ jobs:
         #     dotnet-version: 8.0.x
         
         - name: Install Dependencies 📂
-          run: |
-            dotnet workload restore
-            dotnet restore
+          run: dotnet workload restore
           
         - name: Build 🧱
           run: dotnet build -c release --no-restore
@@ -67,6 +65,6 @@ jobs:
           uses: actions/upload-artifact@v4.3.0
           with:
               name: Artifact-${{ matrix.os }}
-              path: ./ConsoleApp1/bin/Release/net8.0/*
+              path: ./MLFoodAnalyzerServer/bin/Release/net8.0/*
               fail-on-error: true
 
