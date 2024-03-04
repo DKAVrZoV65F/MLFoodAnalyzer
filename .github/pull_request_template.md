@@ -7,5 +7,3 @@ Before submitting your PR, please review the following checklist:
 - [ ] **DO** keep pull requests small so they can be easily reviewed.
 - [ ] **DO** make sure unit tests pass.
 - [ ] **AVOID** breaking the continuous integration build.
-
-Remember to use helpful labels and milestones. :white_check_mark:
