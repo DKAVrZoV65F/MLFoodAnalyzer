@@ -32,8 +32,8 @@ jobs:
       uses: actions/cache@v4.0.1
       with:
         path: ${{ env.DOTNET_INSTALL_DIR }}
-        key: ${{ runner.os }}-dotnet-8
-        restore-keys: ${{ runner.os }}-dotnet-8
+        key: Dotnet-8
+        restore-keys: Dotnet-8
         
     - name: Display Cache .NET 📦
       run: echo '${{ toJSON(steps.cache-dotnet.outputs) }}'
