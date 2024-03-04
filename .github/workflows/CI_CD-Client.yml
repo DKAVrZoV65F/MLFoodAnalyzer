@@ -19,7 +19,9 @@ env:
   DOTNET_INSTALL_DIR: '.\.dotnet'
   DOTNET_DEPENDENCIES_DIR: '~/.nuget/packages'
 
-
+concurrency:
+  group: CI/CD-Client-🧪🚀
+  cancel-in-progress: true
 jobs:
   CI-windows:
     runs-on: windows-latest
