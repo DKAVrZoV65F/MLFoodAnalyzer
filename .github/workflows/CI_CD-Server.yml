@@ -37,14 +37,16 @@ jobs:
         - name: Display Cache .NET 📦
           run: echo '${{ toJSON(steps.cache-dotnet.outputs) }}'
           
-        - name: Setup .NET 📦
-          if: ${{ steps.cache-dotnet.outputs.cache-hit != 'true' }}
-          uses: actions/setup-dotnet@v4.0.0
-          with:
-            dotnet-version: 8.0.x
+        # - name: Setup .NET 📦
+        #   if: ${{ steps.cache-dotnet.outputs.cache-hit != 'true' }}
+        #   uses: actions/setup-dotnet@v4.0.0
+        #   with:
+        #     dotnet-version: 8.0.x
         
         - name: Install Dependencies 📂
-          run: dotnet restore
+          run: |
+            dotnet workload restore
+            dotnet restore MLFoodAnalyzerServer/MLFoodAnalyzerServer.csproj
           
         - name: Build 🧱
           run: dotnet build -c release --no-restore
