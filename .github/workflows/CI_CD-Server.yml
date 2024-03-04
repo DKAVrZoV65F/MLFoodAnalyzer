@@ -9,21 +9,14 @@ on:
       - '**/*.gitattributes'
   pull_request:
     branches: [ "master" ]
-  workflow_dispatch:
-
 env:
-  DOTNET_NOLOGO: true                     # Disable the .NET logo
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Disable the .NET first time experience
-  DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry
-  DOTNET_VERSION: '8.0.x'                 # Version .NET
   DOTNET_INSTALL_DIR: '.\.dotnet'
-  DOTNET_DEPENDENCIES_DIR: '~/.nuget/packages'
 
 concurrency:
   group: CI/CD-Server-🧪🚀
   cancel-in-progress: true
 jobs:
-  CI:
+  CI-CD:
     continue-on-error: false
     strategy:
       matrix:
@@ -32,51 +25,45 @@ jobs:
       max-parallel: 1
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4.1.1
-    - name: Cache .NET 📦
-      id: cache-dotnet
-      uses: actions/cache@v4.0.1
-      with:
-        path: ${{ env.DOTNET_INSTALL_DIR }}
-        key: ${{ runner.os }}-dotnet-8
-        restore-keys: ${{ runner.os }}-dotnet-8
+        - uses: actions/checkout@v4.1.1
+        - name: Cache .NET 📦
+          id: cache-dotnet
+          uses: actions/cache@v4.0.1
+          with:
+            path: ${{ env.DOTNET_INSTALL_DIR }}
+            key: Dotnet-8
+            restore-keys: Dotnet-8
         
-    - name: Display Cache .NET 📦
-      run: echo '${{ toJSON(steps.cache-dotnet.outputs) }}'
-    - name: Setup .NET 📦
-      if: ${{ steps.cache-dotnet.outputs.cache-hit != 'true' }}
-      uses: actions/setup-dotnet@v4.0.0
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
-    - name: Set installed/cached dotnet path [${{ env.DOTNET_INSTALL_DIR }}] 💾
-      run: echo "${{ env.DOTNET_INSTALL_DIR }}" | Out-File -FilePath $ENV:GITHUB_PATH -Encoding utf8 -Append
-
-    - name: Cache Dependencies 📂
-      id: cache-dependencies-server
-      uses: actions/cache@v4.0.1
-      with:
-        path: ${{ env.DOTNET_DEPENDENCIES_DIR }}
-        key: ${{ runner.os }}-dotnet-dependencies-server
-        restore-keys: ${{ runner.os }}-dotnet-dependencies-server
-    - name: Install Dependencies 📂
-      if: ${{ steps.cache-dependencies-server.outputs.cache-hit != 'true' }}
-      run: |
-        dotnet workload restore
-        dotnet restore MLFoodAnalyzerServer/MLFoodAnalyzerServer.csproj
-    - name: Set installed/cached dependencies path [${{ env.DOTNET_DEPENDENCIES_DIR }}] 💾
-      run: echo "${{ env.DOTNET_DEPENDENCIES_DIR }}" | Out-File -FilePath $ENV:GITHUB_PATH -Encoding utf8 -Append
+        - name: Display Cache .NET 📦
+          run: echo '${{ toJSON(steps.cache-dotnet.outputs) }}'
+        # - name: Setup .NET 📦
+        #   if: ${{ steps.cache-dotnet.outputs.cache-hit != 'true' }}
+        #   uses: actions/setup-dotnet@v4.0.0
+        #   with:
+        #     dotnet-version: 8.0.x
         
-    - name: Build 🧱
-      run: dotnet build
-      
-    - name: Test 🧪
-      run: dotnet test xU_Server --logger "trx;LogFileName=test-results-server-{{ matrix.os }}.trx" || true
+        - name: Install Dependencies 📂
+          run: dotnet restore
+          
+        - name: Build 🧱
+          run: dotnet build -c release --no-restore
 
-    - name: Publish Test Result 🚀
-      uses: dorny/test-reporter@v1
-      if: always()
-      with:
-        name: Report Tests 🚀
-        path: "**/test-results-server-{{ matrix.os }}.trx"
-        reporter: dotnet-trx
-        fail-on-error: true
+        - name: Test 🧪
+          run: dotnet test xU_Server --logger "trx;LogFileName=test-results-server-{{ matrix.os }}.trx" || true
+
+        - name: Publish Test Result 🧪
+          uses: dorny/test-reporter@v1
+          if: always()
+          with:
+            name: Report Tests 💾
+            path: "**/test-results-server-{{ matrix.os }}.trx"
+            reporter: dotnet-trx
+            fail-on-error: true
+
+        - name: Upload a Build Artifact 🚀
+          uses: actions/upload-artifact@v4.3.0
+          with:
+              name: Artifact-${{ matrix.os }}
+              path: ./ConsoleApp1/bin/Release/net8.0/*
+              fail-on-error: true
+
