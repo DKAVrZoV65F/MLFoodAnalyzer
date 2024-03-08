@@ -31,8 +31,6 @@ public class TCPServer
         tcpListener = new TcpListener(ip, port);
         // settings = MLFoodAnalyzerServer.settings;
         store = MLFoodAnalyzerServer.store;
-
-
         Console.CancelKeyPress += new ConsoleCancelEventHandler(myHandler);
     }
 
@@ -40,15 +38,11 @@ public class TCPServer
     protected void myHandler(object sender, ConsoleCancelEventArgs args)
     {
         Console.WriteLine("\nThe read operation has been interrupted.");
-
         Console.WriteLine($"  Key pressed: {args.SpecialKey}");
-
         Console.WriteLine($"  Cancel property: {args.Cancel}");
-
         // Set the Cancel property to true to prevent the process from terminating.
         Console.WriteLine("Setting the Cancel property to true...");
         args.Cancel = true;
-
         // Announce the new value of the Cancel property.
         Console.WriteLine($"  Cancel property: {args.Cancel}");
         Console.WriteLine("The read operation will resume...\n");
@@ -69,9 +63,12 @@ public class TCPServer
             {
                 tcpClient = await tcpListener.AcceptTcpClientAsync();
                 tcpClient.ReceiveTimeout = timeout;
+                tcpClient.SendTimeout = timeout;
                 startUserOperation = DateTime.Now;
                 Console.WriteLine($"[{startUserOperation}] Client {tcpClient.Client.RemoteEndPoint} connected to server");
                 stream = tcpClient.GetStream();
+                stream.ReadTimeout = timeout;
+                stream.WriteTimeout = timeout;
                 _ = Task.Run(GetCommand);
             }
         }
