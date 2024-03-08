@@ -12,10 +12,10 @@ public partial class MainPage : ContentPage
         // TestLabel.Text = $"Hello {UserName}!";
     }
 
-    /*private void OnCounterClicked(object sender, EventArgs e)
+    private void OnCounterClicked(object sender, EventArgs e)
     {
-        UserName = "Qwerty";
+        /*UserName = "Qwerty";
         Preferences.Default.Set(nameof(UserName), UserName);
-        TestLabel.Text = $"Hello {UserName}!";
-    }*/
+        TestLabel.Text = $"Hello {UserName}!";*/
+    }
 }

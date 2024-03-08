@@ -200,7 +200,7 @@ public class TCPServer
 
     private static IPAddress GetIp()
     {
-        string Hostname = Environment.MachineName;
+        /*string Hostname = Environment.MachineName;
         IPHostEntry Host = Dns.GetHostEntry(Hostname);
 
         foreach (IPAddress IP in Host.AddressList)
@@ -210,7 +210,12 @@ public class TCPServer
                 return IP;
             }
         }
-        return IPAddress.Any;
+        return IPAddress.Any;*/
+
+
+        string Hostname = Environment.MachineName;
+        IPHostEntry Host = Dns.GetHostEntry(Hostname);
+        return Host.AddressList[Host.AddressList.Length - 1];
     }
 
     private static string DecryptText(string CipherText)
