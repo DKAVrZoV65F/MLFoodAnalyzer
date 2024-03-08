@@ -20,6 +20,7 @@ public class TCPServer
     private readonly string success = "Settings applied sucessfully";
     private readonly string unsuccess = "Settings applied unsucessfully";
 
+
     public TCPServer(int port = 55555, int timeout = 10000)
     {
         this.port = port;
@@ -30,6 +31,32 @@ public class TCPServer
         tcpListener = new TcpListener(ip, port);
         // settings = MLFoodAnalyzerServer.settings;
         store = MLFoodAnalyzerServer.store;
+
+
+        Console.CancelKeyPress += new ConsoleCancelEventHandler(myHandler);
+    }
+
+
+    protected void myHandler(object sender, ConsoleCancelEventArgs args)
+    {
+        Console.WriteLine("\nThe read operation has been interrupted.");
+
+        Console.WriteLine($"  Key pressed: {args.SpecialKey}");
+
+        Console.WriteLine($"  Cancel property: {args.Cancel}");
+
+        // Set the Cancel property to true to prevent the process from terminating.
+        Console.WriteLine("Setting the Cancel property to true...");
+        args.Cancel = true;
+
+        // Announce the new value of the Cancel property.
+        Console.WriteLine($"  Cancel property: {args.Cancel}");
+        Console.WriteLine("The read operation will resume...\n");
+
+
+        stream.Close();
+        tcpClient.Close();
+        tcpListener.Stop();
     }
 
     public async Task Run()
@@ -48,10 +75,16 @@ public class TCPServer
                 _ = Task.Run(GetCommand);
             }
         }
+        catch (SocketException e)
+        {
+            Console.WriteLine("SocketException: {0}", e);
+        }
         finally
         {
             tcpListener.Stop();
         }
+
+        Console.WriteLine("\nHit enter to continue...");
     }
 
     private async Task Send(string text)
@@ -161,7 +194,7 @@ public class TCPServer
         }
         string word = Encoding.UTF8.GetString(response.ToArray());
         char code = word[0];
-        if (code == '1') 
+        if (code == '1')
         {
             word = DecryptText(word[1..]);
         }

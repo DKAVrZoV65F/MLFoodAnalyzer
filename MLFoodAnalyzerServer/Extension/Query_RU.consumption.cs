@@ -49,7 +49,7 @@ namespace MLFoodAnalyzerServer
 
         #endregion
 
-        private static string MLNetModelPath = Path.GetFullPath("Query_RU.mlnet");
+        private static string MLNetModelPath = Path.GetFullPath("Extension\\Query_RU.mlnet");
 
         public static readonly Lazy<PredictionEngine<ModelInput, ModelOutput>> PredictEngine = new Lazy<PredictionEngine<ModelInput, ModelOutput>>(() => CreatePredictEngine(), true);
 

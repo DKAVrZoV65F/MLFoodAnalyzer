@@ -12,7 +12,6 @@ internal class MLFoodAnalyzerServer
     {
         Console.Title = settings.GetTitle();
         int selectedOption;
-
         do
         {
             Console.Clear();
