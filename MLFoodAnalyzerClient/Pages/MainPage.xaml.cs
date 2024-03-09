@@ -147,7 +147,18 @@ public partial class MainPage : ContentPage
 
     private async Task SendPicture(string path)
     {
-        using TcpClient tcpClient = new();
+        string fileName = path;
+        FileInfo fileInfo = new(fileName);
+        long fileSize = fileInfo.Length;
+
+        if (fileSize >= 8_000_000) 
+        {
+            await DisplayAlert("Titile", $"The image must not exceed 8MB! You are uploading a picture with the size {fileSize / 1_000_000} MB", "OK");
+            return;
+        }
+
+
+        /*using TcpClient tcpClient = new();
         ipServer = Preferences.Get("SavedIpServer", "");
         portServer = Preferences.Get("SavedPortServer", 0);
         textFromServer = "";
@@ -165,13 +176,13 @@ public partial class MainPage : ContentPage
         NetworkStream networkStream = tcpClient.GetStream();
 
         int bytesRead = 10; //  To read bytes from a stream
-        await stream.WriteAsync(Encoding.UTF8.GetBytes("IMAGE" + "\0"));
+        await stream.WriteAsync(Encoding.UTF8.GetBytes("IMAGE" + "\0"));*/
 
-        string fileName = path;
-        FileInfo fileInfo = new(fileName);
-        long fileSize = fileInfo.Length;
 
-        if (!string.IsNullOrEmpty(Preferences.Get("SavedPasswordServer", "")))
+
+
+
+        /*if (!string.IsNullOrEmpty(Preferences.Get("SavedPasswordServer", "")))
         {
             string encWord = EncryptText(fileSize.ToString());
             await stream.WriteAsync(Encoding.UTF8.GetBytes($"1{encWord}\0"));
@@ -198,7 +209,7 @@ public partial class MainPage : ContentPage
         textFromServer = translation[0] == '1' ? DecryptText(translation[1..]) + '\n' : translation[1..] + '\n';
 
         response.Clear();
-        networkStream.Close();
+        networkStream.Close();*/
     }
 
     private async Task SendText(string text)
