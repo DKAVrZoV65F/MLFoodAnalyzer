@@ -50,4 +50,6 @@ public partial class AdminStoragePage : ContentPage
         fruitsListView.IsVisible = (searchLength == 0 || foodSearch > 0);
         testLabel.IsVisible = (searchLength != 0 && foodSearch == 0);
     }
+
+    private async void GoToHistory(object sender, EventArgs e) => await Navigation.PushAsync(new HistoryChange());
 }

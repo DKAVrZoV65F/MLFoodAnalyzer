@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MLFoodAnalyzerClient.Pages.HistoryChange"
+             xmlns:extension="clr-namespace:MLFoodAnalyzerClient.Extension"
+             BackgroundColor="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}">
+    <Grid RowDefinitions="*"
+          Margin="20, 40, 20, 0">
+
+        <!-- Display data -->
+        <Border
+            IsVisible="True"
+            Stroke="{AppThemeBinding Default={StaticResource Black}, Light={StaticResource White200}, Dark={StaticResource Black}}"
+            Margin="0, 10">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10" />
+            </Border.StrokeShape>
+            <ListView
+                x:Name="historyListView"
+                Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
+                ItemsSource="{Binding Histories}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <HorizontalStackLayout
+                                    Spacing="50"
+                                    MinimumHeightRequest="50">
+                                    <Label
+                                        Text="{Binding Date}"
+                                        FontSize="20" />
+                                    <Label
+                                        Text="{Binding HistoryChange}"
+                                        FontSize="20" />
+                                </HorizontalStackLayout>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Border>
+    </Grid>
+
+</ContentPage>
