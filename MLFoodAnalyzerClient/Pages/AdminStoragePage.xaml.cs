@@ -41,8 +41,13 @@ public partial class AdminStoragePage : ContentPage
 
     private void SearchEntry_TextChanged(object sender, TextChangedEventArgs e)
     {
+        string search = SearchEntry.Text;
+        int searchLength = search.Length;
+        ObservableCollection<Food> FoodSearch = new(Foods.Where(x => string.Equals(x.Name, search, StringComparison.OrdinalIgnoreCase) || string.Equals(x.Id.ToString(), search, StringComparison.OrdinalIgnoreCase)));
 
-        ObservableCollection<Food> Search = new(Foods.Where(x => string.Equals(x.Name, SearchEntry.Text, StringComparison.OrdinalIgnoreCase) || string.Equals(x.Id.ToString(), SearchEntry.Text, StringComparison.OrdinalIgnoreCase)));
-        fruitsListView.ItemsSource = (Search.Count > 0) ? Search : Foods;
+        int foodSearch = FoodSearch.Count;
+        fruitsListView.ItemsSource = (foodSearch > 0) ? FoodSearch : Foods;
+        fruitsListView.IsVisible = (searchLength == 0 || foodSearch > 0);
+        testLabel.IsVisible = (searchLength != 0 && foodSearch == 0);
     }
 }

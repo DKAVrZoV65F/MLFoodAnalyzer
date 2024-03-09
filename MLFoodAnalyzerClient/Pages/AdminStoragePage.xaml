@@ -30,8 +30,20 @@
                 IsTextPredictionEnabled="True"/>
         </Border>
 
+
+        <Label
+            x:Name="testLabel"
+            IsVisible="False"
+            Text="Not found"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            FontSize="20"
+            Grid.Row="1"
+            Margin="0, 10" />
+
         <!-- Display data -->
         <Border
+            IsVisible="True"
             Stroke="{AppThemeBinding Default={StaticResource Black}, Light={StaticResource White200}, Dark={StaticResource Black}}"
             Grid.Row="1"
             Margin="0, 10">
