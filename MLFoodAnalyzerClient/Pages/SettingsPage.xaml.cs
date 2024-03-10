@@ -32,13 +32,13 @@ public partial class SettingsPage : ContentPage
 
         IsFlag = Preferences.Get("IsAdminPanel", false);
 #if ANDROID
-        AppVersionLabel.Text = (LocalizationResourceManager["AppName"].ToString() + ' ' + LocalizationResourceManager["For"].ToString() + " Android v0.1");
+        AppVersionLabel.Text = (LocalizationResourceManager["AppName"].ToString() + ' ' + LocalizationResourceManager["For"].ToString() + " Android v0.7.5");
 #elif IOS
-        AppVersionLabel.Text = (LocalizationResourceManager["AppName"].ToString() + ' ' + LocalizationResourceManager["For"].ToString() + " IOS v0.1");
+        AppVersionLabel.Text = (LocalizationResourceManager["AppName"].ToString() + ' ' + LocalizationResourceManager["For"].ToString() + " IOS v0.7.5");
 #elif MACCATALYST
-        AppVersionLabel.Text = (LocalizationResourceManager["AppName"].ToString() + ' ' + LocalizationResourceManager["For"].ToString() + " Maccatalyst v0.1");
+        AppVersionLabel.Text = (LocalizationResourceManager["AppName"].ToString() + ' ' + LocalizationResourceManager["For"].ToString() + " Maccatalyst v0.7.5");
 #elif WINDOWS
-        AppVersionLabel.Text = (LocalizationResourceManager["AppName"].ToString() + ' ' + LocalizationResourceManager["For"].ToString() + " Windows v0.1");
+        AppVersionLabel.Text = (LocalizationResourceManager["AppName"].ToString() + ' ' + LocalizationResourceManager["For"].ToString() + " Windows v0.7.5");
 #endif
         UpdateTime();
     }
