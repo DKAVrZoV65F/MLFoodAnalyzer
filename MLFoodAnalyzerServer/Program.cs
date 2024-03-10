@@ -1,4 +1,5 @@
-﻿using MLFoodAnalyzerServer.Extension;
+﻿using Microsoft.Data.SqlClient;
+using MLFoodAnalyzerServer.Extension;
 
 namespace MLFoodAnalyzerServer;
 
@@ -19,7 +20,8 @@ internal class MLFoodAnalyzerServer
             Console.WriteLine("1. Run server");
             Console.WriteLine("2. Settings");
             Console.WriteLine("3. Information");
-            Console.WriteLine("4. Exit");
+            Console.WriteLine("4. DB");
+            Console.WriteLine("5. Exit");
             Console.Write("Please enter your selection: ");
             _ = int.TryParse(Console.ReadLine(), out selectedOption);
             Console.Clear();
@@ -27,6 +29,8 @@ internal class MLFoodAnalyzerServer
             switch (selectedOption)
             {
                 case 1:
+                    QRGenerate();
+                    Console.WriteLine("QRCode generate.");
                     Console.WriteLine("Running server.");
                     await server.Run();
                     break;
@@ -39,6 +43,9 @@ internal class MLFoodAnalyzerServer
                     Console.ReadLine();
                     break;
                 case 4:
+                    Database();
+                    break;
+                case 5:
                     Console.WriteLine("Exiting...");
                     break;
                 default:
@@ -46,7 +53,18 @@ internal class MLFoodAnalyzerServer
                     Console.ReadLine();
                     break;
             }
-        } while (selectedOption != 4);
+        } while (selectedOption != 5);
+    }
+
+    private async static void Database()
+    {
+        string connectionString = "Server=(localdb)\\Local;Database=MLF3A7;Trusted_Connection=True;";
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            await connection.OpenAsync();
+            Console.WriteLine("Подключение открыто");
+        }
+        Console.WriteLine("Подключение закрыто...");
     }
 
     private static void Settings()
@@ -125,6 +143,14 @@ internal class MLFoodAnalyzerServer
             }
             Console.Clear();
         } while (selectedOption != 10);
+    }
+
+    private static void QRGenerate()
+    {
+        MessagingToolkit.QRCode.Codec.QRCodeEncoder encoder = new MessagingToolkit.QRCode.Codec.QRCodeEncoder();
+        encoder.QRCodeScale = 8;
+        System.Drawing.Bitmap bmp = encoder.Encode($"{server.GetIp()}|{server.GetPort()}|{server.GetPassword()}");
+        bmp.Save(filename: "QRServer.png");
     }
 }
 

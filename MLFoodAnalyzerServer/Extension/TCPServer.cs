@@ -228,7 +228,8 @@ public class TCPServer
 
     public string GetInfo() => $"IP: {ip}\nPort: {port}\nTimeout: {timeout}";
 
-    private static IPAddress GetIp()
+    public string GetPassword() => SecurityKey;
+    public IPAddress GetIp()
     {
         /*string Hostname = Environment.MachineName;
         IPHostEntry Host = Dns.GetHostEntry(Hostname);
