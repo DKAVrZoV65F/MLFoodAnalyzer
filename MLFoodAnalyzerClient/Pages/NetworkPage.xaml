@@ -2,24 +2,42 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MLFoodAnalyzerClient.Pages.NetworkPage"
+             xmlns:local="clr-namespace:MLFoodAnalyzerClient.Extension"
              xmlns:extension="clr-namespace:MLFoodAnalyzerClient.Extension"
              xmlns:customControls="clr-namespace:MLFoodAnalyzerClient.Pages"
              xmlns:strings="clr-namespace:MLFoodAnalyzerClient.Resources.Strings"
              BackgroundColor="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}">
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:QRScan x:Key="qR" Ip="" Port="0" Password="" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <Grid RowDefinitions="50, 50, 50, 50, 150"
-          ColumnDefinitions="Auto, *"
+          ColumnDefinitions="Auto, *, 50"
           Margin="20, 40, 20, 0">
 
         <!-- Title -->
         <Label
             x:Name="TitleLabel"
-            Grid.ColumnSpan="2"
+            Grid.ColumnSpan="3"
             Margin="0,-20"
             Text="{Binding LocalizationResourceManager[Network], Mode=OneWay}"
             FontSize="Title"
             TextColor="#F30A49"
             FontFamily="RegularFont"/>
+
+        <Button
+            Grid.Column="2"
+            Margin="0,-20, 0 ,20"
+            Text="QR"
+            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
+            FontFamily="BoldFont"
+            Clicked="QRScanner"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill"
+            IsVisible="{OnPlatform WinUI='False', MacCatalyst='False'}"/>
 
         <!-- IP text -->
         <Label
@@ -36,7 +54,10 @@
             x:Name="IPEntry"
             Grid.Row="1"
             Grid.Column="1"
+            Grid.ColumnSpan="2"
             Margin="10, 0"
+            Text="{Binding Path=Ip}"
+            BindingContext="{StaticResource qR}"
             Placeholder="{Binding LocalizationResourceManager[EnterTheIp], Mode=OneWay}"
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
             PlaceholderColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray490}}"
@@ -60,7 +81,10 @@
             x:Name="PortEntry"
             Grid.Row="2"
             Grid.Column="1"
+            Grid.ColumnSpan="2"
             Margin="10, 0"
+            Text="{Binding Path=Port}"
+            BindingContext="{StaticResource qR}"
             Placeholder="{Binding LocalizationResourceManager[EnterThePort], Mode=OneWay}"
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
             PlaceholderColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray490}}"
@@ -84,7 +108,10 @@
             x:Name="PasswordEntry"
             Grid.Row="3"
             Grid.Column="1"
+            Grid.ColumnSpan="2"
             Margin="10,0"
+            Text="{Binding Path=Password}"
+            BindingContext="{StaticResource qR}"
             Placeholder="{Binding LocalizationResourceManager[EnterThePassword], Mode=OneWay}"
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
             PlaceholderColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray490}}"
@@ -98,7 +125,7 @@
         <customControls:ButtonControl
             x:Name="CheckIpPortButton"
             Grid.Row="4"
-            Grid.ColumnSpan="2"
+            Grid.ColumnSpan="3"
             Margin="-10, 40"
             Text="{Binding LocalizationResourceManager[CheckTheConnection], Mode=OneWay}"
             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"

@@ -12,6 +12,10 @@ public partial class NetworkPage : ContentPage
 
     private bool IsFlag = true;
     private bool task = false;
+
+    public static QRScan qR = new();
+
+
     public NetworkPage()
     {
         InitializeComponent();
@@ -28,6 +32,8 @@ public partial class NetworkPage : ContentPage
         IPEntry.Text = Preferences.Get("SavedIpServer", "");
         PortEntry.Text = Preferences.Get("SavedPortServer", 0).ToString();
         PasswordEntry.Text = Preferences.Get("SavedPasswordServer", "");
+
+        qR = Resources["qR"] as QRScan;
     }
 
 
@@ -95,7 +101,7 @@ public partial class NetworkPage : ContentPage
             {
                 Preferences.Set("SavedIpServer", ipAddress);
                 Preferences.Set("SavedPortServer", port);
-                Preferences.Set("SavedPasswordServer", password); 
+                Preferences.Set("SavedPasswordServer", password);
                 task = true;
             }
 
@@ -108,4 +114,6 @@ public partial class NetworkPage : ContentPage
             tcpClient.Close();
         }
     }
+
+    private async void QRScanner(object sender, EventArgs e) => await Navigation.PushModalAsync(new QRScanner());
 }

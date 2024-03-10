@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using ZXing.Net.Maui.Controls;
 
 namespace MLFoodAnalyzerClient;
 
@@ -13,7 +14,8 @@ public static class MauiProgram
             {
                 fonts.AddFont("Carlito-Bold.ttf", "BoldFont");
                 fonts.AddFont("Carlito-Regular.ttf", "RegularFont");
-            });
+            })
+            .UseBarcodeReader();
 
 #if DEBUG
         builder.Logging.AddDebug();
