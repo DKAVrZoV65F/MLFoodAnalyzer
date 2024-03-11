@@ -67,8 +67,8 @@ public class TCPServer
                 startUserOperation = DateTime.Now;
                 Console.WriteLine($"[{startUserOperation}] Client {tcpClient.Client.RemoteEndPoint} connected to server");
                 stream = tcpClient.GetStream();
-                stream.ReadTimeout = timeout;
-                stream.WriteTimeout = timeout;
+                //stream.ReadTimeout = timeout;
+                //stream.WriteTimeout = timeout;
                 _ = Task.Run(GetCommand);
             }
         }

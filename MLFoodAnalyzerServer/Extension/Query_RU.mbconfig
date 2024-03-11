@@ -46,8 +46,8 @@
         "Version": 1,
         "Type": "Trial",
         "TrainerName": "TextClassificationMulti",
-        "Score": 0.5,
-        "RuntimeInSeconds": 6.513,
+        "Score": 0.125,
+        "RuntimeInSeconds": 22.555,
         "Parameter": {
           "_SCHEMA_": "e0 * e1 * e2",
           "e0": {
