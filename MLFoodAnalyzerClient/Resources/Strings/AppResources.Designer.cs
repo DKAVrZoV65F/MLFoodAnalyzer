@@ -61,115 +61,223 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Information about the application.
+        ///   Looks up a localized string similar to Accept.
         /// </summary>
-        internal static string AppInfo {
+        internal static string Accept {
             get {
-                return ResourceManager.GetString("AppInfo", resourceCulture);
+                return ResourceManager.GetString("Accept", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Apply a mask?.
+        ///   Looks up a localized string similar to Accept settings.
         /// </summary>
-        internal static string ApplyAMask {
+        internal static string AcceptSettings {
             get {
-                return ResourceManager.GetString("ApplyAMask", resourceCulture);
+                return ResourceManager.GetString("AcceptSettings", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Author: Sergey Krainov.
+        ///   Looks up a localized string similar to Administration.
         /// </summary>
-        internal static string Author {
+        internal static string Administration {
             get {
-                return ResourceManager.GetString("Author", resourceCulture);
+                return ResourceManager.GetString("Administration", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Count of images.
+        ///   Looks up a localized string similar to MLFoodAnalyzer.
         /// </summary>
-        internal static string CountOfImages {
+        internal static string AppName {
             get {
-                return ResourceManager.GetString("CountOfImages", resourceCulture);
+                return ResourceManager.GetString("AppName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter path to image.
+        ///   Looks up a localized string similar to You have attached a picture .
         /// </summary>
-        internal static string EnterPathToImage {
+        internal static string AttachedAPicture {
             get {
-                return ResourceManager.GetString("EnterPathToImage", resourceCulture);
+                return ResourceManager.GetString("AttachedAPicture", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Specify the processing algorithm.
+        ///   Looks up a localized string similar to Chat Settings.
         /// </summary>
-        internal static string ErrorWithAlgorithm {
+        internal static string ChatSettings {
             get {
-                return ResourceManager.GetString("ErrorWithAlgorithm", resourceCulture);
+                return ResourceManager.GetString("ChatSettings", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The file does not contain the required extension!.
+        ///   Looks up a localized string similar to Check the connection.
         /// </summary>
-        internal static string ErrorWithImageRequires {
+        internal static string CheckTheConnection {
             get {
-                return ResourceManager.GetString("ErrorWithImageRequires", resourceCulture);
+                return ResourceManager.GetString("CheckTheConnection", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The path to the folder is not specified!.
+        ///   Looks up a localized string similar to Dark theme.
         /// </summary>
-        internal static string ErrorWithPathFolder {
+        internal static string DarkTheme {
             get {
-                return ResourceManager.GetString("ErrorWithPathFolder", resourceCulture);
+                return ResourceManager.GetString("DarkTheme", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The path to the file is not specified!.
+        ///   Looks up a localized string similar to Default theme.
         /// </summary>
-        internal static string ErrorWithPathToFile {
+        internal static string DefaultTheme {
             get {
-                return ResourceManager.GetString("ErrorWithPathToFile", resourceCulture);
+                return ResourceManager.GetString("DefaultTheme", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DPI image.
+        ///   Looks up a localized string similar to Description:.
         /// </summary>
-        internal static string imgDPI {
+        internal static string Description {
             get {
-                return ResourceManager.GetString("imgDPI", resourceCulture);
+                return ResourceManager.GetString("Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Height image.
+        ///   Looks up a localized string similar to In common language usage, fruit normally means the seed-associated fleshy structures. Excepteur sint occaecat cupidatat non proident, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, sunt in culpa qui officia deserunt mollit anim id e [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string imgHeight {
+        internal static string DescriptionPolicy {
             get {
-                return ResourceManager.GetString("imgHeight", resourceCulture);
+                return ResourceManager.GetString("DescriptionPolicy", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Width image.
+        ///   Looks up a localized string similar to Destination Host Unreachable.
         /// </summary>
-        internal static string imgWidth {
+        internal static string DestinationHostUn {
             get {
-                return ResourceManager.GetString("imgWidth", resourceCulture);
+                return ResourceManager.GetString("DestinationHostUn", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Language:.
+        ///   Looks up a localized string similar to Enter the IP address.
+        /// </summary>
+        internal static string EnterTheIp {
+            get {
+                return ResourceManager.GetString("EnterTheIp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter the password.
+        /// </summary>
+        internal static string EnterThePassword {
+            get {
+                return ResourceManager.GetString("EnterThePassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter the port.
+        /// </summary>
+        internal static string EnterThePort {
+            get {
+                return ResourceManager.GetString("EnterThePort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter the text.
+        /// </summary>
+        internal static string EnterTheText {
+            get {
+                return ResourceManager.GetString("EnterTheText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter your username.
+        /// </summary>
+        internal static string EnterTheUserName {
+            get {
+                return ResourceManager.GetString("EnterTheUserName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error connecting to the server!.
+        /// </summary>
+        internal static string ErrorConToServ {
+            get {
+                return ResourceManager.GetString("ErrorConToServ", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error With IP or port.
+        /// </summary>
+        internal static string ErrorWithIPOrPort {
+            get {
+                return ResourceManager.GetString("ErrorWithIPOrPort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cleaning robots using artificial intelligence can automatically identify and remove garbage, which greatly simplifies the cleaning process and reduces the likelihood of environmental pollution..
+        /// </summary>
+        internal static string ExampleText {
+            get {
+                return ResourceManager.GetString("ExampleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to for.
+        /// </summary>
+        internal static string For {
+            get {
+                return ResourceManager.GetString("For", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gallery.
+        /// </summary>
+        internal static string Gallery {
+            get {
+                return ResourceManager.GetString("Gallery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Help.
+        /// </summary>
+        internal static string Help {
+            get {
+                return ResourceManager.GetString("Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IP address:.
+        /// </summary>
+        internal static string IPAddress {
+            get {
+                return ResourceManager.GetString("IPAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Language.
         /// </summary>
         internal static string Language {
             get {
@@ -178,56 +286,326 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open image.
+        ///   Looks up a localized string similar to Light theme.
         /// </summary>
-        internal static string OpenImage {
+        internal static string LightTheme {
             get {
-                return ResourceManager.GetString("OpenImage", resourceCulture);
+                return ResourceManager.GetString("LightTheme", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Process.
+        ///   Looks up a localized string similar to Log in.
         /// </summary>
-        internal static string Process {
+        internal static string LogIn {
             get {
-                return ResourceManager.GetString("Process", resourceCulture);
+                return ResourceManager.GetString("LogIn", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Step.
+        ///   Looks up a localized string similar to Mail.
         /// </summary>
-        internal static string Step {
+        internal static string Mail {
             get {
-                return ResourceManager.GetString("Step", resourceCulture);
+                return ResourceManager.GetString("Mail", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Completed successfully and save in.
+        ///   Looks up a localized string similar to The email address has been copied to the clipboard..
         /// </summary>
-        internal static string SuccessWork {
+        internal static string MailMessage {
             get {
-                return ResourceManager.GetString("SuccessWork", resourceCulture);
+                return ResourceManager.GetString("MailMessage", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Thanks.
+        ///   Looks up a localized string similar to MainPage.
         /// </summary>
-        internal static string Thanks {
+        internal static string MainPage {
             get {
-                return ResourceManager.GetString("Thanks", resourceCulture);
+                return ResourceManager.GetString("MainPage", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Version:.
+        ///   Looks up a localized string similar to MLModel.
         /// </summary>
-        internal static string Version {
+        internal static string MLModel {
             get {
-                return ResourceManager.GetString("Version", resourceCulture);
+                return ResourceManager.GetString("MLModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Network.
+        /// </summary>
+        internal static string Network {
+            get {
+                return ResourceManager.GetString("Network", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No results.
+        /// </summary>
+        internal static string NoResults {
+            get {
+                return ResourceManager.GetString("NoResults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password:.
+        /// </summary>
+        internal static string Password {
+            get {
+                return ResourceManager.GetString("Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please wait....
+        /// </summary>
+        internal static string PleaseWait {
+            get {
+                return ResourceManager.GetString("PleaseWait", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Privacy policy.
+        /// </summary>
+        internal static string Policy {
+            get {
+                return ResourceManager.GetString("Policy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I read policy.
+        /// </summary>
+        internal static string PolicyAccept {
+            get {
+                return ResourceManager.GetString("PolicyAccept", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Port:.
+        /// </summary>
+        internal static string Port {
+            get {
+                return ResourceManager.GetString("Port", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile.
+        /// </summary>
+        internal static string Profile {
+            get {
+                return ResourceManager.GetString("Profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please restart the application for the changes to take effect..
+        /// </summary>
+        internal static string ReloadApp {
+            get {
+                return ResourceManager.GetString("ReloadApp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        internal static string Save {
+            get {
+                return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save the login?.
+        /// </summary>
+        internal static string SaveLogin {
+            get {
+                return ResourceManager.GetString("SaveLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        internal static string Search {
+            get {
+                return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select an action.
+        /// </summary>
+        internal static string SelectAnAction {
+            get {
+                return ResourceManager.GetString("SelectAnAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send picture.
+        /// </summary>
+        internal static string SendPicture {
+            get {
+                return ResourceManager.GetString("SendPicture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send text.
+        /// </summary>
+        internal static string SendText {
+            get {
+                return ResourceManager.GetString("SendText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server: .
+        /// </summary>
+        internal static string Server {
+            get {
+                return ResourceManager.GetString("Server", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        internal static string Settings {
+            get {
+                return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Success.
+        /// </summary>
+        internal static string Success {
+            get {
+                return ResourceManager.GetString("Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Take a picture.
+        /// </summary>
+        internal static string TakeAPicture {
+            get {
+                return ResourceManager.GetString("TakeAPicture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chat, communication with the server.
+        /// </summary>
+        internal static string TipChat {
+            get {
+                return ResourceManager.GetString("TipChat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Displays the password you entered.
+        /// </summary>
+        internal static string TipDisplayPassword {
+            get {
+                return ResourceManager.GetString("TipDisplayPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter your username to which your account was registered.
+        /// </summary>
+        internal static string TipLogIn {
+            get {
+                return ResourceManager.GetString("TipLogIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter your password that you entered during registration.
+        /// </summary>
+        internal static string TipPassword {
+            get {
+                return ResourceManager.GetString("TipPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to On some servers, you need to specify a password to encrypt the text.
+        /// </summary>
+        internal static string TipPasswordServer {
+            get {
+                return ResourceManager.GetString("TipPasswordServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saves your username and password on your device.
+        /// </summary>
+        internal static string TipSaveLogIn {
+            get {
+                return ResourceManager.GetString("TipSaveLogIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter a request or attach an image.
+        /// </summary>
+        internal static string TipWriteOrPickImg {
+            get {
+                return ResourceManager.GetString("TipWriteOrPickImg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title:.
+        /// </summary>
+        internal static string Title {
+            get {
+                return ResourceManager.GetString("Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View the password?.
+        /// </summary>
+        internal static string ViewThePassword {
+            get {
+                return ResourceManager.GetString("ViewThePassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Welcome!.
+        /// </summary>
+        internal static string Welcome {
+            get {
+                return ResourceManager.GetString("Welcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You: .
+        /// </summary>
+        internal static string You {
+            get {
+                return ResourceManager.GetString("You", resourceCulture);
             }
         }
     }

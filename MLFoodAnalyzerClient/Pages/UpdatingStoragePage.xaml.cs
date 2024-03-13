@@ -6,20 +6,19 @@ public partial class UpdatingStoragePage : ContentPage
 {
     public LocalizationResourceManager LocalizationResourceManager
        => LocalizationResourceManager.Instance;
+
+    private static Settings settings = AppShell.settings;
     private bool IsFlag = true;
+
 	public UpdatingStoragePage(Food xyz)
 	{
 		InitializeComponent();
 
+        settings = (Settings)Resources["settings"];
+
         BindingContext = this;
 
-        int getValue = Preferences.Get("FontSize", 20);
-        IDLabel.FontSize = getValue;
-        NameLabel.FontSize = getValue;
-        DescriptionLabel.FontSize = getValue;
-        DescriptionEntry.FontSize = getValue;
-
-        IDLabel.Text = $"ID: {xyz.Id}"; 
+        IDLabel.Text = $"ID: {xyz.Id}";
         NameLabel.Text = $"{LocalizationResourceManager["Title"]} {xyz.Name}";
         DescriptionEntry.Text = $"{xyz.Description}";
     }

@@ -4,29 +4,20 @@ namespace MLFoodAnalyzerClient.Pages;
 
 public partial class AdminLogInPage : ContentPage
 {
-    private bool IsFlag = true;
-    private bool IsLogIn = false;
-    private string SavedLogIn = "";
-    private string SavedPassword = "";
+    private static Settings settings = AppShell.settings;
+    /*private bool IsFlag = true;
+    private bool IsLogIn = false;*/
 
-    public static LocalizationResourceManager LocalizationResourceManager
-       => LocalizationResourceManager.Instance;
+    /*public static LocalizationResourceManager LocalizationResourceManager
+       => LocalizationResourceManager.Instance;*/
     public AdminLogInPage()
     {
-        SavedLogIn = Preferences.Get("SavedLogIn", SavedLogIn);
-        SavedPassword = Preferences.Get("SavedPassword", SavedPassword);
 
         InitializeComponent();
 
-
-        int getValue = Preferences.Get("FontSize", 20);
-        TitleLabel.FontSize = getValue + 5;
-        LoginEntry.FontSize = getValue;
-        PasswordEntry.FontSize = getValue;
-        DisplayLabel.FontSize = getValue;
-        SavingLabel.FontSize = getValue;
-
-        if (!string.IsNullOrEmpty(SavedLogIn))
+        settings = (Settings)Resources["settings"];
+        TitleLabel.FontSize = settings.FSize + 5;
+        /*if (!string.IsNullOrEmpty(SavedLogIn))
         {
             LoginEntry.Text = SavedLogIn;
             SavingCheckBox.IsChecked = true;
@@ -35,14 +26,14 @@ public partial class AdminLogInPage : ContentPage
         {
             PasswordEntry.Text = SavedPassword;
             SavingCheckBox.IsChecked = true;
-        }
+        }*/
     }
 
     private void DisplayPassword_Changed(object sender, CheckedChangedEventArgs e) => PasswordEntry.IsPassword = !e.Value;
 
     public async void LogIn_Tapped(object sender, EventArgs e)
     {
-        if (!IsFlag) return;
+        /*if (!IsFlag) return;
 
         IsFlag = false;
         LogInButton.IsInProgress = true;
@@ -65,15 +56,13 @@ public partial class AdminLogInPage : ContentPage
         }
         else
         {
-            LoginEntry.Text = "";
-            PasswordEntry.Text = "";
-            SavedLogIn = "";
-            SavedPassword = "";
-            Preferences.Set("SavedLogIn", LoginEntry.Text);
-            Preferences.Set("SavedPassword", PasswordEntry.Text);
+            LoginEntry.Text = string.Empty;
+            PasswordEntry.Text = string.Empty;
+            Preferences.Set("SavedLogIn", string.Empty);
+            Preferences.Set("SavedPassword", string.Empty);
         }
         IsFlag = true;
-        LogInButton.IsInProgress = false;
+        LogInButton.IsInProgress = false;*/
         await Navigation.PushAsync(new AdminStoragePage());
     }
 }

@@ -53,6 +53,10 @@
             </Setter>
         </Style>
 
+        <ResourceDictionary>
+            <extension:Settings x:Key="settings"/>
+        </ResourceDictionary>
+
     </ContentPage.Resources>
 
     <Grid
@@ -158,7 +162,7 @@
             <Label
                 x:Name="PolicyLabel"
                 Margin="48,12,48,0"
-                Text="{Binding LocalizationResourceManager[DescriptionPolicy], Mode=OneWay}"
+                Text="{x:Static strings:AppResources.DescriptionPolicy}"
                 TextColor="{AppThemeBinding Light={StaticResource Gray470}, Dark={StaticResource White100}}"
                 LineHeight="1.2"
                 FontFamily="RegularFont"
@@ -180,7 +184,7 @@
                 CheckedChanged="Agree_Changed"/>
             <Label
                 x:Name="InformationLabel"
-                Text="{Binding LocalizationResourceManager[PolicyAccept], Mode=OneWay}"
+                Text="{x:Static strings:AppResources.PolicyAccept}"
                 TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
                 FontFamily="BoldFont"
                 VerticalTextAlignment="Center"/>
@@ -192,7 +196,7 @@
             x:Name="AcceptButton"
             Grid.Row="4"
             Margin="32, 0, 32, 24"
-            Text="{Binding LocalizationResourceManager[Accept], Mode=OneWay}"
+            Text="{x:Static strings:AppResources.Accept}"
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
             FontFamily="BoldFont"
@@ -203,10 +207,4 @@
             VerticalOptions="Fill"/>
 
     </Grid>
-    <!--FF5722-->
-    <!--F30A49-->
-    <!--DF7861-->
-
-    <!--9BA4B4-->
-    <!--A77979-->
 </ContentPage>

@@ -5,8 +5,10 @@ namespace MLFoodAnalyzerClient;
 
 public partial class AppShell : Shell
 {
+    public static Settings settings = new(); 
     public LocalizationResourceManager LocalizationResourceManager
     => LocalizationResourceManager.Instance;
+
     public AppShell()
     {
         InitializeComponent();
@@ -14,7 +16,7 @@ public partial class AppShell : Shell
         BindingContext = this;
         AdminPanel.IsVisible = Preferences.Get("IsAdminPanel", false);
 
-        CultureInfo cultureInfo = new(Preferences.Get("LanguageApp", "ru-RU"));
+        CultureInfo cultureInfo = new(settings.Language);
         LocalizationResourceManager.Instance.SetCulture(cultureInfo);
 
         Application.Current!.UserAppTheme = Preferences.Get("ThemeApp", "Default") switch

@@ -213,6 +213,9 @@
   <data name="Network" xml:space="preserve">
     <value>Сеть</value>
   </data>
+  <data name="NoResults" xml:space="preserve">
+    <value>Нет результатов</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Пароль:</value>
   </data>

@@ -6,16 +6,23 @@
              xmlns:strings="clr-namespace:MLFoodAnalyzerClient.Resources.Strings"
              BackgroundColor="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}">
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <extension:Settings x:Key="settings"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <Grid RowDefinitions="50, Auto, *, 76, 50, 50, 50"
           ColumnDefinitions="*, 50"
-          Margin="20, 40, 20, 0">
+          Margin="20, 40, 20, 0"
+          BindingContext="{StaticResource settings}">
 
         <!-- Title -->
         <Label
             x:Name="TitleLabel"
             Grid.ColumnSpan="2"
             Margin="0, -20"
-            Text="{Binding LocalizationResourceManager[ChatSettings], Mode=OneWay}"
+            Text="{x:Static strings:AppResources.ChatSettings}"
             TextColor="#F30A49"
             FontFamily="RegularFont"/>
 
@@ -24,21 +31,21 @@
             x:Name="FontSizeSlider"
             Grid.Row="1"
             Margin="0, 0, 20, 10"
-            Value="20"
             Minimum="10"
             Maximum="30"
-            ValueChanged="FontSize_Changed"
+            Value="{Binding Path=FSize}"
             MinimumTrackColor="{AppThemeBinding Light={StaticResource Gray470}, Dark={StaticResource White100}}"
             MaximumTrackColor="{AppThemeBinding Light={StaticResource Gray980}, Dark={StaticResource White100}}"
             ThumbColor="{AppThemeBinding Light={StaticResource Gray980}, Dark={StaticResource White100}}"/>
 
         <!-- Font Value -->
         <Label
-            x:Name="FontSizeLabel"
             Grid.Row="1"
             Grid.Column="1"
             Margin="0, 0, 0, 20"
             FontFamily="RegularFont"
+            Text="{Binding Source={x:Reference Name=FontSizeSlider}, Path=Value, StringFormat='{0:f0}'}"
+            FontSize="{Binding Path=FSize}"
             TextColor="{AppThemeBinding Light={StaticResource Gray980}, Dark={StaticResource White100}}"/>
 
         <!-- Text -->
@@ -46,23 +53,23 @@
             Grid.Row="2"
             Grid.ColumnSpan="2">
             <Label
-                x:Name="InfoLabel"
                 Padding="10, 40, 20, 10"
-                Text="{Binding LocalizationResourceManager[ExampleText], Mode=OneWay}"
+                Text="{x:Static strings:AppResources.ExampleText}"
                 TextColor="{AppThemeBinding Light={StaticResource Gray980}, Dark={StaticResource White100}}"
+                FontSize="{Binding Source={x:Reference Name=FontSizeSlider}, Path=Value, StringFormat='{0:f0}'}"
                 FontFamily="RegularFont"/>
         </ScrollView>
 
         <!-- Accept -->
         <Button
-            x:Name="AcceptButton"
             Grid.Row="3"
             Grid.ColumnSpan="2"
             Margin="32, 0, 32, 24"
-            Text="{Binding LocalizationResourceManager[AcceptSettings], Mode=OneWay}"
+            Text="{x:Static strings:AppResources.AcceptSettings}"
             TextColor="{AppThemeBinding Light={StaticResource Gray980}, Dark={StaticResource White100}}"
             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
             FontFamily="BoldFont"
+            FontSize="{Binding Path=FSize}"
             Clicked="Accept_Clicked"
             CornerRadius="26"
             HorizontalOptions="Fill"
@@ -73,9 +80,10 @@
             x:Name="LightRadioButton"
             Grid.Row="4"
             Grid.ColumnSpan="2"
-            Content="{Binding LocalizationResourceManager[LightTheme], Mode=OneWay}"
+            Content="{x:Static strings:AppResources.LightTheme}"
             TextColor="{AppThemeBinding Light={StaticResource Gray980}, Dark={StaticResource White100}}"
             FontFamily="RegularFont"
+            FontSize="{Binding Path=FSize}"
             Value="Light"
             CheckedChanged="Theme_Changed"/>
 
@@ -84,9 +92,10 @@
             x:Name="DarkRadioButton"
             Grid.Row="5"
             Grid.ColumnSpan="2"
-            Content="{Binding LocalizationResourceManager[DarkTheme], Mode=OneWay}"
+            Content="{x:Static strings:AppResources.DarkTheme}"
             TextColor="{AppThemeBinding Light={StaticResource Gray980}, Dark={StaticResource White100}}"
             FontFamily="RegularFont"
+            FontSize="{Binding Path=FSize}"
             Value="Dark"
             CheckedChanged="Theme_Changed"/>
 
@@ -95,9 +104,10 @@
             x:Name="DefaultRadioButton"
             Grid.Row="6"
             Grid.ColumnSpan="2"
-            Content="{Binding LocalizationResourceManager[DefaultTheme], Mode=OneWay}"
+            Content="{x:Static strings:AppResources.DefaultTheme}"
             TextColor="{AppThemeBinding Light={StaticResource Gray980}, Dark={StaticResource White100}}"
             FontFamily="RegularFont"
+            FontSize="{Binding Path=FSize}"
             Value="Default"
             CheckedChanged="Theme_Changed"/>
 

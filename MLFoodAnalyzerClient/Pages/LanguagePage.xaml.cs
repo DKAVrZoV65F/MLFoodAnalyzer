@@ -1,27 +1,30 @@
 ﻿using MLFoodAnalyzerClient.Extension;
-using System.Globalization;
 
 namespace MLFoodAnalyzerClient.Pages;
 
 public partial class LanguagePage : ContentPage
 {
-    public LocalizationResourceManager LocalizationResourceManager
+    private LocalizationResourceManager LocalizationResourceManager
        => LocalizationResourceManager.Instance;
+
+    private static Settings settings = AppShell.settings;
+    private AlertService alert = new();
 
     public LanguagePage()
     {
         InitializeComponent();
 
-        int getValue = Preferences.Get("FontSize", 20);
-        TitleLabel.FontSize = getValue + 5;
-        RussianRadioButton.FontSize = getValue;
-        EnglishRadioButton.FontSize = getValue;
+        settings = (Settings)Resources["settings"];
+        TitleLabel.FontSize = settings.FSize + 5;
 
-        string currentLanguage = Preferences.Get("LanguageApp", "ru-RU");
+        string currentLanguage = settings.Language;
         switch (currentLanguage)
         {
             case "en-US":
                 EnglishRadioButton.IsChecked = true;
+                break;
+            case "ru-RU":
+                RussianRadioButton.IsChecked = true;
                 break;
             default:
                 RussianRadioButton.IsChecked = true;
@@ -31,12 +34,11 @@ public partial class LanguagePage : ContentPage
 
     void Language_Changed(object sender, CheckedChangedEventArgs e)
     {
-        RadioButton selectedRadioButton = ((RadioButton)sender);
-        string? checkBoxValue = (selectedRadioButton.Value != null) ? selectedRadioButton.Value.ToString() : "";
-        if (string.IsNullOrEmpty(checkBoxValue)) return;
-
-        CultureInfo cultureInfo = new(checkBoxValue);
-        LocalizationResourceManager.Instance.SetCulture(cultureInfo);
+        RadioButton selectedRadioButton = (RadioButton)sender;
+        string? checkBoxValue = (selectedRadioButton.Value != null) ? selectedRadioButton.Value.ToString() : string.Empty;
+        if (string.IsNullOrEmpty(checkBoxValue) || checkBoxValue == settings.Language) return;
         Preferences.Set("LanguageApp", checkBoxValue);
+
+        alert.DisplayMessage(LocalizationResourceManager["ReloadApp"].ToString());
     }
 }

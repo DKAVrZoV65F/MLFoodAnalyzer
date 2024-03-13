@@ -9,31 +9,20 @@ public partial class NetworkPage : ContentPage
 {
     public LocalizationResourceManager LocalizationResourceManager
        => LocalizationResourceManager.Instance;
+    private readonly AlertService alert = new();
 
     private bool IsFlag = true;
     private bool task = false;
 
-    public static QRScan qR = new();
+    private static Settings settings = AppShell.settings;
 
 
     public NetworkPage()
     {
         InitializeComponent();
 
-        int getValue = Preferences.Get("FontSize", 20);
-        TitleLabel.FontSize = getValue + 5;
-        IPLabel.FontSize = getValue;
-        IPEntry.FontSize = getValue;
-        PortLabel.FontSize = getValue;
-        PortEntry.FontSize = getValue;
-        PasswordLabel.FontSize = getValue;
-        PasswordEntry.FontSize = getValue;
-
-        IPEntry.Text = Preferences.Get("SavedIpServer", "");
-        PortEntry.Text = Preferences.Get("SavedPortServer", 0).ToString();
-        PasswordEntry.Text = Preferences.Get("SavedPasswordServer", "");
-
-        qR = Resources["qR"] as QRScan;
+        settings = (Settings)Resources["settings"];
+        TitleLabel.FontSize = settings.FSize + 5;
     }
 
 
@@ -50,7 +39,8 @@ public partial class NetworkPage : ContentPage
         {
             IsFlag = true;
             CheckIpPortButton.IsInProgress = false;
-            await DisplayAlert(LocalizationResourceManager["AppName"].ToString(), LocalizationResourceManager["ErrorWithIPOrPort"].ToString(), "OK");
+
+            alert.DisplayMessage(LocalizationResourceManager["ErrorWithIPOrPort"].ToString());
             return;
         }
         string password = PasswordEntry.Text;
@@ -58,7 +48,7 @@ public partial class NetworkPage : ContentPage
         await PingServerAsync(ipAddress, port, password);
 
         string? result = (task) ? LocalizationResourceManager["Success"].ToString() : LocalizationResourceManager["DestinationHostUn"].ToString();
-        await DisplayAlert(LocalizationResourceManager["AppName"].ToString(), result, "OK");
+        alert.DisplayMessage(result);
 
         task = false;
         IsFlag = true;

@@ -5,10 +5,14 @@ namespace MLFoodAnalyzerClient.Pages;
 
 public partial class HistoryChange : ContentPage
 {
-    public ObservableCollection<History> Histories { get; set; }
+    private ObservableCollection<History> Histories { get; set; }
+    private static Settings settings = AppShell.settings;
+
     public HistoryChange()
     {
         InitializeComponent();
+
+        settings = (Settings)Resources["settings"];
 
         BindingContext = this;
 

@@ -7,14 +7,20 @@
              xmlns:strings="clr-namespace:MLFoodAnalyzerClient.Resources.Strings"
              BackgroundColor="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}">
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <extension:Settings x:Key="settings"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <Grid RowDefinitions="100, *, 150"
-          ColumnDefinitions="*, Auto">
+          ColumnDefinitions="*, Auto"
+          BindingContext="{StaticResource settings}">
 
         <!-- Information -->
         <Label
             x:Name="InfoLabel"
             Grid.ColumnSpan="2"
-            Text=""
             TextColor="{AppThemeBinding Light={StaticResource Red500}, Dark={StaticResource Red100}}"
             HorizontalTextAlignment="Center"
             FontFamily="RegularFont"
@@ -31,7 +37,8 @@
                 x:Name="ResultEditor"
                 TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
                 FontFamily="RegularFont"
-                ToolTipProperties.Text="{Binding LocalizationResourceManager[TipChat], Mode=OneWay}"/>
+                FontSize="{Binding Path=FSize}"
+                ToolTipProperties.Text="{x:Static strings:AppResources.TipChat}"/>
         </ScrollView>
 
         <!-- Writing text to server -->
@@ -39,18 +46,19 @@
             x:Name="QueryEditor"
             Grid.Row="2"
             Margin="20,40,0,40"
-            Placeholder="{Binding LocalizationResourceManager[EnterTheText], Mode=OneWay}"
+            Placeholder="{x:Static strings:AppResources.EnterTheText}"
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
             PlaceholderColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray490}}"
             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
             FontFamily="RegularFont"
+            FontSize="{Binding Path=FSize}"
             Keyboard="Text"
             IsSpellCheckEnabled="True"
             IsTextPredictionEnabled="True"
             TextChanged="QueryEditor_Changed"
             VerticalTextAlignment="Center"
             HorizontalTextAlignment="Start"
-            ToolTipProperties.Text="{Binding LocalizationResourceManager[TipWriteOrPickImg], Mode=OneWay}">
+            ToolTipProperties.Text="{x:Static strings:AppResources.TipWriteOrPickImg}">
             <Editor.Shadow>
                 <Shadow
                     Brush="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource White100}}"
@@ -66,8 +74,8 @@
             Grid.Row="2"
             Grid.Column="2"
             Margin="20,40,20,40"
-            Text="{Binding LocalizationResourceManager[SendPicture], Mode=OneWay}"
-            LoadingText="{Binding LocalizationResourceManager[PleaseWait], Mode=OneWay}"
+            Text="{x:Static strings:AppResources.SendPicture}"
+            LoadingText="{x:Static strings:AppResources.PleaseWait}"
             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
             Tapped="SendPicture_Tapped"
             CornerRadius="26"
@@ -79,13 +87,12 @@
             Grid.Row="2"
             Grid.Column="2"
             Margin="20,40,20,40"
-            Text="{Binding LocalizationResourceManager[SendText], Mode=OneWay}"
-            LoadingText="{Binding LocalizationResourceManager[PleaseWait], Mode=OneWay}"
+            Text="{x:Static strings:AppResources.SendText}"
+            LoadingText="{x:Static strings:AppResources.PleaseWait}"
             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
             Tapped="SendText_Tapped"
             CornerRadius="26"
             IsVisible="False"/>
 
     </Grid>
-
 </ContentPage>

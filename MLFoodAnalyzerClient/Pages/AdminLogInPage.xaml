@@ -7,14 +7,21 @@
              xmlns:strings="clr-namespace:MLFoodAnalyzerClient.Resources.Strings"
              BackgroundColor="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}">
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <extension:Settings x:Key="settings"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
     <Grid RowDefinitions="50, Auto, Auto, 50, 50, Auto"
-          Margin="20, 40, 20, 0">
+          Margin="20, 40, 20, 0"
+          BindingContext="{StaticResource settings}">
 
         <!-- Title -->
         <Label
             x:Name="TitleLabel"
             Margin="0, -20"
-            Text="{Binding LocalizationResourceManager[Administration], Mode=OneWay}"
+            Text="{x:Static strings:AppResources.Administration}"
             TextColor="#F30A49"
             FontFamily="RegularFont"/>
 
@@ -27,15 +34,16 @@
             </Border.StrokeShape>
             <Entry
                 x:Name="LoginEntry"
-                Placeholder="{Binding LocalizationResourceManager[EnterTheUserName], Mode=OneWay}"
+                Placeholder="{x:Static strings:AppResources.EnterTheUserName}"
                 TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
                 BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
                 FontFamily="RegularFont"
+                FontSize="{Binding Path=FSize}"
                 Keyboard="Text"
                 IsSpellCheckEnabled="True"
                 IsTextPredictionEnabled="True"
                 VerticalTextAlignment="Center"
-                ToolTipProperties.Text="{Binding LocalizationResourceManager[TipLogIn], Mode=OneWay}"/>
+                ToolTipProperties.Text="{x:Static strings:AppResources.TipLogIn}"/>
         </Border>
         
 
@@ -48,16 +56,17 @@
             </Border.StrokeShape>
             <Entry
                 x:Name="PasswordEntry"
-                Placeholder="{Binding LocalizationResourceManager[EnterThePassword], Mode=OneWay}"
+                Placeholder="{x:Static strings:AppResources.EnterThePassword}"
                 TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
                 BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
                 FontFamily="RegularFont"
+                FontSize="{Binding Path=FSize}"
                 Keyboard="Text"
                 IsPassword="True"
                 IsSpellCheckEnabled="True"
                 IsTextPredictionEnabled="True"
                 VerticalTextAlignment="Center"
-                ToolTipProperties.Text="{Binding LocalizationResourceManager[TipPassword], Mode=OneWay}"/>
+                ToolTipProperties.Text="{x:Static strings:AppResources.TipPassword}"/>
         </Border>
 
         <!-- Display password -->
@@ -71,12 +80,12 @@
                 CheckedChanged="DisplayPassword_Changed"/>
 
             <Label
-                x:Name="DisplayLabel"
-                Text="{Binding LocalizationResourceManager[ViewThePassword], Mode=OneWay}"
+                Text="{x:Static strings:AppResources.ViewThePassword}"
                 TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
                 FontFamily="BoldFont"
+                FontSize="{Binding Path=FSize}"
                 VerticalTextAlignment="Center"
-                ToolTipProperties.Text="{Binding LocalizationResourceManager[TipDisplayPassword], Mode=OneWay}"/>
+                ToolTipProperties.Text="{x:Static strings:AppResources.TipDisplayPassword}"/>
         </HorizontalStackLayout>
 
         <!-- Save Log In -->
@@ -90,12 +99,12 @@
                 Color="{AppThemeBinding Light={StaticResource Gray470}, Dark={StaticResource White100}}"/>
 
             <Label
-                x:Name="SavingLabel"
-                Text="{Binding LocalizationResourceManager[SaveLogin], Mode=OneWay}"
+                Text="{x:Static strings:AppResources.SaveLogin}"
                 TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
                 FontFamily="BoldFont"
+                FontSize="{Binding Path=FSize}"
                 VerticalTextAlignment="Center"
-                ToolTipProperties.Text="{Binding LocalizationResourceManager[TipSaveLogIn], Mode=OneWay}"/> 
+                ToolTipProperties.Text="{x:Static strings:AppResources.TipSaveLogIn}"/> 
         </HorizontalStackLayout>
 
         <!-- Log In -->
@@ -104,7 +113,7 @@
             Grid.Row="5"
             Margin="32,0,32,24"
             CornerRadius="26"
-            Text="{Binding LocalizationResourceManager[LogIn], Mode=OneWay}"
+            Text="{x:Static strings:AppResources.LogIn}"
             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
             VerticalOptions="Fill"
             HorizontalOptions="Fill"

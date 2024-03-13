@@ -8,15 +8,23 @@
              xmlns:local="clr-namespace:MLFoodAnalyzerClient.Pages"
              BackgroundColor="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}">
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <extension:Settings x:Key="settings"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
     <Grid RowDefinitions="Auto, Auto, Auto, *, Auto"
-          Margin="20, 40, 20, 0">
+          Margin="20, 40, 20, 0"
+          BindingContext="{StaticResource settings}">
         
         <!-- ID -->
         <Label
             x:Name="IDLabel"
             Margin="0, 10"
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
-            FontFamily="RegularFont"/>
+            FontFamily="RegularFont"
+            FontSize="{Binding Path=FSize}"/>
 
         <!-- Name -->
         <Label
@@ -24,16 +32,17 @@
             Grid.Row="1"
             Margin="0, 10"
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
-            FontFamily="RegularFont"/>
+            FontFamily="RegularFont"
+            FontSize="{Binding Path=FSize}"/>
 
         <!-- Description -->
         <Label
-            x:Name="DescriptionLabel"
             Grid.Row="2"
-            Text="{Binding LocalizationResourceManager[Description], Mode=OneWay}"
+            Text="{x:Static strings:AppResources.Description}"
             Margin="0, 10"
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
-            FontFamily="RegularFont"/>
+            FontFamily="RegularFont"
+            FontSize="{Binding Path=FSize}"/>
 
         <Entry
             x:Name="DescriptionEntry"
@@ -42,6 +51,7 @@
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
             FontFamily="RegularFont"
+            FontSize="{Binding Path=FSize}"
             Keyboard="Text"
             IsSpellCheckEnabled="True"
             IsTextPredictionEnabled="True"/>
@@ -51,9 +61,8 @@
             x:Name="SavingButton"
             Grid.Row="4"
             Margin="0, 20"
-            Text="{Binding LocalizationResourceManager[Save], Mode=OneWay}"
+            Text="{x:Static strings:AppResources.Save}"
             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
-            MinimumHeightRequest="0"
             Tapped="SavingData"
             CornerRadius="26"/>
 

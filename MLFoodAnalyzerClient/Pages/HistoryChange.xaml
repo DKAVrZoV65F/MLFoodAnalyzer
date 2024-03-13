@@ -4,8 +4,16 @@
              x:Class="MLFoodAnalyzerClient.Pages.HistoryChange"
              xmlns:extension="clr-namespace:MLFoodAnalyzerClient.Extension"
              BackgroundColor="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <extension:Settings x:Key="settings"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <Grid RowDefinitions="*"
-          Margin="20, 40, 20, 0">
+          Margin="20, 40, 20, 0"
+          BindingContext="{StaticResource settings}">
 
         <!-- Display data -->
         <Border
@@ -28,10 +36,12 @@
                                     MinimumHeightRequest="50">
                                     <Label
                                         Text="{Binding Date}"
-                                        FontSize="20" />
+                                        FontFamily="RegularFont"
+                                        FontSize="{Binding Path=FSize}" />
                                     <Label
                                         Text="{Binding HistoryChange}"
-                                        FontSize="20" />
+                                        FontFamily="RegularFont"
+                                        FontSize="{Binding Path=FSize}" />
                                 </HorizontalStackLayout>
                             </ViewCell.View>
                         </ViewCell>
@@ -39,6 +49,6 @@
                 </ListView.ItemTemplate>
             </ListView>
         </Border>
+        
     </Grid>
-
 </ContentPage>

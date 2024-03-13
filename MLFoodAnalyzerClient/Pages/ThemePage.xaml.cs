@@ -4,13 +4,18 @@ namespace MLFoodAnalyzerClient.Pages;
 
 public partial class ThemePage : ContentPage
 {
-    public LocalizationResourceManager LocalizationResourceManager
-       => LocalizationResourceManager.Instance;
-    private int oldValue = 20;
+    private LocalizationResourceManager LocalizationResourceManager
+        => LocalizationResourceManager.Instance;
+    private static Settings settings = AppShell.settings;
+
+    private AlertService? alert;
 
     public ThemePage()
     {
         InitializeComponent();
+
+        settings = (Settings)Resources["settings"];
+        TitleLabel.FontSize = settings.FSize + 5;
 
         string getTheme = Preferences.Get("ThemeApp", "Default");
         switch (getTheme)
@@ -25,16 +30,6 @@ public partial class ThemePage : ContentPage
                 DefaultRadioButton.IsChecked = true;
                 break;
         }
-
-        int getValue = Preferences.Get("FontSize", oldValue);
-        FontSizeSlider.Value = getValue;
-        oldValue = getValue;
-        TitleLabel.FontSize = getValue + 5;
-        InfoLabel.FontSize = getValue;
-        AcceptButton.FontSize = getValue;
-        LightRadioButton.FontSize = getValue;
-        DarkRadioButton.FontSize = getValue;
-        DefaultRadioButton.FontSize = getValue;
     }
 
     private void Theme_Changed(object sender, CheckedChangedEventArgs e)
@@ -52,17 +47,9 @@ public partial class ThemePage : ContentPage
         Preferences.Set("ThemeApp", checkBoxValue);
     }
 
-    private void FontSize_Changed(object sender, ValueChangedEventArgs e)
-    {
-        int value = (int)e.NewValue;
-        InfoLabel.FontSize = value;
-        FontSizeLabel.Text = value.ToString();
-        if (value != oldValue) oldValue = value;
-    }
-
-    private async void Accept_Clicked(object sender, EventArgs e)
-    {
-        Preferences.Set("FontSize", oldValue);
-        await DisplayAlert(LocalizationResourceManager["AppName"].ToString(), LocalizationResourceManager["ReloadApp"].ToString(), "OK");
-    }
+    private void Accept_Clicked(object sender, EventArgs e) {
+        Preferences.Set("FontSize", Convert.ToInt32(FontSizeSlider.Value));
+        alert = new();
+        alert.DisplayMessage(LocalizationResourceManager["ReloadApp"].ToString());
+    } 
 }

@@ -5,8 +5,7 @@ namespace MLFoodAnalyzerClient.Pages;
 
 public partial class AdminStoragePage : ContentPage
 {
-    public LocalizationResourceManager LocalizationResourceManager
-       => LocalizationResourceManager.Instance;
+    private static Settings settings = AppShell.settings;
 
     public ObservableCollection<Food> Foods { get; set; }
 
@@ -14,10 +13,9 @@ public partial class AdminStoragePage : ContentPage
     {
         InitializeComponent();
 
-        BindingContext = this;
+        settings = (Settings)Resources["settings"];
 
-        int getValue = Preferences.Get("FontSize", 20);
-        SearchEntry.FontSize = getValue;
+        BindingContext = this;
 
         Foods =
         [
@@ -48,7 +46,7 @@ public partial class AdminStoragePage : ContentPage
         int foodSearch = FoodSearch.Count;
         fruitsListView.ItemsSource = (foodSearch > 0) ? FoodSearch : Foods;
         fruitsListView.IsVisible = (searchLength == 0 || foodSearch > 0);
-        testLabel.IsVisible = (searchLength != 0 && foodSearch == 0);
+        infoLabel.IsVisible = (searchLength != 0 && foodSearch == 0);
     }
 
     private async void GoToHistory(object sender, EventArgs e) => await Navigation.PushAsync(new HistoryChange());

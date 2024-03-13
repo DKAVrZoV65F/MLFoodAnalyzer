@@ -2,6 +2,8 @@ namespace MLFoodAnalyzerClient.Pages;
 
 public partial class QRScanner : ContentPage
 {
+    private static readonly char[] separator = ['|'];
+
     public QRScanner()
     {
         InitializeComponent();
@@ -22,11 +24,11 @@ public partial class QRScanner : ContentPage
 
         Dispatcher.DispatchAsync(async () =>
         {
-            string[] words = first.Value.Split(new char[] { '|' });
+            string[] words = first.Value.Split(separator);
 
-            NetworkPage.qR.Ip = words[0];
-            NetworkPage.qR.Port = int.Parse(words[1]);
-            NetworkPage.qR.Password = words[2];
+            AppShell.settings.Ip = words[0];
+            AppShell.settings.Port = int.Parse(words[1]);
+            AppShell.settings.Password = words[2];
 
             await Navigation.PopModalAsync();
         });

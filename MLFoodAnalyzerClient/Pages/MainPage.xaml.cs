@@ -9,15 +9,13 @@ public partial class MainPage : ContentPage
 {
     public LocalizationResourceManager LocalizationResourceManager
        => LocalizationResourceManager.Instance;
+    private static Settings settings = AppShell.settings;
 
     private const string errorServer = "ErrorConToServ";
     private string text = "";
     private string textFromServer = "";
     private bool IsFlag = true;
-
-    private string ipServer = "";
-    private int portServer = 55555;
-
+    bool IsPolicyRead;
 
     readonly Random rnd = new();
     readonly int minValue = 10;
@@ -25,21 +23,26 @@ public partial class MainPage : ContentPage
 
     public MainPage()
     {
-        bool IsPolicyRead = Preferences.Get("IsPolicyRead", true);
+        IsPolicyRead = Preferences.Get("IsPolicyRead", true);
         if (IsPolicyRead) GoToPolicy();
 
         InitializeComponent();
 
-        int getValue = Preferences.Get("FontSize", 20);
-        InfoLabel.FontSize = getValue;
-        ResultEditor.FontSize = getValue;
-        QueryEditor.FontSize = getValue;
+        settings = (Settings)Resources["settings"];
+        InfoLabel.FontSize = settings.FSize + 5;
     }
 
     private async void GoToPolicy() => await Navigation.PushModalAsync(new PolicyPage());
 
     private async void SendText_Tapped(object sender, EventArgs e)
     {
+        IsPolicyRead = Preferences.Get("IsPolicyRead", true);
+        if (IsPolicyRead)
+        {
+            GoToPolicy();
+            return;
+        }
+
         text = QueryEditor.Text;
         if (string.IsNullOrEmpty(text) || !IsFlag) return;
 
@@ -80,6 +83,13 @@ public partial class MainPage : ContentPage
 
     private async void SendPicture_Tapped(object sender, EventArgs e)
     {
+        IsPolicyRead = Preferences.Get("IsPolicyRead", true);
+        if (IsPolicyRead)
+        {
+            GoToPolicy();
+            return;
+        }
+
         if (!IsFlag) return;
 
         IsFlag = false;
@@ -159,16 +169,14 @@ public partial class MainPage : ContentPage
 
 
         using TcpClient tcpClient = new();
-        ipServer = Preferences.Get("SavedIpServer", "");
-        portServer = Preferences.Get("SavedPortServer", 0);
         textFromServer = "";
-        if (string.IsNullOrEmpty(ipServer) || portServer == 0)
+        if (string.IsNullOrEmpty(settings.Ip) || settings.Port == 0)
         {
             textFromServer += LocalizationResourceManager[errorServer].ToString();
             return;
         }
 
-        await tcpClient.ConnectAsync(ipServer, portServer);
+        await tcpClient.ConnectAsync(settings.Ip, settings.Port);
         var stream = tcpClient.GetStream();
 
         //  Buffer for incoming data
@@ -211,15 +219,14 @@ public partial class MainPage : ContentPage
     private async Task SendText(string text)
     {
         using TcpClient tcpClient = new();
-        ipServer = Preferences.Get("SavedIpServer", "");
         textFromServer = "";
 
-        if (string.IsNullOrEmpty(ipServer))
+        if (string.IsNullOrEmpty(settings.Ip))
         {
             textFromServer += LocalizationResourceManager[errorServer].ToString();
             return;
         }
-        await tcpClient.ConnectAsync(ipServer, portServer);
+        await tcpClient.ConnectAsync(settings.Ip, settings.Port);
         var stream = tcpClient.GetStream();
 
         //  Buffer for incoming data
