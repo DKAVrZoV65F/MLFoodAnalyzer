@@ -46,9 +46,7 @@ public partial class AdminLogInPage : ContentPage
             LogInButton.IsInProgress = false;
             return;
         }
-        login = EncryptText(login);
-        password = EncryptText(password);
-
+        string encryptText = EncryptText($"{login}|{password}");
         using TcpClient tcpClient = new();
         await tcpClient.ConnectAsync(settings.Ip, settings.Port);
         var stream = tcpClient.GetStream();
@@ -59,7 +57,7 @@ public partial class AdminLogInPage : ContentPage
 
         int bytesRead = 10; //  To read bytes from a stream
         await stream.WriteAsync(Encoding.UTF8.GetBytes("LOGIN\0"));
-        await stream.WriteAsync(Encoding.UTF8.GetBytes($"{login}|{password}\0"));
+        await stream.WriteAsync(Encoding.UTF8.GetBytes($"{encryptText}\0"));
 
         while ((bytesRead = stream.ReadByte()) != '\0')
             response.Add((byte)bytesRead);
@@ -96,7 +94,7 @@ public partial class AdminLogInPage : ContentPage
         byte[] toEncryptArray = Convert.FromBase64String(CipherText);
 
         MD5CryptoServiceProvider objMD5CryptoService = new();
-        byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(Preferences.Get("SavedPasswordServer", "")));
+        byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(settings.Password));
         objMD5CryptoService.Clear();
 
         using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
@@ -115,7 +113,7 @@ public partial class AdminLogInPage : ContentPage
         byte[] toEncryptedArray = UTF8Encoding.UTF8.GetBytes(PlainText);
 
         MD5CryptoServiceProvider objMD5CryptoService = new();
-        byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(Preferences.Get("SavedPasswordServer", "")));
+        byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(settings.Password));
         objMD5CryptoService.Clear();
 
         using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
