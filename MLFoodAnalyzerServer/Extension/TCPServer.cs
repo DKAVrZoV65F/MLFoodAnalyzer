@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace MLFoodAnalyzerServer.Extension;
@@ -14,8 +13,8 @@ public class TCPServer
     private NetworkStream stream;
     private TcpListener tcpListener;
     // private readonly Settings settings;
-    private const string SecurityKey = "QWERTY";
     private Store store;
+    private Database database;
     private static DateTime startUserOperation;
     private readonly string success = "Settings applied sucessfully";
     private readonly string unsuccess = "Settings applied unsucessfully";
@@ -31,6 +30,7 @@ public class TCPServer
         tcpListener = new TcpListener(ip, port);
         // settings = MLFoodAnalyzerServer.settings;
         store = MLFoodAnalyzerServer.store;
+        database = MLFoodAnalyzerServer.database;
         Console.CancelKeyPress += new ConsoleCancelEventHandler(myHandler);
     }
 
@@ -84,10 +84,7 @@ public class TCPServer
         Console.WriteLine("\nHit enter to continue...");
     }
 
-    private async Task Send(string text)
-    {
-        await stream.WriteAsync(Encoding.UTF8.GetBytes(text + '\0'));
-    }
+    private async Task Send(string text) => await stream.WriteAsync(Encoding.UTF8.GetBytes(text + '\0'));
 
     private async Task GetCommand()
     {
@@ -112,6 +109,9 @@ public class TCPServer
                 break;
             case "PING":
                 await PingServer();
+                break;
+            case "LOGIN":
+                await LogIN();
                 break;
             default:
                 Stop();
@@ -146,18 +146,7 @@ public class TCPServer
             response.Add((byte)bytesRead);
         }
         string word = Encoding.UTF8.GetString(response.ToArray());
-
-        if (word[0] == '1')
-        {
-            word = DecryptText(word[1..]);
-        }
-        else
-        {
-            word = word[1..];
-        }
-
         long sizeImage = long.Parse(word);
-
 
         string filePath = @$"{folderPath}\{fileName}";
         FileStream? fileStream;
@@ -180,6 +169,8 @@ public class TCPServer
 
     private async Task ProcessText()
     {
+        Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a text");
+
         int bytesRead;
         store = MLFoodAnalyzerServer.store;
         List<byte> response = new List<byte>();
@@ -190,27 +181,10 @@ public class TCPServer
             response.Add((byte)bytesRead);
         }
         string word = Encoding.UTF8.GetString(response.ToArray());
-        char code = word[0];
-        if (code == '1')
-        {
-            word = DecryptText(word[1..]);
-        }
-
         MLFood mLFood = new();
-        Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a text");
         // Text
-
         string message = mLFood.SetText(word);
         message += '\0';
-
-        if (code == '1')
-        {
-            message = EncryptText('1' + message);
-        }
-        else
-        {
-            message = '0' + message;
-        }
         await Send(message);
         Stop();
     }
@@ -225,10 +199,32 @@ public class TCPServer
         stream.Close();
     }
 
+    private async Task LogIN()
+    {
+        Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a login");
+
+        Encryption encryption = new();
+        int bytesRead;
+        List<byte> response = new List<byte>();
+        // считываем данные до конечного символа
+        while ((bytesRead = stream.ReadByte()) != '\0')
+        {
+            // добавляем в буфер
+            response.Add((byte)bytesRead);
+        }
+        string word = Encoding.UTF8.GetString(response.ToArray());
+        word = encryption.DecryptText(word);
+        string[] textSplit = word.Split('|');
+        string? message = await database.DBLogIn(encryption.ConvertToHash(textSplit[0]), encryption.ConvertToHash(textSplit[1]));
+        message += '\0';
+        message = encryption.EncryptText(message);
+        await Send(message);
+        Stop();
+    }
+
 
     public string GetInfo() => $"IP: {ip}\nPort: {port}\nTimeout: {timeout}";
 
-    public string GetPassword() => SecurityKey;
     public IPAddress GetIp()
     {
         /*string Hostname = Environment.MachineName;
@@ -247,63 +243,6 @@ public class TCPServer
         string Hostname = Environment.MachineName;
         IPHostEntry Host = Dns.GetHostEntry(Hostname);
         return Host.AddressList[Host.AddressList.Length - 1];
-    }
-
-    private static string DecryptText(string CipherText)
-    {
-        byte[] toEncryptArray = Convert.FromBase64String(CipherText);
-
-        MD5CryptoServiceProvider objMD5CryptoService = new();
-        //Gettting the bytes from the Security Key and Passing it to compute the Corresponding Hash Value.
-        byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(SecurityKey));
-        objMD5CryptoService.Clear();
-
-        using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
-        {
-            //Assigning the Security key to the TripleDES Service Provider.
-            Key = securityKeyArray,
-            //Mode of the Crypto service is Electronic Code Book.
-            Mode = CipherMode.ECB,
-            //Padding Mode is PKCS7 if there is any extra byte is added.
-            Padding = PaddingMode.PKCS7
-        };
-
-        var objCrytpoTransform = objTripleDESCryptoService.CreateDecryptor();
-        //Transform the bytes array to resultArray
-        byte[] resultArray = objCrytpoTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
-        objTripleDESCryptoService.Clear();
-
-        //Convert and return the decrypted data/byte into string format.
-        return UTF8Encoding.UTF8.GetString(resultArray);
-    }
-
-    private static string EncryptText(string PlainText)
-    {
-        // Getting the bytes of Input String.
-        byte[] toEncryptedArray = UTF8Encoding.UTF8.GetBytes(PlainText);
-
-        MD5CryptoServiceProvider objMD5CryptoService = new();
-        //Gettting the bytes from the Security Key and Passing it to compute the Corresponding Hash Value.
-        byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(SecurityKey));
-        //De-allocatinng the memory after doing the Job.
-        objMD5CryptoService.Clear();
-
-        using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
-        {
-            //Assigning the Security key to the TripleDES Service Provider.
-            Key = securityKeyArray,
-            //Mode of the Crypto service is Electronic Code Book.
-            Mode = CipherMode.ECB,
-            //Padding Mode is PKCS7 if there is any extra byte is added.
-            Padding = PaddingMode.PKCS7
-        };
-
-
-        var objCrytpoTransform = objTripleDESCryptoService.CreateEncryptor();
-        //Transform the bytes array to resultArray
-        byte[] resultArray = objCrytpoTransform.TransformFinalBlock(toEncryptedArray, 0, toEncryptedArray.Length);
-        objTripleDESCryptoService.Clear();
-        return Convert.ToBase64String(resultArray, 0, resultArray.Length);
     }
 
 
