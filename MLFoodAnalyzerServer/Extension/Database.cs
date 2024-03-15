@@ -1,18 +1,19 @@
 ﻿using Microsoft.Data.SqlClient;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace MLFoodAnalyzerServer.Extension;
 
 public class Database
 {
 
-    private string connectionString = string.Empty;
+    private string connectionString = "Server=(localdb)\\Local;Database=MLF3A7;Trusted_Connection=True;";
 
 
-    public Database(string connectionString = "Server=(localdb)\\Local;Database=MLF3A7;Trusted_Connection=True;") { }
+    public Database(string connectionString = "Server=(localdb)\\Local;Database=MLF3A7;Trusted_Connection=True;")
+    {
+        this.connectionString = connectionString;
+    }
 
-    private async void Info()
+    public async void Info()
     {
         using (SqlConnection connection = new SqlConnection(connectionString))
         {
@@ -32,6 +33,7 @@ public class Database
 
     public async Task<string?> DBLogIn(string login, string password)
     {
+        Console.WriteLine("START");
         string sqlExpression = "SELECT TOP(1) Account.Nickname FROM Account INNER JOIN AccountProperty ON AccountProperty.Id = Account.Id WHERE AccountProperty.Login = @login and AccountProperty.Password = @password";
 
         using (SqlConnection connection = new SqlConnection(connectionString))
@@ -53,9 +55,11 @@ public class Database
 
                 object id = reader.GetValue(0);
                 await reader.CloseAsync();
+                Console.WriteLine("END");
                 return id?.ToString();
             }
             await reader.CloseAsync();
+            Console.WriteLine("END");
             return "No account found";
         }
     }

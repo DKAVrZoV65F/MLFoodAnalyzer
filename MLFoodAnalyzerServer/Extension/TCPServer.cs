@@ -16,8 +16,8 @@ public class TCPServer
     private Store store;
     private Database database;
     private static DateTime startUserOperation;
-    private readonly string success = "Settings applied sucessfully";
-    private readonly string unsuccess = "Settings applied unsucessfully";
+    private readonly string success = "Settings applied successfully";
+    private readonly string unsuccess = "Settings applied unsuccessfully";
 
 
     public TCPServer(int port = 55555, int timeout = 10000)
