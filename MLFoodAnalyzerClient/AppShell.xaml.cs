@@ -6,8 +6,7 @@ namespace MLFoodAnalyzerClient;
 public partial class AppShell : Shell
 {
     public static Settings settings = new(); 
-    public LocalizationResourceManager LocalizationResourceManager
-    => LocalizationResourceManager.Instance;
+    public LocalizationResourceManager LocalizationResourceManager => LocalizationResourceManager.Instance;
 
     public AppShell()
     {

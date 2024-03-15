@@ -1,15 +1,14 @@
 ﻿using MLFoodAnalyzerClient.Extension;
 using System.Net.Sockets;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace MLFoodAnalyzerClient.Pages;
 
 public partial class MainPage : ContentPage
 {
-    public LocalizationResourceManager LocalizationResourceManager
-       => LocalizationResourceManager.Instance;
+    public LocalizationResourceManager LocalizationResourceManager => LocalizationResourceManager.Instance;
     private static Settings settings = AppShell.settings;
+    private AlertService alert;
 
     private const string errorServer = "ErrorConToServ";
     private string text = "";
@@ -18,8 +17,8 @@ public partial class MainPage : ContentPage
     bool IsPolicyRead;
 
     readonly Random rnd = new();
-    readonly int minValue = 10;
-    readonly int maxValue = 50;
+    readonly int minValue = 5;
+    readonly int maxValue = 25;
 
     public MainPage()
     {
@@ -28,6 +27,7 @@ public partial class MainPage : ContentPage
 
         InitializeComponent();
 
+        alert = new();
         settings = (Settings)Resources["settings"];
         InfoLabel.FontSize = settings.FSize + 5;
     }
@@ -96,7 +96,6 @@ public partial class MainPage : ContentPage
         SendTextButton.IsInProgress = true;
         SendPictureButton.IsInProgress = true;
 
-
         string path = await GetPicturePath();
         if (string.IsNullOrEmpty(path))
         {
@@ -130,7 +129,7 @@ public partial class MainPage : ContentPage
     private async Task<string> GetPicturePath()
     {
 #if ANDROID || IOS
-        bool result = await DisplayAlert(LocalizationResourceManager["AppName"].ToString(), LocalizationResourceManager["SelectAnAction"].ToString(), LocalizationResourceManager["TakeAPicture"].ToString(), LocalizationResourceManager["Gallery"].ToString());
+        bool result = await alert.DisplayMessage(LocalizationResourceManager["SelectAnAction"].ToString(), LocalizationResourceManager["TakeAPicture"].ToString(), LocalizationResourceManager["Gallery"].ToString());
         string res = (result) ? await GetPicture() : await GetMedia();
         return res;
 #else
@@ -143,7 +142,7 @@ public partial class MainPage : ContentPage
 
     private async Task<string> GetMedia() => await GetPathToImage(await MediaPicker.Default.PickPhotoAsync());
 
-    private async Task<string> GetPathToImage(FileResult myPhoto)
+    private async Task<string> GetPathToImage(FileResult? myPhoto)
     {
         if (myPhoto == null) return "";
         string localFilePath = Path.Combine(FileSystem.CacheDirectory, myPhoto.FileName);
@@ -154,16 +153,15 @@ public partial class MainPage : ContentPage
         return localFilePath;
     }
 
-
     private async Task SendPicture(string path)
     {
         string fileName = path;
         FileInfo fileInfo = new(fileName);
         long fileSize = fileInfo.Length;
 
-        if (fileSize >= 8_000_000) 
+        if (fileSize >= 8_000_000)
         {
-            await DisplayAlert("Titile", $"The image must not exceed 8MB! You are uploading a picture with the size {fileSize / 1_000_000} MB", "OK");
+            alert.DisplayMessage($"The image must not exceed 8MB! You are uploading a picture with the size {fileSize / 1_000_000} MB");
             return;
         }
 
@@ -184,17 +182,8 @@ public partial class MainPage : ContentPage
         NetworkStream networkStream = tcpClient.GetStream();
 
         int bytesRead = 10; //  To read bytes from a stream
-        await stream.WriteAsync(Encoding.UTF8.GetBytes("IMAGE" + "\0"));
-
-        if (!string.IsNullOrEmpty(Preferences.Get("SavedPasswordServer", "")))
-        {
-            string encWord = EncryptText(fileSize.ToString());
-            await stream.WriteAsync(Encoding.UTF8.GetBytes($"1{encWord}\0"));
-        }
-        else
-        {
-            await stream.WriteAsync(Encoding.UTF8.GetBytes($"0{fileSize}\0"));
-        }
+        await stream.WriteAsync(Encoding.UTF8.GetBytes("IMAGE\0"));
+        await stream.WriteAsync(Encoding.UTF8.GetBytes($"{fileSize}\0"));
 
         byte[] buffer = new byte[1024];
         int bytesReadImg;
@@ -210,7 +199,7 @@ public partial class MainPage : ContentPage
         while ((bytesRead = stream.ReadByte()) != '\0') response.Add((byte)bytesRead);  //  Adding to the buffer
 
         string translation = Encoding.UTF8.GetString(response.ToArray());
-        textFromServer = translation[0] == '1' ? DecryptText(translation[1..]) + '\n' : translation[1..] + '\n';
+        textFromServer = translation + '\n';
 
         response.Clear();
         networkStream.Close();
@@ -235,64 +224,53 @@ public partial class MainPage : ContentPage
 
         int bytesRead = 10; //  To read bytes from a stream
         await stream.WriteAsync(Encoding.UTF8.GetBytes("TEXT\0"));
-
-        if (!string.IsNullOrEmpty(Preferences.Get("SavedPasswordServer", "")))
-        {
-            text = EncryptText(text);
-            await stream.WriteAsync(Encoding.UTF8.GetBytes($"1{text}\0"));
-        }
-        else
-            await stream.WriteAsync(Encoding.UTF8.GetBytes($"0{text}\0"));
+        await stream.WriteAsync(Encoding.UTF8.GetBytes($"{text}\0"));
 
         while ((bytesRead = stream.ReadByte()) != '\0')
             response.Add((byte)bytesRead);  //  Adding to the buffer
 
         string translation = Encoding.UTF8.GetString(response.ToArray());
-        textFromServer = (DecryptText(translation))[1..] + '\n';
+        textFromServer = translation + '\n';
 
         response.Clear();
         networkStream.Close();
     }
 
-    // Disable the warning.
-#pragma warning disable SYSLIB0021
-    private static string DecryptText(string CipherText)
-    {
-        byte[] toEncryptArray = Convert.FromBase64String(CipherText);
-
-        MD5CryptoServiceProvider objMD5CryptoService = new();
-        byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(Preferences.Get("SavedPasswordServer", "")));
-        objMD5CryptoService.Clear();
-
-        using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
+    /*    private static string DecryptText(string CipherText)
         {
-            Key = securityKeyArray,
-            Mode = CipherMode.ECB,
-            Padding = PaddingMode.PKCS7
-        };
-        byte[] resultArray = objTripleDESCryptoService.CreateDecryptor().TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
-        objTripleDESCryptoService.Clear();
-        return UTF8Encoding.UTF8.GetString(resultArray);
-    }
+            byte[] toEncryptArray = Convert.FromBase64String(CipherText);
 
-    private static string EncryptText(string PlainText)
-    {
-        byte[] toEncryptedArray = UTF8Encoding.UTF8.GetBytes(PlainText);
+            MD5CryptoServiceProvider objMD5CryptoService = new();
+            byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(Preferences.Get("SavedPasswordServer", "")));
+            objMD5CryptoService.Clear();
 
-        MD5CryptoServiceProvider objMD5CryptoService = new();
-        byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(Preferences.Get("SavedPasswordServer", "")));
-        objMD5CryptoService.Clear();
+            using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
+            {
+                Key = securityKeyArray,
+                Mode = CipherMode.ECB,
+                Padding = PaddingMode.PKCS7
+            };
+            byte[] resultArray = objTripleDESCryptoService.CreateDecryptor().TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
+            objTripleDESCryptoService.Clear();
+            return UTF8Encoding.UTF8.GetString(resultArray);
+        }
 
-        using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
+        private static string EncryptText(string PlainText)
         {
-            Key = securityKeyArray,
-            Mode = CipherMode.ECB,
-            Padding = PaddingMode.PKCS7
-        };
-        byte[] resultArray = objTripleDESCryptoService.CreateEncryptor().TransformFinalBlock(toEncryptedArray, 0, toEncryptedArray.Length);
-        objTripleDESCryptoService.Clear();
-        return Convert.ToBase64String(resultArray, 0, resultArray.Length);
-    }
-    // Re-enable the warning.
-#pragma warning restore SYSLIB0021
+            byte[] toEncryptedArray = UTF8Encoding.UTF8.GetBytes(PlainText);
+
+            MD5CryptoServiceProvider objMD5CryptoService = new();
+            byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(Preferences.Get("SavedPasswordServer", "")));
+            objMD5CryptoService.Clear();
+
+            using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
+            {
+                Key = securityKeyArray,
+                Mode = CipherMode.ECB,
+                Padding = PaddingMode.PKCS7
+            };
+            byte[] resultArray = objTripleDESCryptoService.CreateEncryptor().TransformFinalBlock(toEncryptedArray, 0, toEncryptedArray.Length);
+            objTripleDESCryptoService.Clear();
+            return Convert.ToBase64String(resultArray, 0, resultArray.Length);
+        }*/
 }

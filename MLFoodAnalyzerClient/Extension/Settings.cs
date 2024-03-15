@@ -5,19 +5,19 @@ namespace MLFoodAnalyzerClient.Extension;
 
 public class Settings : INotifyPropertyChanged
 {
-    double fontSize = Preferences.Get("FontSize", 20);
+    private double fontSize = Preferences.Get("FontSize", 20);
 
-    string ip = Preferences.Get("SavedIpServer", string.Empty);
-    int port = Preferences.Get("SavedPortServer", 0);
-    string password = Preferences.Get("SavedPasswordServer", string.Empty);
+    private string ip = Preferences.Get("SavedIpServer", string.Empty);
+    private int port = Preferences.Get("SavedPortServer", 0);
+    private string password = Preferences.Get("SavedPasswordServer", string.Empty);
 
-    string login = Preferences.Get("SavedLogIn", string.Empty);
-    string savedPassword = Preferences.Get("SavedPassword", string.Empty);
+    private string login = Preferences.Get("SavedLogIn", string.Empty);
+    private string savedPassword = Preferences.Get("SavedPassword", string.Empty);
 
-    string language = Preferences.Get("LanguageApp", "ru-RU");
+    private string language = Preferences.Get("LanguageApp", "ru-RU");
 
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public double FSize
     {

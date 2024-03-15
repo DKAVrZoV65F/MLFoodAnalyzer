@@ -439,6 +439,15 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save the password.
+        /// </summary>
+        internal static string SavePSWD {
+            get {
+                return ResourceManager.GetString("SavePSWD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search.
         /// </summary>
         internal static string Search {

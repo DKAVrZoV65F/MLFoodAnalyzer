@@ -43,9 +43,8 @@ public partial class NetworkPage : ContentPage
             alert.DisplayMessage(LocalizationResourceManager["ErrorWithIPOrPort"].ToString());
             return;
         }
-        string password = PasswordEntry.Text;
 
-        await PingServerAsync(ipAddress, port, password);
+        await PingServerAsync(ipAddress, port);
 
         string? result = (task) ? LocalizationResourceManager["Success"].ToString() : LocalizationResourceManager["DestinationHostUn"].ToString();
         alert.DisplayMessage(result);
@@ -63,7 +62,7 @@ public partial class NetworkPage : ContentPage
 
     private bool IsValidPort(int port) => port is >= 49152 and <= 65535;
 
-    private async Task PingServerAsync(string ipAddress, int port, string password)
+    private async Task PingServerAsync(string ipAddress, int port)
     {
         if (string.IsNullOrEmpty(ipAddress)) return;
 
@@ -91,7 +90,7 @@ public partial class NetworkPage : ContentPage
             {
                 Preferences.Set("SavedIpServer", ipAddress);
                 Preferences.Set("SavedPortServer", port);
-                Preferences.Set("SavedPasswordServer", password);
+                
                 task = true;
             }
 
@@ -106,4 +105,13 @@ public partial class NetworkPage : ContentPage
     }
 
     private async void QRScanner(object sender, EventArgs e) => await Navigation.PushModalAsync(new QRScanner());
+
+    private void SavePSWD(object sender, EventArgs e)
+    {
+        string password = PasswordEntry.Text;
+        settings.Password = password;
+        Preferences.Set("SavedPasswordServer", password);
+    } 
+
+    private void DisplayPassword_Changed(object sender, CheckedChangedEventArgs e) => PasswordEntry.IsPassword = !e.Value;
 }

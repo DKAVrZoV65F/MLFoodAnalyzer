@@ -8,7 +8,7 @@ public partial class LanguagePage : ContentPage
        => LocalizationResourceManager.Instance;
 
     private static Settings settings = AppShell.settings;
-    private AlertService alert = new();
+    private readonly AlertService alert = new();
 
     public LanguagePage()
     {

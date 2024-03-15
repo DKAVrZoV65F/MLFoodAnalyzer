@@ -28,7 +28,6 @@ public partial class QRScanner : ContentPage
 
             AppShell.settings.Ip = words[0];
             AppShell.settings.Port = int.Parse(words[1]);
-            AppShell.settings.Password = words[2];
 
             await Navigation.PopModalAsync();
         });

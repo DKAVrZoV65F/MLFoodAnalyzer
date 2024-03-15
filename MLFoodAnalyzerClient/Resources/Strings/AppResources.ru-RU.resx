@@ -243,6 +243,9 @@
   <data name="SaveLogin" xml:space="preserve">
     <value>Сохранить вход?</value>
   </data>
+  <data name="SavePSWD" xml:space="preserve">
+    <value>Сохранить пароль</value>
+  </data>
   <data name="Search" xml:space="preserve">
     <value>Поиск</value>
   </data>

@@ -14,7 +14,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     
-    <Grid RowDefinitions="50, 50, 50, 50, 150"
+    <Grid RowDefinitions="50, 50, 50, 150, 50, 50, 150"
           ColumnDefinitions="Auto, *, 50"
           Margin="20, 40, 20, 0"
           BindingContext="{StaticResource settings}">
@@ -97,9 +97,20 @@
             Keyboard="Numeric"
             VerticalTextAlignment="Center"/>
 
+        <!-- Ping -->
+        <customControls:ButtonControl
+            x:Name="CheckIpPortButton"
+            Grid.Row="3"
+            Grid.ColumnSpan="3"
+            Margin="-10, 40"
+            Text="{x:Static strings:AppResources.CheckTheConnection}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
+            Tapped="PingServer"
+            CornerRadius="26"/>
+        
         <!-- Password text -->
         <Label
-            Grid.Row="3"
+            Grid.Row="4"
             Text="{x:Static strings:AppResources.Password}"
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
             FontFamily="BoldFont"
@@ -110,7 +121,7 @@
         <!-- Password entry -->
         <Entry
             x:Name="PasswordEntry"
-            Grid.Row="3"
+            Grid.Row="4"
             Grid.Column="1"
             Grid.ColumnSpan="2"
             Margin="10,0"
@@ -126,15 +137,35 @@
             VerticalTextAlignment="Center"
             ToolTipProperties.Text="{x:Static strings:AppResources.TipPasswordServer}"/>
 
-        <!-- Ping -->
-        <customControls:ButtonControl
-            x:Name="CheckIpPortButton"
-            Grid.Row="4"
+        <!-- Save PSWD -->
+        <HorizontalStackLayout
+            Grid.Row="5"
+            Grid.ColumnSpan="3"
+            VerticalOptions="Fill"
+            HorizontalOptions="Fill">
+            <CheckBox
+                Color="{AppThemeBinding Light={StaticResource Gray470}, Dark={StaticResource White100}}"
+                CheckedChanged="DisplayPassword_Changed"/>
+
+            <Label
+                Text="{x:Static strings:AppResources.ViewThePassword}"
+                TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+                FontFamily="BoldFont"
+                FontSize="{Binding Path=FSize}"
+                VerticalTextAlignment="Center"/>
+        </HorizontalStackLayout>
+
+        <!-- Save PSWD -->
+        <Button
+            Grid.Row="6"
             Grid.ColumnSpan="3"
             Margin="-10, 40"
-            Text="{x:Static strings:AppResources.CheckTheConnection}"
+            Text="{x:Static strings:AppResources.SavePSWD}"
+            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
-            Tapped="PingServer"
+            FontFamily="BoldFont"
+            FontSize="{Binding Path=FSize}"
+            Clicked="SavePSWD"
             CornerRadius="26"/>
 
     </Grid>
