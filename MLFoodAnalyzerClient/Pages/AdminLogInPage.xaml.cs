@@ -1,4 +1,5 @@
 using MLFoodAnalyzerClient.Extension;
+using System.Security.Cryptography;
 using System.Net.Sockets;
 using System.Text;
 
@@ -45,7 +46,8 @@ public partial class AdminLogInPage : ContentPage
             LogInButton.IsInProgress = false;
             return;
         }
-
+        login = EncryptText(login);
+        password = EncryptText(password);
 
         using TcpClient tcpClient = new();
         await tcpClient.ConnectAsync(settings.Ip, settings.Port);
@@ -63,6 +65,7 @@ public partial class AdminLogInPage : ContentPage
             response.Add((byte)bytesRead);
 
         string translation = Encoding.UTF8.GetString(response.ToArray());
+        translation = DecryptText(translation);
         response.Clear();
         networkStream.Close();
 
@@ -82,6 +85,47 @@ public partial class AdminLogInPage : ContentPage
 
         IsFlag = true;
         LogInButton.IsInProgress = false;
-        await Navigation.PushAsync(new AdminStoragePage());
+        await DisplayAlert("", translation, "OK");
+        if(!translation.Equals("No account found")) await Navigation.PushAsync(new AdminStoragePage());
+    }
+
+
+
+    private static string DecryptText(string CipherText)
+    {
+        byte[] toEncryptArray = Convert.FromBase64String(CipherText);
+
+        MD5CryptoServiceProvider objMD5CryptoService = new();
+        byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(Preferences.Get("SavedPasswordServer", "")));
+        objMD5CryptoService.Clear();
+
+        using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
+        {
+            Key = securityKeyArray,
+            Mode = CipherMode.ECB,
+            Padding = PaddingMode.PKCS7
+        };
+        byte[] resultArray = objTripleDESCryptoService.CreateDecryptor().TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
+        objTripleDESCryptoService.Clear();
+        return UTF8Encoding.UTF8.GetString(resultArray);
+    }
+
+    private static string EncryptText(string PlainText)
+    {
+        byte[] toEncryptedArray = UTF8Encoding.UTF8.GetBytes(PlainText);
+
+        MD5CryptoServiceProvider objMD5CryptoService = new();
+        byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(Preferences.Get("SavedPasswordServer", "")));
+        objMD5CryptoService.Clear();
+
+        using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
+        {
+            Key = securityKeyArray,
+            Mode = CipherMode.ECB,
+            Padding = PaddingMode.PKCS7
+        };
+        byte[] resultArray = objTripleDESCryptoService.CreateEncryptor().TransformFinalBlock(toEncryptedArray, 0, toEncryptedArray.Length);
+        objTripleDESCryptoService.Clear();
+        return Convert.ToBase64String(resultArray, 0, resultArray.Length);
     }
 }
