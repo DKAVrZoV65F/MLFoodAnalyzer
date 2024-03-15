@@ -207,14 +207,14 @@ public partial class MainPage : ContentPage
 
     private async Task SendText(string text)
     {
-        using TcpClient tcpClient = new();
-        textFromServer = "";
-
         if (string.IsNullOrEmpty(settings.Ip))
         {
             textFromServer += LocalizationResourceManager[errorServer].ToString();
             return;
         }
+
+        using TcpClient tcpClient = new();
+        textFromServer = "";
         await tcpClient.ConnectAsync(settings.Ip, settings.Port);
         var stream = tcpClient.GetStream();
 
