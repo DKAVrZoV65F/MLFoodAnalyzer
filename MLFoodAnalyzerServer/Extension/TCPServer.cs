@@ -40,10 +40,8 @@ public class TCPServer
         Console.WriteLine("\nThe read operation has been interrupted.");
         Console.WriteLine($"  Key pressed: {args.SpecialKey}");
         Console.WriteLine($"  Cancel property: {args.Cancel}");
-        // Set the Cancel property to true to prevent the process from terminating.
         Console.WriteLine("Setting the Cancel property to true...");
         args.Cancel = true;
-        // Announce the new value of the Cancel property.
         Console.WriteLine($"  Cancel property: {args.Cancel}");
         Console.WriteLine("The read operation will resume...\n");
 
@@ -91,10 +89,8 @@ public class TCPServer
         int bytesRead;
         store = MLFoodAnalyzerServer.store;
         var response = new List<byte>();
-        // считываем данные до конечного символа
         while ((bytesRead = stream.ReadByte()) != '\0')
         {
-            // добавляем в буфер
             response.Add((byte)bytesRead);
         }
         var word = Encoding.UTF8.GetString(response.ToArray());
@@ -111,7 +107,7 @@ public class TCPServer
                 await PingServer();
                 break;
             case "LOGIN":
-                await LogIN();
+                await LogIn();
                 break;
             default:
                 Stop();
@@ -174,12 +170,8 @@ public class TCPServer
         int bytesRead;
         store = MLFoodAnalyzerServer.store;
         List<byte> response = new List<byte>();
-        // считываем данные до конечного символа
         while ((bytesRead = stream.ReadByte()) != '\0')
-        {
-            // добавляем в буфер
             response.Add((byte)bytesRead);
-        }
         string word = Encoding.UTF8.GetString(response.ToArray());
         MLFood mLFood = new();
         // Text
@@ -199,25 +191,21 @@ public class TCPServer
         stream.Close();
     }
 
-    private async Task LogIN()
+    private async Task LogIn()
     {
         Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a login");
 
         Encryption encryption = new();
         int bytesRead;
         List<byte> response = new List<byte>();
-        // считываем данные до конечного символа
         while ((bytesRead = stream.ReadByte()) != '\0')
-        {
-            // добавляем в буфер
             response.Add((byte)bytesRead);
-        }
         string word = Encoding.UTF8.GetString(response.ToArray());
         word = encryption.DecryptText(word);
         string[] textSplit = word.Split('|');
         string? message = await database.DBLogIn(encryption.ConvertToHash(textSplit[0]), encryption.ConvertToHash(textSplit[1]));
-        message += '\0';
         message = encryption.EncryptText(message);
+        message += '\0';
         await Send(message);
         Stop();
     }
