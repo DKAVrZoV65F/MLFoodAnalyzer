@@ -62,7 +62,7 @@ public partial class AdminLogInPage : ContentPage
 
         IsFlag = true;
         LogInButton.IsInProgress = false;
-        if (!translation.Equals("0"))
+        if (translation.Equals("0"))
         {
             if (alert == null) alert = new();
             alert.DisplayMessage(LocalizationResourceManager["ErrorLogIn"].ToString());
@@ -75,17 +75,18 @@ public partial class AdminLogInPage : ContentPage
     private string DecryptText(string CipherText)
     {
         byte[] toEncArray = Convert.FromBase64String(CipherText);
-        return UTF8Encoding.UTF8.GetString(CryptoService(toEncArray));
+        byte[] resultArray = CryptoService().CreateDecryptor().TransformFinalBlock(toEncArray, 0, toEncArray.Length);
+        return UTF8Encoding.UTF8.GetString(resultArray);
     }
 
     private string EncryptText(string PlainText)
     {
         byte[] toEncArray = UTF8Encoding.UTF8.GetBytes(PlainText);
-        byte[] resultArray = CryptoService(toEncArray);
+        byte[] resultArray = CryptoService().CreateEncryptor().TransformFinalBlock(toEncArray, 0, toEncArray.Length);
         return Convert.ToBase64String(resultArray, 0, resultArray.Length);
     }
 
-    private byte[] CryptoService(byte[] toEncArray)
+    private TripleDESCryptoServiceProvider CryptoService()
     {
         MD5CryptoServiceProvider objMD5CryptoService = new();
         byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(settings.Password));
@@ -97,8 +98,6 @@ public partial class AdminLogInPage : ContentPage
             Mode = CipherMode.ECB,
             Padding = PaddingMode.PKCS7
         };
-        byte[] resultArray = objTripleDESCryptoService.CreateEncryptor().TransformFinalBlock(toEncArray, 0, toEncArray.Length);
-        objTripleDESCryptoService.Clear();
-        return resultArray;
+        return objTripleDESCryptoService;
     }
 }
