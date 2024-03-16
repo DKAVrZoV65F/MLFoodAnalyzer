@@ -9,7 +9,7 @@ public class Settings : INotifyPropertyChanged
 
     private string ip = Preferences.Get("SavedIpServer", string.Empty);
     private int port = Preferences.Get("SavedPortServer", 0);
-    private string password = Preferences.Get("SavedPasswordServer", string.Empty);
+    private string? password = (string.IsNullOrEmpty(SecureStorage.GetAsync("SavedPasswordServer").Result?.ToString())) ? "" : SecureStorage.GetAsync("SavedPasswordServer").Result?.ToString();
 
     private string? login = (string.IsNullOrEmpty(SecureStorage.GetAsync("SavedLogIn").Result?.ToString())) ? "" : SecureStorage.GetAsync("SavedLogIn").Result?.ToString();
     private string? savedPassword = (string.IsNullOrEmpty(SecureStorage.GetAsync("SavedPassword").Result?.ToString())) ? "" : SecureStorage.GetAsync("SavedPassword").Result?.ToString();
@@ -61,7 +61,7 @@ public class Settings : INotifyPropertyChanged
 
     public string Password
     {
-        get => password;
+        get => password == null ? "" : password;
         set
         {
             if (password != value)

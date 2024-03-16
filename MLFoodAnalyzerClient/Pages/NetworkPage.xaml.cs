@@ -110,7 +110,7 @@ public partial class NetworkPage : ContentPage
     {
         string password = PasswordEntry.Text;
         settings.Password = password;
-        Preferences.Set("SavedPasswordServer", password);
+        _ = SecureStorage.SetAsync("SavedPasswordServer", password);
     } 
 
     private void DisplayPassword_Changed(object sender, CheckedChangedEventArgs e) => PasswordEntry.IsPassword = !e.Value;

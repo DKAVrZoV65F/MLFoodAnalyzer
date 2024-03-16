@@ -74,15 +74,39 @@ public partial class AdminLogInPage : ContentPage
 
     private string DecryptText(string CipherText)
     {
-        byte[] toEncArray = Convert.FromBase64String(CipherText);
-        byte[] resultArray = CryptoService().CreateDecryptor().TransformFinalBlock(toEncArray, 0, toEncArray.Length);
+        byte[] toEncryptArray = Convert.FromBase64String(CipherText);
+
+        MD5CryptoServiceProvider objMD5CryptoService = new();
+        byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(settings.Password));
+        objMD5CryptoService.Clear();
+
+        using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
+        {
+            Key = securityKeyArray,
+            Mode = CipherMode.ECB,
+            Padding = PaddingMode.PKCS7
+        };
+        byte[] resultArray = objTripleDESCryptoService.CreateDecryptor().TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
+        objTripleDESCryptoService.Clear();
         return UTF8Encoding.UTF8.GetString(resultArray);
     }
 
     private string EncryptText(string PlainText)
     {
-        byte[] toEncArray = UTF8Encoding.UTF8.GetBytes(PlainText);
-        byte[] resultArray = CryptoService().CreateEncryptor().TransformFinalBlock(toEncArray, 0, toEncArray.Length);
+        byte[] toEncryptedArray = UTF8Encoding.UTF8.GetBytes(PlainText);
+
+        MD5CryptoServiceProvider objMD5CryptoService = new();
+        byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(settings.Password));
+        objMD5CryptoService.Clear();
+
+        using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
+        {
+            Key = securityKeyArray,
+            Mode = CipherMode.ECB,
+            Padding = PaddingMode.PKCS7
+        };
+        byte[] resultArray = objTripleDESCryptoService.CreateEncryptor().TransformFinalBlock(toEncryptedArray, 0, toEncryptedArray.Length);
+        objTripleDESCryptoService.Clear();
         return Convert.ToBase64String(resultArray, 0, resultArray.Length);
     }
 
