@@ -2,6 +2,8 @@ using MLFoodAnalyzerClient.Extension;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
+using System.Transactions;
 
 namespace MLFoodAnalyzerClient.Pages;
 
@@ -28,6 +30,13 @@ public partial class AdminLogInPage : ContentPage
     {
         if (!IsFlag) return;
 
+        if (string.IsNullOrEmpty(settings.Ip) || settings.Port == 0)
+        {
+            if (alert == null) alert = new();
+            alert.DisplayMessage(LocalizationResourceManager["ErrorWithIPOrPort"].ToString());
+            return;
+        }
+
         _ = SecureStorage.SetAsync("SavedLogIn", SavingCheckBox.IsChecked ? settings.Login : string.Empty);
         _ = SecureStorage.SetAsync("SavedPassword", SavingCheckBox.IsChecked ? settings.SavedPassword : string.Empty);
 
@@ -43,36 +52,51 @@ public partial class AdminLogInPage : ContentPage
 
         string encryptText = EncryptText($"{settings.Login}|{settings.SavedPassword}");
         using TcpClient tcpClient = new();
-        await tcpClient.ConnectAsync(settings.Ip, settings.Port);
-        var stream = tcpClient.GetStream();
-        var response = new List<byte>();
-        NetworkStream networkStream = tcpClient.GetStream();
+        string translation = string.Empty;
+        try
+        {
+            await tcpClient.ConnectAsync(settings.Ip, settings.Port);
+            var stream = tcpClient.GetStream();
+            var response = new List<byte>();
+            NetworkStream networkStream = tcpClient.GetStream();
 
-        int bytesRead = 10;
-        await stream.WriteAsync(Encoding.UTF8.GetBytes("LOGIN\0"));
-        await stream.WriteAsync(Encoding.UTF8.GetBytes($"{encryptText}\0"));
+            int bytesRead = 10;
+            await stream.WriteAsync(Encoding.UTF8.GetBytes("LOGIN\0"));
+            await stream.WriteAsync(Encoding.UTF8.GetBytes($"{encryptText}\0"));
 
-        while ((bytesRead = stream.ReadByte()) != '\0')
-            response.Add((byte)bytesRead);
+            while ((bytesRead = stream.ReadByte()) != '\0')
+                response.Add((byte)bytesRead);
 
-        string translation = Encoding.UTF8.GetString(response.ToArray());
-        translation = DecryptText(translation);
-        response.Clear();
-        networkStream.Close();
+            translation = Encoding.UTF8.GetString(response.ToArray());
+            translation = DecryptText(translation);
+            response.Clear();
+            networkStream.Close();
+        }
+        catch { }
+        finally
+        {
+            tcpClient.Close();
+            encryptText = string.Empty;
+        }
 
         IsFlag = true;
         LogInButton.IsInProgress = false;
-        if (translation.Equals("0"))
+        if (translation.Equals("0") && !string.IsNullOrEmpty(translation))
         {
             if (alert == null) alert = new();
             alert.DisplayMessage(LocalizationResourceManager["ErrorLogIn"].ToString());
             return;
         }
-
+        else if(string.IsNullOrEmpty(translation))
+        {
+            if (alert == null) alert = new();
+            alert.DisplayMessage(LocalizationResourceManager["DestinationHostUn"].ToString());
+            return;
+        }
         await Navigation.PushAsync(new AdminStoragePage());
     }
 
-    private string DecryptText(string CipherText)
+    /*private string DecryptText(string CipherText)
     {
         byte[] toEncryptArray = Convert.FromBase64String(CipherText);
 
@@ -88,6 +112,22 @@ public partial class AdminLogInPage : ContentPage
         };
         byte[] resultArray = objTripleDESCryptoService.CreateDecryptor().TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
         objTripleDESCryptoService.Clear();
+        return UTF8Encoding.UTF8.GetString(resultArray);
+    }*/
+
+    private string DecryptText(string CipherText)
+    {
+        byte[] toEncryptArray = Convert.FromBase64String(CipherText);
+
+        using MD5 md5 = MD5.Create();
+        byte[] securityKeyArray = md5.ComputeHash(UTF8Encoding.UTF8.GetBytes(settings.Password));
+
+        using TripleDES des = TripleDES.Create();
+        des.Key = securityKeyArray;
+        des.Mode = CipherMode.ECB;
+        des.Padding = PaddingMode.PKCS7;
+
+        byte[] resultArray = des.CreateDecryptor().TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
         return UTF8Encoding.UTF8.GetString(resultArray);
     }
 

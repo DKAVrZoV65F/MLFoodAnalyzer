@@ -33,9 +33,7 @@ public partial class NetworkPage : ContentPage
         IsFlag = false;
         CheckIpPortButton.IsInProgress = true;
 
-        string ipAddress = IPEntry.Text;
-        int port = Convert.ToInt32(PortEntry.Text);
-        if ((string.IsNullOrEmpty(ipAddress) || port == 0) || !IsValidIpAddress(ipAddress) || !IsValidPort(port))
+        if ((string.IsNullOrEmpty(settings.Ip) || settings.Port == 0) || !IsValidIpAddress(settings.Ip) || !IsValidPort(settings.Port))
         {
             IsFlag = true;
             CheckIpPortButton.IsInProgress = false;
@@ -44,7 +42,7 @@ public partial class NetworkPage : ContentPage
             return;
         }
 
-        await PingServerAsync(ipAddress, port);
+        await PingServerAsync(settings.Ip, settings.Port);
 
         string? result = (task) ? LocalizationResourceManager["Success"].ToString() : LocalizationResourceManager["DestinationHostUn"].ToString();
         alert.DisplayMessage(result);
@@ -66,7 +64,6 @@ public partial class NetworkPage : ContentPage
     {
         if (string.IsNullOrEmpty(ipAddress)) return;
 
-
         using TcpClient tcpClient = new();
         try
         {
@@ -80,10 +77,7 @@ public partial class NetworkPage : ContentPage
             int bytesRead = 10; //  to read bytes from a stream
             await stream.WriteAsync(Encoding.UTF8.GetBytes("PING\0"));
             while ((bytesRead = stream.ReadByte()) != '\0')
-            {
-                //  adding to the buffer
                 response.Add((byte)bytesRead);
-            }
 
             var translation = Encoding.UTF8.GetString(response.ToArray());
             if ("SUCCESS" == translation)
