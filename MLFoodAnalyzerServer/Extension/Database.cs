@@ -54,7 +54,7 @@ public class Database
 
     public async Task<string?[]> SelectDescriptionFood(string[]? foodNames)
     {
-        if (foodNames == null || foodNames.Length < 0) return ["Nothing"];
+        if (foodNames == null || foodNames.Length <= 0) return ["Nothing"];
 
         List<string?> results = [];
         foreach (string foodName in foodNames)
