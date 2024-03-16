@@ -11,7 +11,7 @@ public partial class AdminStoragePage : ContentPage
     private static Settings settings = AppShell.settings;
     private AlertService? alert;
 
-    public ObservableCollection<Food> Foods { get; set; } = new();
+    public ObservableCollection<Food> Foods { get; set; } = [];
 
     public AdminStoragePage()
     {
@@ -51,7 +51,7 @@ public partial class AdminStoragePage : ContentPage
     {
         if (string.IsNullOrEmpty(settings.Ip) || settings.Port == 0)
         {
-            if (alert == null) alert = new();
+            alert ??= new();
             alert.DisplayMessage(LocalizationResourceManager["ErrorWithIPOrPort"].ToString());
             return;
         }
@@ -78,7 +78,7 @@ public partial class AdminStoragePage : ContentPage
             foreach (string row in rows)
             {
                 string[] words = row.Split('\t');
-                Food food = new Food(int.Parse(words[0]), words[1], words[2]);
+                Food food = new(int.Parse(words[0]), words[1], words[2]);
                 Foods.Add(food);
             }
             response.Clear();

@@ -132,6 +132,9 @@
   <data name="AttachedAPicture" xml:space="preserve">
     <value>Вы прикрепили картинку </value>
   </data>
+  <data name="Back" xml:space="preserve">
+    <value>Назад</value>
+  </data>
   <data name="ChatSettings" xml:space="preserve">
     <value>Настройки чата</value>
   </data>
@@ -174,6 +177,9 @@
   <data name="ErrorLogIn" xml:space="preserve">
     <value>Введенное имя пользователя или пароль неверны</value>
   </data>
+  <data name="ErrorUpdateDescr" xml:space="preserve">
+    <value>Описание не было обновлено</value>
+  </data>
   <data name="ErrorWithIPOrPort" xml:space="preserve">
     <value>Ошибка с IP-Адресом или портом</value>
   </data>
@@ -188,6 +194,9 @@
   </data>
   <data name="Help" xml:space="preserve">
     <value>Помощь</value>
+  </data>
+  <data name="History" xml:space="preserve">
+    <value>История</value>
   </data>
   <data name="IPAddress" xml:space="preserve">
     <value>IP-адрес:</value>
@@ -273,6 +282,9 @@
   <data name="Success" xml:space="preserve">
     <value>Успех</value>
   </data>
+  <data name="SuccessUpdateDescr" xml:space="preserve">
+    <value>Описание было успешно обновлено</value>
+  </data>
   <data name="TakeAPicture" xml:space="preserve">
     <value>Сфотографировать</value>
   </data>
@@ -299,6 +311,9 @@
   </data>
   <data name="Title" xml:space="preserve">
     <value>Название:</value>
+  </data>
+  <data name="Upload" xml:space="preserve">
+    <value>Подгрузить</value>
   </data>
   <data name="ViewThePassword" xml:space="preserve">
     <value>Посмотреть пароль?</value>

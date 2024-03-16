@@ -29,7 +29,9 @@ public partial class AdminLogInPage : ContentPage
 
         if (string.IsNullOrEmpty(settings.Ip) || settings.Port == 0)
         {
-            if (alert == null) alert = new();
+            alert ??= new();
+            IsFlag = true;
+            LogInButton.IsInProgress = false;
             alert.DisplayMessage(LocalizationResourceManager["ErrorWithIPOrPort"].ToString());
             return;
         }
@@ -80,16 +82,17 @@ public partial class AdminLogInPage : ContentPage
         LogInButton.IsInProgress = false;
         if (translation.Equals("0") && !string.IsNullOrEmpty(translation))
         {
-            if (alert == null) alert = new();
+            alert ??= new();
             alert.DisplayMessage(LocalizationResourceManager["ErrorLogIn"].ToString());
             return;
         }
         else if (string.IsNullOrEmpty(translation))
         {
-            if (alert == null) alert = new();
+            alert ??= new();
             alert.DisplayMessage(LocalizationResourceManager["DestinationHostUn"].ToString());
             return;
         }
+        settings.NickName = translation;
         await Navigation.PushAsync(new AdminStoragePage());
     }
 

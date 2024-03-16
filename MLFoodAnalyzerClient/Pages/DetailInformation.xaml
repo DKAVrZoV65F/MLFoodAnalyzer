@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MLFoodAnalyzerClient.Pages.DetailInformation"
+             xmlns:extension="clr-namespace:MLFoodAnalyzerClient.Extension"
+             xmlns:strings="clr-namespace:MLFoodAnalyzerClient.Resources.Strings"
+             xmlns:local="clr-namespace:MLFoodAnalyzerClient.Pages"
+             BackgroundColor="{AppThemeBinding Light={StaticResource White200}, Dark={StaticResource Black}}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <extension:Settings x:Key="settings"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="50, 50, *, *, Auto"
+          ColumnDefinitions="*, Auto"
+          Margin="20, 40, 20, 0"
+          BindingContext="{StaticResource settings}">
+
+        <!-- User -->
+        <Label
+            x:Name="detailUser"
+            Margin="0, 10"
+            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource Wh      ite100}}"
+            FontFamily="RegularFont"
+            FontSize="{Binding Path=FSize}"/>
+
+        <!-- Food -->
+        <Label
+            x:Name="detailFood"
+            Grid.Row="1"
+            Margin="0, 10"
+            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+            FontFamily="RegularFont"
+            FontSize="{Binding Path=FSize}"/>
+
+        <!-- Date -->
+        <Label
+            x:Name="detailDate"
+            Grid.RowSpan="2"
+            Grid.Column="1"
+            HorizontalTextAlignment="End"
+            VerticalTextAlignment="Center"
+            Margin="0, 10"
+            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+            FontFamily="RegularFont"
+            FontSize="{Binding Path=FSize}"/>
+
+        <!-- Old Description -->
+        <Entry
+            x:Name="oldDescription"
+            Grid.Row="2"
+            Grid.ColumnSpan="2"
+            Margin="0, 10"
+            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
+            FontFamily="RegularFont"
+            FontSize="{Binding Path=FSize}"
+            IsReadOnly="True"/>
+
+        <!-- New Description -->
+        <Entry
+            x:Name="newDescription"
+            Grid.Row="3"
+            Grid.ColumnSpan="2"
+            Margin="0, 10"
+            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
+            FontFamily="RegularFont"
+            FontSize="{Binding Path=FSize}"
+            IsReadOnly="True"/>
+
+        <!-- Back -->
+        <Button
+            Grid.Row="4"
+            Grid.ColumnSpan="2"
+            Margin="0, 20"
+            Text="{x:Static strings:AppResources.Back}"
+            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
+            FontFamily="BoldFont"
+            FontSize="{Binding Path=FSize}"
+            Clicked="Button_Clicked"
+            CornerRadius="26"/>
+
+    </Grid>
+</ContentPage>

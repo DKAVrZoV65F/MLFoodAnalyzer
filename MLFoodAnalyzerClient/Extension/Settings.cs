@@ -15,6 +15,7 @@ public class Settings : INotifyPropertyChanged
     private string? savedPassword = (string.IsNullOrEmpty(SecureStorage.GetAsync("SavedPassword").Result?.ToString())) ? "" : SecureStorage.GetAsync("SavedPassword").Result?.ToString();
 
     private string language = Preferences.Get("LanguageApp", "ru-RU");
+    private String nickName = string.Empty;
 
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -61,7 +62,7 @@ public class Settings : INotifyPropertyChanged
 
     public string Password
     {
-        get => password == null ? "" : password;
+        get => password ?? "";
         set
         {
             if (password != value)
@@ -74,7 +75,7 @@ public class Settings : INotifyPropertyChanged
 
     public string Login
     {
-        get => login == null ? "" : login;
+        get => login ?? "";
         set
         {
             if (login != value)
@@ -87,7 +88,7 @@ public class Settings : INotifyPropertyChanged
 
     public string SavedPassword
     {
-        get => savedPassword == null ? "" : savedPassword;
+        get => savedPassword ?? "";
         set
         {
             if (savedPassword != value)
@@ -106,6 +107,19 @@ public class Settings : INotifyPropertyChanged
             if (language != value)
             {
                 language = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    public string NickName
+    {
+        get => nickName;
+        set
+        {
+            if (nickName != value)
+            {
+                nickName = value;
                 OnPropertyChanged();
             }
         }

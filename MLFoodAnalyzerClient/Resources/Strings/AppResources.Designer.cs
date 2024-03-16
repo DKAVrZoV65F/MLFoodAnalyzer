@@ -106,6 +106,15 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Back.
+        /// </summary>
+        internal static string Back {
+            get {
+                return ResourceManager.GetString("Back", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chat Settings.
         /// </summary>
         internal static string ChatSettings {
@@ -232,6 +241,15 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The description has not been updated.
+        /// </summary>
+        internal static string ErrorUpdateDescr {
+            get {
+                return ResourceManager.GetString("ErrorUpdateDescr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error With IP or port.
         /// </summary>
         internal static string ErrorWithIPOrPort {
@@ -273,6 +291,15 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         internal static string Help {
             get {
                 return ResourceManager.GetString("Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to History.
+        /// </summary>
+        internal static string History {
+            get {
+                return ResourceManager.GetString("History", resourceCulture);
             }
         }
         
@@ -529,6 +556,15 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Description has been successfully updated.
+        /// </summary>
+        internal static string SuccessUpdateDescr {
+            get {
+                return ResourceManager.GetString("SuccessUpdateDescr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Take a picture.
         /// </summary>
         internal static string TakeAPicture {
@@ -606,6 +642,15 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         internal static string Title {
             get {
                 return ResourceManager.GetString("Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload.
+        /// </summary>
+        internal static string Upload {
+            get {
+                return ResourceManager.GetString("Upload", resourceCulture);
             }
         }
         
