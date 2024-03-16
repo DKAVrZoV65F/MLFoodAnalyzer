@@ -209,18 +209,8 @@ public class TCPServer
     private async Task GetAllFood()
     {
         Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a foods");
-        /*
-        int bytesRead;
-        List<byte> response = [];
-        while ((bytesRead = stream.ReadByte()) != '\0')
-            response.Add((byte)bytesRead);
 
-
-        string word = Encoding.UTF8.GetString(response.ToArray());
-        word = Encryption.DecryptText(word);
-        string[] textSplit = word.Split('|');*/
         string? message = await database.FoodSelect();
-        message = Encryption.EncryptText(message!);
         await Send(message);
         Stop();
     }

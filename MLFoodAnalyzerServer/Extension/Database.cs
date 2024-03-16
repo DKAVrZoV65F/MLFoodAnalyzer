@@ -104,12 +104,8 @@ public class Database
                 {
                     values[j] = reader.GetValue(j);
                 }
-                string result = string.Join("\t", values);
-                result += '\n';
-                /*object id = reader.GetValue(0);
-                object name = reader.GetValue(1);
-                object description = reader.GetValue(2);*/
-
+                results += string.Join("\t", values);
+                results += '\n';
             }
         }
 
