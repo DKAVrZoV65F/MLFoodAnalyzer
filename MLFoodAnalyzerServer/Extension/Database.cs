@@ -112,4 +112,59 @@ public class Database
         await reader.CloseAsync();
         return results;
     }
+
+    public async Task<string?> History(int count = 0)
+    {
+        string sqlExpression = "SELECT IdFood, NameFood, IdAccount, NickName, Old_Description, New_Description, LastUpdate FROM History ORDER BY LastUpdate DESC OFFSET @count ROWS FETCH FIRST 10 ROWS ONLY;";
+
+        using SqlConnection connection = new(connectionString);
+        await connection.OpenAsync();
+
+        SqlCommand command = new(sqlExpression, connection);
+        SqlParameter countParam = new("@count", count);
+        command.Parameters.Add(countParam);
+        SqlDataReader reader = await command.ExecuteReaderAsync();
+        string? results = string.Empty;
+        if (reader.HasRows)
+        {
+            object[] values = new object[7];
+            while (await reader.ReadAsync())
+            {
+                for (int j = 0; j < values.Length; j++)
+                {
+                    values[j] = reader.GetValue(j);
+                }
+                results += string.Join("\t", values);
+                results += '\n';
+            }
+        }
+
+        await reader.CloseAsync();
+        return results;
+    }
+
+    public async Task<string?> UpdateDescriptionFood(string nickname, int foodId, string foodDescription)
+    {
+        string sqlExpression = $"DECLARE @accountId INT;DECLARE @Old_Description nvarchar(max);DECLARE @NameFood Varchar(50);" +
+            $"SELECT @accountId = Id FROM Account WHERE NickName = @nickname;SELECT @Old_Description = Description FROM Food WHERE Id = @foodId;" +
+            $"SELECT @NameFood = Name FROM Food WHERE Id = @foodId;UPDATE Food SET Description = @foodDescription WHERE Id = @foodId;" +
+            $"Insert into History (IdFood, NameFood, IdAccount, NickName, Old_Description, New_Description, LastUpdate) " +
+            $"Values(@foodId, @NameFood, @accountId, @nickname, @Old_Description, @foodDescription, CURRENT_TIMESTAMP);";
+
+        using SqlConnection connection = new(connectionString);
+        await connection.OpenAsync();
+
+        SqlCommand command = new(sqlExpression, connection);
+
+        SqlParameter nicknameParam = new("@nickname", nickname);
+        command.Parameters.Add(nicknameParam);
+        SqlParameter foodIdParam = new("@foodId", foodId);
+        command.Parameters.Add(foodIdParam);
+        SqlParameter foodDescriptionParam = new("@foodDescription", foodDescription);
+        command.Parameters.Add(foodDescriptionParam);
+
+        await command.ExecuteNonQueryAsync();
+
+        return "success";
+    }
 }

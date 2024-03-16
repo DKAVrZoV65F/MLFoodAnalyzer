@@ -113,6 +113,12 @@ public class TCPServer
             case "FOOD":
                 await GetAllFood();
                 break;
+            case "History":
+                await GetAllHistory();
+                break;
+            case "Update":
+                await UpdateFood();
+                break;
             default:
                 Stop();
                 break;
@@ -215,6 +221,34 @@ public class TCPServer
         Stop();
     }
 
+    private async Task GetAllHistory()
+    {
+        Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a history");
+
+        int bytesRead;
+        List<byte> response = [];
+        while ((bytesRead = stream.ReadByte()) != '\0')
+            response.Add((byte)bytesRead);
+        string word = Encoding.UTF8.GetString(response.ToArray());
+        string? message = await database.History(int.Parse(word));
+        await Send(message);
+        Stop();
+    }
+
+    private async Task UpdateFood()
+    {
+        Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested an update food");
+
+        int bytesRead;
+        List<byte> response = [];
+        while ((bytesRead = stream.ReadByte()) != '\0')
+            response.Add((byte)bytesRead);
+        string word = Encoding.UTF8.GetString(response.ToArray());
+        string[] textSplit = word.Split('|');
+        string? message = await database.UpdateDescriptionFood(textSplit[0], int.Parse(textSplit[1]), textSplit[2]);
+        await Send(message);
+        Stop();
+    }
 
     public string GetInfo() => $"IP: {ip}\nPort: {port}\nTimeout: {timeout}";
 
