@@ -94,17 +94,26 @@ public class Database
 
         SqlCommand command = new(sqlExpression, connection);
         SqlDataReader reader = await command.ExecuteReaderAsync();
-
+        string? results = string.Empty;
         if (reader.HasRows)
         {
-            await reader.ReadAsync();
-            object id = reader.GetValue(0);
-            object name = reader.GetValue(1);
-            object description = reader.GetValue(2);
-            Console.WriteLine($"{id}\t{name}\t{description}");
+            object[] values = new object[3];
+            while (await reader.ReadAsync())
+            {
+                for (int j = 0; j < values.Length; j++)
+                {
+                    values[j] = reader.GetValue(j);
+                }
+                string result = string.Join("\t", values);
+                result += '\n';
+                /*object id = reader.GetValue(0);
+                object name = reader.GetValue(1);
+                object description = reader.GetValue(2);*/
+
+            }
         }
 
         await reader.CloseAsync();
-        return "Nothing";
+        return results;
     }
 }

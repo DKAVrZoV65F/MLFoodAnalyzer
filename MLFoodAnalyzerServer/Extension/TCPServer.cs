@@ -111,7 +111,7 @@ public class TCPServer
                 await LogIn();
                 break;
             case "FOOD":
-                await LogIn();
+                await GetAllFood();
                 break;
             default:
                 Stop();
@@ -201,6 +201,25 @@ public class TCPServer
         word = Encryption.DecryptText(word);
         string[] textSplit = word.Split('|');
         string? message = await database.DBLogIn(Encryption.ConvertToHash(textSplit[0]), Encryption.ConvertToHash(textSplit[1]));
+        message = Encryption.EncryptText(message!);
+        await Send(message);
+        Stop();
+    }
+
+    private async Task GetAllFood()
+    {
+        Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a foods");
+        /*
+        int bytesRead;
+        List<byte> response = [];
+        while ((bytesRead = stream.ReadByte()) != '\0')
+            response.Add((byte)bytesRead);
+
+
+        string word = Encoding.UTF8.GetString(response.ToArray());
+        word = Encryption.DecryptText(word);
+        string[] textSplit = word.Split('|');*/
+        string? message = await database.FoodSelect();
         message = Encryption.EncryptText(message!);
         await Send(message);
         Stop();
