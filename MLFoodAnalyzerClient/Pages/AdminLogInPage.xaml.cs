@@ -66,8 +66,10 @@ public partial class AdminLogInPage : ContentPage
         {
             if (alert == null) alert = new();
             alert.DisplayMessage(LocalizationResourceManager["ErrorLogIn"].ToString());
-            await Navigation.PushAsync(new AdminStoragePage());
+            return;
         }
+
+        await Navigation.PushAsync(new AdminStoragePage());
     }
 
     private string DecryptText(string CipherText)
