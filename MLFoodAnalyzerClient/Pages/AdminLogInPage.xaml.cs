@@ -109,19 +109,4 @@ public partial class AdminLogInPage : ContentPage
         objTripleDESCryptoService.Clear();
         return Convert.ToBase64String(resultArray, 0, resultArray.Length);
     }
-
-    private TripleDESCryptoServiceProvider CryptoService()
-    {
-        MD5CryptoServiceProvider objMD5CryptoService = new();
-        byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(settings.Password));
-        objMD5CryptoService.Clear();
-
-        using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
-        {
-            Key = securityKeyArray,
-            Mode = CipherMode.ECB,
-            Padding = PaddingMode.PKCS7
-        };
-        return objTripleDESCryptoService;
-    }
 }
