@@ -9,65 +9,40 @@ namespace MLFoodAnalyzerServer.Extension
 
         public Encryption() { }
 
-        public string EncryptText(string PlainText)
+        public static string EncryptText(string plainText)
         {
-            // Getting the bytes of Input String.
-            byte[] toEncryptedArray = UTF8Encoding.UTF8.GetBytes(PlainText);
+            byte[] toEncryptedArray = Encoding.UTF8.GetBytes(plainText);
+            byte[] securityKeyArray = MD5.HashData(Encoding.UTF8.GetBytes(SecurityKey));
 
-            MD5CryptoServiceProvider objMD5CryptoService = new();
-            //Gettting the bytes from the Security Key and Passing it to compute the Corresponding Hash Value.
-            byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(SecurityKey));
-            //De-allocatinng the memory after doing the Job.
-            objMD5CryptoService.Clear();
+            using TripleDES des = TripleDES.Create();
+            des.Key = securityKeyArray;
+            des.Mode = CipherMode.ECB;
+            des.Padding = PaddingMode.PKCS7;
 
-            using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
-            {
-                //Assigning the Security key to the TripleDES Service Provider.
-                Key = securityKeyArray,
-                //Mode of the Crypto service is Electronic Code Book.
-                Mode = CipherMode.ECB,
-                //Padding Mode is PKCS7 if there is any extra byte is added.
-                Padding = PaddingMode.PKCS7
-            };
-
-
-            var objCrytpoTransform = objTripleDESCryptoService.CreateEncryptor();
-            //Transform the bytes array to resultArray
-            byte[] resultArray = objCrytpoTransform.TransformFinalBlock(toEncryptedArray, 0, toEncryptedArray.Length);
-            objTripleDESCryptoService.Clear();
+            ICryptoTransform objCryptoTransform = des.CreateEncryptor();
+            byte[] resultArray = objCryptoTransform.TransformFinalBlock(toEncryptedArray, 0, toEncryptedArray.Length);
+            des.Clear();
             return Convert.ToBase64String(resultArray, 0, resultArray.Length);
         }
 
-        public string DecryptText(string CipherText)
+        public static string DecryptText(string CipherText)
         {
             byte[] toEncryptArray = Convert.FromBase64String(CipherText);
+            byte[] securityKeyArray = MD5.HashData(Encoding.UTF8.GetBytes(SecurityKey));
 
-            MD5CryptoServiceProvider objMD5CryptoService = new();
-            //Gettting the bytes from the Security Key and Passing it to compute the Corresponding Hash Value.
-            byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(SecurityKey));
-            objMD5CryptoService.Clear();
+            using TripleDES des = TripleDES.Create();
+            des.Key = securityKeyArray;
+            des.Mode = CipherMode.ECB;
+            des.Padding = PaddingMode.PKCS7;
 
-            using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
-            {
-                //Assigning the Security key to the TripleDES Service Provider.
-                Key = securityKeyArray,
-                //Mode of the Crypto service is Electronic Code Book.
-                Mode = CipherMode.ECB,
-                //Padding Mode is PKCS7 if there is any extra byte is added.
-                Padding = PaddingMode.PKCS7
-            };
-
-            var objCrytpoTransform = objTripleDESCryptoService.CreateDecryptor();
-            //Transform the bytes array to resultArray
-            byte[] resultArray = objCrytpoTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
-            objTripleDESCryptoService.Clear();
-
-            //Convert and return the decrypted data/byte into string format.
-            return UTF8Encoding.UTF8.GetString(resultArray);
+            ICryptoTransform objCryptoTransform = des.CreateDecryptor();
+            byte[] resultArray = objCryptoTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
+            des.Clear();
+            return Encoding.UTF8.GetString(resultArray);
         }
 
-        public string ConvertToHash(string input) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(input)));
+        public static string ConvertToHash(string input) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(input)));
 
-        public string GetPassword() => SecurityKey;
+        public static string GetPassword() => SecurityKey;
     }
 }

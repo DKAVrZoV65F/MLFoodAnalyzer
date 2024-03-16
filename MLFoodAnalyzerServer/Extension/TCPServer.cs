@@ -31,7 +31,7 @@ public class TCPServer
         // settings = MLFoodAnalyzerServer.settings;
         store = MLFoodAnalyzerServer.store;
         database = MLFoodAnalyzerServer.database;
-        Console.CancelKeyPress += new ConsoleCancelEventHandler(myHandler);
+        Console.CancelKeyPress += new ConsoleCancelEventHandler(myHandler!);
     }
 
 
@@ -125,7 +125,6 @@ public class TCPServer
 
     private async Task ProcessImage(string folderPath)
     {
-        // Get all the files in the folder
         int bytesRead;
         byte[] buffer = new byte[1024];
         var response = new List<byte>();
@@ -137,10 +136,7 @@ public class TCPServer
         Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a picture \"{fileName}\"");
 
         while ((bytesRead = stream.ReadByte()) != '\0')
-        {
-            // добавляем в буфер
             response.Add((byte)bytesRead);
-        }
         string word = Encoding.UTF8.GetString(response.ToArray());
         long sizeImage = long.Parse(word);
 
@@ -158,7 +154,6 @@ public class TCPServer
 
         MLFood mLFood = new();
         string message = mLFood.SetImage(filePath);
-        // Message send
         await Send(message);
         Stop();
     }
@@ -174,9 +169,7 @@ public class TCPServer
             response.Add((byte)bytesRead);
         string word = Encoding.UTF8.GetString(response.ToArray());
         MLFood mLFood = new();
-        // Text
         string message = mLFood.SetText(word);
-        message += '\0';
         await Send(message);
         Stop();
     }
@@ -187,7 +180,6 @@ public class TCPServer
         TimeSpan difference = end.Subtract(startUserOperation);
         Console.WriteLine($"[{end}] Client {tcpClient.Client.RemoteEndPoint} disconnect and waste {difference} milliseconds");
         //DirectorySettings();
-
         stream.Close();
     }
 
@@ -195,17 +187,15 @@ public class TCPServer
     {
         Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a login");
 
-        Encryption encryption = new();
         int bytesRead;
         List<byte> response = new List<byte>();
         while ((bytesRead = stream.ReadByte()) != '\0')
             response.Add((byte)bytesRead);
         string word = Encoding.UTF8.GetString(response.ToArray());
-        word = encryption.DecryptText(word);
+        word = Encryption.DecryptText(word);
         string[] textSplit = word.Split('|');
-        string? message = await database.DBLogIn(encryption.ConvertToHash(textSplit[0]), encryption.ConvertToHash(textSplit[1]));
-        message = encryption.EncryptText(message);
-        message += '\0';
+        string? message = await database.DBLogIn(Encryption.ConvertToHash(textSplit[0]), Encryption.ConvertToHash(textSplit[1]));
+        message = Encryption.EncryptText(message!);
         await Send(message);
         Stop();
     }
