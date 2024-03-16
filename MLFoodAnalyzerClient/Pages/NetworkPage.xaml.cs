@@ -111,6 +111,7 @@ public partial class NetworkPage : ContentPage
         string password = PasswordEntry.Text;
         settings.Password = password;
         _ = SecureStorage.SetAsync("SavedPasswordServer", password);
+        alert.DisplayMessage(LocalizationResourceManager["PSWDServer"].ToString());
     } 
 
     private void DisplayPassword_Changed(object sender, CheckedChangedEventArgs e) => PasswordEntry.IsPassword = !e.Value;

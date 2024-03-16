@@ -237,6 +237,9 @@
   <data name="Profile" xml:space="preserve">
     <value>Профиль</value>
   </data>
+  <data name="PSWDServer" xml:space="preserve">
+    <value>Пароль для сервера сохранен</value>
+  </data>
   <data name="ReloadApp" xml:space="preserve">
     <value>Пожалуйста, перезапустите приложение, чтобы изменения вступили в силу.</value>
   </data>

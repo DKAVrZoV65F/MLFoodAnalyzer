@@ -421,6 +421,15 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The password for the server is saved.
+        /// </summary>
+        internal static string PSWDServer {
+            get {
+                return ResourceManager.GetString("PSWDServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please restart the application for the changes to take effect..
         /// </summary>
         internal static string ReloadApp {
