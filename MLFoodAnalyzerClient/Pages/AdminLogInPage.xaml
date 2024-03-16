@@ -34,6 +34,7 @@
             </Border.StrokeShape>
             <Entry
                 x:Name="LoginEntry"
+                Text="{Binding Path=Login}"
                 Placeholder="{x:Static strings:AppResources.EnterTheUserName}"
                 TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
                 BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
@@ -56,6 +57,7 @@
             </Border.StrokeShape>
             <Entry
                 x:Name="PasswordEntry"
+                Text="{Binding Path=SavedPassword}"
                 Placeholder="{x:Static strings:AppResources.EnterThePassword}"
                 TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
                 BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"

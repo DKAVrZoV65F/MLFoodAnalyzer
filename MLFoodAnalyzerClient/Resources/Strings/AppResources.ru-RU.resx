@@ -171,6 +171,9 @@
   <data name="ErrorConToServ" xml:space="preserve">
     <value>Ошибка при подключении к серверу!</value>
   </data>
+  <data name="ErrorLogIn" xml:space="preserve">
+    <value>Введенное имя пользователя или пароль неверны</value>
+  </data>
   <data name="ErrorWithIPOrPort" xml:space="preserve">
     <value>Ошибка с IP-Адресом или портом</value>
   </data>

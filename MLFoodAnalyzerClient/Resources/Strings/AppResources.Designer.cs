@@ -223,6 +223,15 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The entered username or password is incorrect.
+        /// </summary>
+        internal static string ErrorLogIn {
+            get {
+                return ResourceManager.GetString("ErrorLogIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error With IP or port.
         /// </summary>
         internal static string ErrorWithIPOrPort {

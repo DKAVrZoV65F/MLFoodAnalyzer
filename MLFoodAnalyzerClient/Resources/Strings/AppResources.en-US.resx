@@ -171,6 +171,9 @@
   <data name="ErrorConToServ" xml:space="preserve">
     <value>Error connecting to the server!</value>
   </data>
+  <data name="ErrorLogIn" xml:space="preserve">
+    <value>The entered username or password is incorrect</value>
+  </data>
   <data name="ErrorWithIPOrPort" xml:space="preserve">
     <value>Error With IP or port</value>
   </data>

@@ -1,14 +1,16 @@
 using MLFoodAnalyzerClient.Extension;
-using System.Security.Cryptography;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace MLFoodAnalyzerClient.Pages;
 
 public partial class AdminLogInPage : ContentPage
 {
+    public LocalizationResourceManager LocalizationResourceManager => LocalizationResourceManager.Instance;
     private static Settings settings = AppShell.settings;
     private bool IsFlag = true;
+    private AlertService? alert;
 
     public AdminLogInPage()
     {
@@ -17,16 +19,7 @@ public partial class AdminLogInPage : ContentPage
 
         settings = (Settings)Resources["settings"];
         TitleLabel.FontSize = settings.FSize + 5;
-        /*if (!string.IsNullOrEmpty(SavedLogIn))
-        {
-            LoginEntry.Text = SavedLogIn;
-            SavingCheckBox.IsChecked = true;
-        }
-        if (!string.IsNullOrEmpty(SavedPassword))
-        {
-            PasswordEntry.Text = SavedPassword;
-            SavingCheckBox.IsChecked = true;
-        }*/
+        SavingCheckBox.IsChecked = !string.IsNullOrEmpty(settings.Login);
     }
 
     private void DisplayPassword_Changed(object sender, CheckedChangedEventArgs e) => PasswordEntry.IsPassword = !e.Value;
@@ -35,27 +28,27 @@ public partial class AdminLogInPage : ContentPage
     {
         if (!IsFlag) return;
 
+        _ = SecureStorage.SetAsync("SavedLogIn", SavingCheckBox.IsChecked ? settings.Login : string.Empty);
+        _ = SecureStorage.SetAsync("SavedPassword", SavingCheckBox.IsChecked ? settings.SavedPassword : string.Empty);
+
         IsFlag = false;
         LogInButton.IsInProgress = true;
-        string login = LoginEntry.Text;
-        string password = PasswordEntry.Text;
 
-        if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
+        if (string.IsNullOrEmpty(settings.Login) || string.IsNullOrEmpty(settings.SavedPassword))
         {
             IsFlag = true;
             LogInButton.IsInProgress = false;
             return;
         }
-        string encryptText = EncryptText($"{login}|{password}");
+
+        string encryptText = EncryptText($"{settings.Login}|{settings.SavedPassword}");
         using TcpClient tcpClient = new();
         await tcpClient.ConnectAsync(settings.Ip, settings.Port);
         var stream = tcpClient.GetStream();
-
-        //  Buffer for incoming data
         var response = new List<byte>();
         NetworkStream networkStream = tcpClient.GetStream();
 
-        int bytesRead = 10; //  To read bytes from a stream
+        int bytesRead = 10;
         await stream.WriteAsync(Encoding.UTF8.GetBytes("LOGIN\0"));
         await stream.WriteAsync(Encoding.UTF8.GetBytes($"{encryptText}\0"));
 
@@ -67,63 +60,43 @@ public partial class AdminLogInPage : ContentPage
         response.Clear();
         networkStream.Close();
 
-
-        if (SavingCheckBox.IsChecked && !translation.Equals("No account found"))
-        {
-            Preferences.Set("SavedLogIn", login);
-            Preferences.Set("SavedPassword", password);
-        }
-        else
-        {
-            Preferences.Set("SavedLogIn", string.Empty);
-            Preferences.Set("SavedPassword", string.Empty);
-            LoginEntry.Text = string.Empty;
-            PasswordEntry.Text = string.Empty;
-        }
-
         IsFlag = true;
         LogInButton.IsInProgress = false;
-        await DisplayAlert("", translation, "OK");
-        if(!translation.Equals("No account found")) await Navigation.PushAsync(new AdminStoragePage());
+        if (!translation.Equals("0"))
+        {
+            if (alert == null) alert = new();
+            alert.DisplayMessage(LocalizationResourceManager["ErrorLogIn"].ToString());
+            await Navigation.PushAsync(new AdminStoragePage());
+        }
     }
 
-
-
-    private static string DecryptText(string CipherText)
+    private string DecryptText(string CipherText)
     {
-        byte[] toEncryptArray = Convert.FromBase64String(CipherText);
-
-        MD5CryptoServiceProvider objMD5CryptoService = new();
-        byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(settings.Password));
-        objMD5CryptoService.Clear();
-
-        using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
-        {
-            Key = securityKeyArray,
-            Mode = CipherMode.ECB,
-            Padding = PaddingMode.PKCS7
-        };
-        byte[] resultArray = objTripleDESCryptoService.CreateDecryptor().TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
-        objTripleDESCryptoService.Clear();
-        return UTF8Encoding.UTF8.GetString(resultArray);
+        byte[] toEncArray = Convert.FromBase64String(CipherText);
+        return UTF8Encoding.UTF8.GetString(CryptoService(toEncArray));
     }
 
-    private static string EncryptText(string PlainText)
+    private string EncryptText(string PlainText)
     {
-        byte[] toEncryptedArray = UTF8Encoding.UTF8.GetBytes(PlainText);
-
-        MD5CryptoServiceProvider objMD5CryptoService = new();
-        byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(settings.Password));
-        objMD5CryptoService.Clear();
-
-        using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
-        {
-            Key = securityKeyArray,
-            Mode = CipherMode.ECB,
-            Padding = PaddingMode.PKCS7
-        };
-        byte[] resultArray = objTripleDESCryptoService.CreateEncryptor().TransformFinalBlock(toEncryptedArray, 0, toEncryptedArray.Length);
-        objTripleDESCryptoService.Clear();
+        byte[] toEncArray = UTF8Encoding.UTF8.GetBytes(PlainText);
+        byte[] resultArray = CryptoService(toEncArray);
         return Convert.ToBase64String(resultArray, 0, resultArray.Length);
+    }
+
+    private byte[] CryptoService(byte[] toEncArray)
+    {
+        MD5CryptoServiceProvider objMD5CryptoService = new();
+        byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(settings.Password));
+        objMD5CryptoService.Clear();
+
+        using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
+        {
+            Key = securityKeyArray,
+            Mode = CipherMode.ECB,
+            Padding = PaddingMode.PKCS7
+        };
+        byte[] resultArray = objTripleDESCryptoService.CreateEncryptor().TransformFinalBlock(toEncArray, 0, toEncArray.Length);
+        objTripleDESCryptoService.Clear();
+        return resultArray;
     }
 }

@@ -11,8 +11,8 @@ public class Settings : INotifyPropertyChanged
     private int port = Preferences.Get("SavedPortServer", 0);
     private string password = Preferences.Get("SavedPasswordServer", string.Empty);
 
-    private string login = Preferences.Get("SavedLogIn", string.Empty);
-    private string savedPassword = Preferences.Get("SavedPassword", string.Empty);
+    private string? login = (string.IsNullOrEmpty(SecureStorage.GetAsync("SavedLogIn").Result?.ToString())) ? "" : SecureStorage.GetAsync("SavedLogIn").Result?.ToString();
+    private string? savedPassword = (string.IsNullOrEmpty(SecureStorage.GetAsync("SavedPassword").Result?.ToString())) ? "" : SecureStorage.GetAsync("SavedPassword").Result?.ToString();
 
     private string language = Preferences.Get("LanguageApp", "ru-RU");
 
@@ -74,7 +74,7 @@ public class Settings : INotifyPropertyChanged
 
     public string Login
     {
-        get => login;
+        get => login == null ? "" : login;
         set
         {
             if (login != value)
@@ -87,7 +87,7 @@ public class Settings : INotifyPropertyChanged
 
     public string SavedPassword
     {
-        get => savedPassword;
+        get => savedPassword == null ? "" : savedPassword;
         set
         {
             if (savedPassword != value)
