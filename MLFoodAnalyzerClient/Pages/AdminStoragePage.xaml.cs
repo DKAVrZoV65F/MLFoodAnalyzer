@@ -1,7 +1,6 @@
 ﻿using MLFoodAnalyzerClient.Extension;
 using System.Collections.ObjectModel;
 using System.Net.Sockets;
-using System.Reflection;
 using System.Text;
 
 namespace MLFoodAnalyzerClient.Pages;
@@ -21,15 +20,7 @@ public partial class AdminStoragePage : ContentPage
         settings = (Settings)Resources["settings"];
 
         BindingContext = this;
-        //GetFruits();
-        /*Foods =
-        [
-            new() {Name="Apple", Id=1, Description = "Q" },
-            new() {Name = "Banana", Id = 2, Description = "W"},
-            new() {Name="Orange", Id = 3, Description = "E"},
-            new() {Name = "Cherry", Id = 4, Description = "R" }
-        ];*/
-
+        GetFruits();
         fruitsListView.ItemsSource = Foods;
     }
 
@@ -37,7 +28,7 @@ public partial class AdminStoragePage : ContentPage
     {
         if (e.Item is Food tappedUser)
         {
-            Food user = new(tappedUser.Name, tappedUser.Id, tappedUser.Description);
+            Food user = new(id: tappedUser.Id, name: tappedUser.Name, description: tappedUser.Description);
             await Navigation.PushAsync(new UpdatingStoragePage(user));
         }
     }
@@ -81,16 +72,15 @@ public partial class AdminStoragePage : ContentPage
                 response.Add((byte)bytesRead);
 
             translation = Encoding.UTF8.GetString(response.ToArray());
-
             string[] rows = translation.Split('\n');
 
             Foods.Clear();
             foreach (string row in rows)
             {
-                Food? food = CreateMyClassInstance(row.Split('\t'));
-                if (food != null) Foods.Add(food);
+                string[] words = row.Split('\t');
+                Food food = new Food(int.Parse(words[0]), words[1], words[2]);
+                Foods.Add(food);
             }
-
             response.Clear();
             networkStream.Close();
         }
@@ -99,36 +89,5 @@ public partial class AdminStoragePage : ContentPage
         {
             tcpClient.Close();
         }
-
-    }
-
-    private static Food? CreateMyClassInstance(string[] values)
-    {
-        string strClassName = nameof(Food);
-        Type? calledType = Type.GetType(strClassName);
-        object? myClassInstance = Activator.CreateInstance(calledType!);
-
-        PropertyInfo[]? propertyInf = calledType?.GetProperties();
-        for (int i = 0; i < propertyInf?.Length; i++)
-        {
-            PropertyInfo propertyInfo = propertyInf[i];
-            if (propertyInfo.CanWrite)
-            {
-                switch (propertyInfo.Name)
-                {
-                    case "Id":
-                        propertyInfo.SetValue(myClassInstance, int.Parse(values[i]));
-                        break;
-                    case "Name":
-                        propertyInfo.SetValue(myClassInstance, values[i]);
-                        break;
-                    case "Description":
-                        propertyInfo.SetValue(myClassInstance, values[i]);
-                        break;
-                }
-            }
-        }
-
-        return (Food?)myClassInstance;
     }
 }
