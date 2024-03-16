@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Tensorflow;
 
 namespace MLFoodAnalyzerServer.Extension;
 
@@ -13,21 +14,21 @@ public class MLFood
         text = "";
     }
 
-    public string SetImage(string filePath)
+    public string[] SetImage(string filePath)
     {
-        if (string.IsNullOrEmpty(filePath) && !File.Exists(filePath)) return "Error on server (1)";
+        if (string.IsNullOrEmpty(filePath) && !File.Exists(filePath)) return ["Error on server (1)"];
         this.filePath = filePath;
         return PredictImage();
     }
 
-    public string SetText(string text)
+    public string[] SetText(string text)
     {
-        if (string.IsNullOrEmpty(text)) return "Error on server (2)";
+        if (string.IsNullOrEmpty(text)) return ["Error on server (1)"];
         this.text = text.ToLower();
         return PredictText();
     }
 
-    private string PredictImage()
+    private string[] PredictImage()
     {
         // Create single instance of sample data from first line of dataset for model input
         var imageBytes = File.ReadAllBytes(filePath);
@@ -41,7 +42,7 @@ public class MLFood
         return PredictResults(sortedScoresWithLabel);
     }
 
-    private string PredictText()
+    private string[] PredictText()
     {
         string str = text;
         int engCount = 0;
@@ -58,9 +59,9 @@ public class MLFood
         else return PredictFoodEn();
     }
 
-    private string PredictFoodEn()
+    private string[] PredictFoodEn()
     {
-        Query_EN.ModelInput sampleData = new Query_EN.ModelInput()
+        Query_EN.ModelInput sampleData = new()
         {
             Text = text,
         };
@@ -69,9 +70,9 @@ public class MLFood
         return PredictResults(sortedScoresWithLabel);
     }
 
-    private string PredictFoodRU()
+    private string[] PredictFoodRU()
     {
-        Query_RU.ModelInput sampleData = new Query_RU.ModelInput()
+        Query_RU.ModelInput sampleData = new()
         {
             Text = text,
         };
@@ -80,17 +81,15 @@ public class MLFood
         return PredictResults(sortedScoresWithLabel);
     }
 
-    private static string PredictResults(IOrderedEnumerable<KeyValuePair<string, float>> sortedScoresWithLabel)
+    private static string[] PredictResults(IOrderedEnumerable<KeyValuePair<string, float>> sortedScoresWithLabel)
     {
-        StringBuilder message = new($"{"\nClass",-40}{"Score",-20}\n{"-----",-40}{"-----",-20}\n");
-
+        List<string> message = [];
         foreach (var score in sortedScoresWithLabel)
         {
-            /*if (score.Value * 100 >= 30) message.AppendLine($"{score.Key,-40}{score.Value * 100,-20}\n");
-            else break;*/
-            message.AppendLine($"{score.Key,-40}{score.Value * 100,-20}\n");
+            if (score.Value * 1000 >= 30) message.Add(score.Key);
+            else break;
         }
-        return message.ToString();
+        return [.. message];
     }
 }
 

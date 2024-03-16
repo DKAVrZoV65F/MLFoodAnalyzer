@@ -31,11 +31,11 @@ public class TCPServer
         // settings = MLFoodAnalyzerServer.settings;
         store = MLFoodAnalyzerServer.store;
         database = MLFoodAnalyzerServer.database;
-        Console.CancelKeyPress += new ConsoleCancelEventHandler(myHandler!);
+        Console.CancelKeyPress += new ConsoleCancelEventHandler(MyHandler!);
     }
 
 
-    protected void myHandler(object sender, ConsoleCancelEventArgs args)
+    protected void MyHandler(object sender, ConsoleCancelEventArgs args)
     {
         Console.WriteLine("\nThe read operation has been interrupted.");
         Console.WriteLine($"  Key pressed: {args.SpecialKey}");
@@ -82,7 +82,8 @@ public class TCPServer
         Console.WriteLine("\nHit enter to continue...");
     }
 
-    private async Task Send(string text) => await stream.WriteAsync(Encoding.UTF8.GetBytes(text + '\0'));
+    private async Task Send(string? text) => await stream.WriteAsync(Encoding.UTF8.GetBytes(text + '\0'));
+    private async Task Send(string?[] text) => await stream.WriteAsync(Encoding.UTF8.GetBytes(string.Join("\n", text) + '\0'));
 
     private async Task GetCommand()
     {
@@ -107,6 +108,9 @@ public class TCPServer
                 await PingServer();
                 break;
             case "LOGIN":
+                await LogIn();
+                break;
+            case "FOOD":
                 await LogIn();
                 break;
             default:
@@ -153,7 +157,8 @@ public class TCPServer
         }
 
         MLFood mLFood = new();
-        string message = mLFood.SetImage(filePath);
+        string?[] message = mLFood.SetImage(filePath);
+        message = await database.SelectDescriptionFood(message!);
         await Send(message);
         Stop();
     }
@@ -164,12 +169,13 @@ public class TCPServer
 
         int bytesRead;
         store = MLFoodAnalyzerServer.store;
-        List<byte> response = new List<byte>();
+        List<byte> response = [];
         while ((bytesRead = stream.ReadByte()) != '\0')
             response.Add((byte)bytesRead);
         string word = Encoding.UTF8.GetString(response.ToArray());
         MLFood mLFood = new();
-        string message = mLFood.SetText(word);
+        string?[] message = mLFood.SetText(word);
+        message = await database.SelectDescriptionFood(message!);
         await Send(message);
         Stop();
     }
@@ -188,7 +194,7 @@ public class TCPServer
         Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a login");
 
         int bytesRead;
-        List<byte> response = new List<byte>();
+        List<byte> response = [];
         while ((bytesRead = stream.ReadByte()) != '\0')
             response.Add((byte)bytesRead);
         string word = Encoding.UTF8.GetString(response.ToArray());
@@ -220,7 +226,7 @@ public class TCPServer
 
         string Hostname = Environment.MachineName;
         IPHostEntry Host = Dns.GetHostEntry(Hostname);
-        return Host.AddressList[Host.AddressList.Length - 1];
+        return Host.AddressList[^1];
     }
 
 
