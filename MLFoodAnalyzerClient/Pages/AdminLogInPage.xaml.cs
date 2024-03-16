@@ -2,8 +2,6 @@ using MLFoodAnalyzerClient.Extension;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
 
 namespace MLFoodAnalyzerClient.Pages;
 
@@ -16,7 +14,6 @@ public partial class AdminLogInPage : ContentPage
 
     public AdminLogInPage()
     {
-
         InitializeComponent();
 
         settings = (Settings)Resources["settings"];
@@ -87,7 +84,7 @@ public partial class AdminLogInPage : ContentPage
             alert.DisplayMessage(LocalizationResourceManager["ErrorLogIn"].ToString());
             return;
         }
-        else if(string.IsNullOrEmpty(translation))
+        else if (string.IsNullOrEmpty(translation))
         {
             if (alert == null) alert = new();
             alert.DisplayMessage(LocalizationResourceManager["DestinationHostUn"].ToString());
@@ -96,57 +93,35 @@ public partial class AdminLogInPage : ContentPage
         await Navigation.PushAsync(new AdminStoragePage());
     }
 
-    /*private string DecryptText(string CipherText)
+    public static string EncryptText(string plainText)
     {
-        byte[] toEncryptArray = Convert.FromBase64String(CipherText);
-
-        MD5CryptoServiceProvider objMD5CryptoService = new();
-        byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(settings.Password));
-        objMD5CryptoService.Clear();
-
-        using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
-        {
-            Key = securityKeyArray,
-            Mode = CipherMode.ECB,
-            Padding = PaddingMode.PKCS7
-        };
-        byte[] resultArray = objTripleDESCryptoService.CreateDecryptor().TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
-        objTripleDESCryptoService.Clear();
-        return UTF8Encoding.UTF8.GetString(resultArray);
-    }*/
-
-    private string DecryptText(string CipherText)
-    {
-        byte[] toEncryptArray = Convert.FromBase64String(CipherText);
-
-        using MD5 md5 = MD5.Create();
-        byte[] securityKeyArray = md5.ComputeHash(UTF8Encoding.UTF8.GetBytes(settings.Password));
+        byte[] toEncryptedArray = Encoding.UTF8.GetBytes(plainText);
+        byte[] securityKeyArray = MD5.HashData(Encoding.UTF8.GetBytes(settings.Password));
 
         using TripleDES des = TripleDES.Create();
         des.Key = securityKeyArray;
         des.Mode = CipherMode.ECB;
         des.Padding = PaddingMode.PKCS7;
 
-        byte[] resultArray = des.CreateDecryptor().TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
-        return UTF8Encoding.UTF8.GetString(resultArray);
+        ICryptoTransform objCryptoTransform = des.CreateEncryptor();
+        byte[] resultArray = objCryptoTransform.TransformFinalBlock(toEncryptedArray, 0, toEncryptedArray.Length);
+        des.Clear();
+        return Convert.ToBase64String(resultArray, 0, resultArray.Length);
     }
 
-    private string EncryptText(string PlainText)
+    public static string DecryptText(string CipherText)
     {
-        byte[] toEncryptedArray = UTF8Encoding.UTF8.GetBytes(PlainText);
+        byte[] toEncryptArray = Convert.FromBase64String(CipherText);
+        byte[] securityKeyArray = MD5.HashData(Encoding.UTF8.GetBytes(settings.Password));
 
-        MD5CryptoServiceProvider objMD5CryptoService = new();
-        byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(settings.Password));
-        objMD5CryptoService.Clear();
+        using TripleDES des = TripleDES.Create();
+        des.Key = securityKeyArray;
+        des.Mode = CipherMode.ECB;
+        des.Padding = PaddingMode.PKCS7;
 
-        using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
-        {
-            Key = securityKeyArray,
-            Mode = CipherMode.ECB,
-            Padding = PaddingMode.PKCS7
-        };
-        byte[] resultArray = objTripleDESCryptoService.CreateEncryptor().TransformFinalBlock(toEncryptedArray, 0, toEncryptedArray.Length);
-        objTripleDESCryptoService.Clear();
-        return Convert.ToBase64String(resultArray, 0, resultArray.Length);
+        ICryptoTransform objCryptoTransform = des.CreateDecryptor();
+        byte[] resultArray = objCryptoTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
+        des.Clear();
+        return Encoding.UTF8.GetString(resultArray);
     }
 }
