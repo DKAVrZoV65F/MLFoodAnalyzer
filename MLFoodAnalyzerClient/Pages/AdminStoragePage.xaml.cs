@@ -8,7 +8,6 @@ namespace MLFoodAnalyzerClient.Pages;
 public partial class AdminStoragePage : ContentPage
 {
     public LocalizationResourceManager LocalizationResourceManager => LocalizationResourceManager.Instance;
-    private static Settings settings = AppShell.settings;
     private AlertService? alert;
 
     public ObservableCollection<Food> Foods { get; set; } = [];
@@ -16,8 +15,6 @@ public partial class AdminStoragePage : ContentPage
     public AdminStoragePage()
     {
         InitializeComponent();
-
-        settings = (Settings)Resources["settings"];
 
         BindingContext = this;
         GetFruits();
@@ -49,7 +46,7 @@ public partial class AdminStoragePage : ContentPage
 
     private async void GetFruits()
     {
-        if (string.IsNullOrEmpty(settings.Ip) || settings.Port == 0)
+        if (string.IsNullOrEmpty(AppShell.settings.Ip) || AppShell.settings.Port == 0)
         {
             alert ??= new();
             alert.DisplayMessage(LocalizationResourceManager["ErrorWithIPOrPort"].ToString());
@@ -60,7 +57,7 @@ public partial class AdminStoragePage : ContentPage
         string translation = string.Empty;
         try
         {
-            await tcpClient.ConnectAsync(settings.Ip, settings.Port);
+            await tcpClient.ConnectAsync(AppShell.settings.Ip, AppShell.settings.Port);
             var stream = tcpClient.GetStream();
             var response = new List<byte>();
             NetworkStream networkStream = tcpClient.GetStream();
@@ -78,7 +75,7 @@ public partial class AdminStoragePage : ContentPage
             foreach (string row in rows)
             {
                 string[] words = row.Split('\t');
-                Food food = new(int.Parse(words[0]), words[1], words[2]);
+                Food food = new(int.Parse(words[0]), $"{words[1][0].ToString().ToUpper()}{words[1][1..]}", words[2]);
                 Foods.Add(food);
             }
             response.Clear();

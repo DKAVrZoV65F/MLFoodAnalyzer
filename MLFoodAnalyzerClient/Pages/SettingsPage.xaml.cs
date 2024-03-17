@@ -7,7 +7,6 @@ public partial class SettingsPage : ContentPage
 {
     public LocalizationResourceManager LocalizationResourceManager
        => LocalizationResourceManager.Instance;
-    private static Settings settings = AppShell.settings;
     private AlertService? alert;
 
     private int counter = 0;
@@ -18,10 +17,9 @@ public partial class SettingsPage : ContentPage
     {
         InitializeComponent();
 
-        settings = (Settings)Resources["settings"];
-        SettingsLabel.FontSize = settings.FSize + 5;
-        HelpLabel.FontSize = settings.FSize + 5;
-        AppVersionLabel.FontSize = settings.FSize - 5;
+        SettingsLabel.FontSize = AppShell.settings.FSize + 5;
+        HelpLabel.FontSize = AppShell.settings.FSize + 5;
+        AppVersionLabel.FontSize = AppShell.settings.FSize - 5;
 
         string getLanguage = Preferences.Get("LanguageApp", "ru-RU");
         CultureInfo currentCulture = new(getLanguage);

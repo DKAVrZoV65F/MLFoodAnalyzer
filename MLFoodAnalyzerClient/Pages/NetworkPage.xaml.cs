@@ -14,15 +14,11 @@ public partial class NetworkPage : ContentPage
     private bool IsFlag = true;
     private bool task = false;
 
-    private static Settings settings = AppShell.settings;
-
-
     public NetworkPage()
     {
         InitializeComponent();
 
-        settings = (Settings)Resources["settings"];
-        TitleLabel.FontSize = settings.FSize + 5;
+        TitleLabel.FontSize = AppShell.settings.FSize + 5;
     }
 
 
@@ -33,7 +29,7 @@ public partial class NetworkPage : ContentPage
         IsFlag = false;
         CheckIpPortButton.IsInProgress = true;
 
-        if ((string.IsNullOrEmpty(settings.Ip) || settings.Port == 0) || !IsValidIpAddress(settings.Ip) || !IsValidPort(settings.Port))
+        if ((string.IsNullOrEmpty(AppShell.settings.Ip) || AppShell.settings.Port == 0) || !IsValidIpAddress(AppShell.settings.Ip) || !IsValidPort(AppShell.settings.Port))
         {
             IsFlag = true;
             CheckIpPortButton.IsInProgress = false;
@@ -42,7 +38,7 @@ public partial class NetworkPage : ContentPage
             return;
         }
 
-        await PingServerAsync(settings.Ip, settings.Port);
+        await PingServerAsync(AppShell.settings.Ip, AppShell.settings.Port);
 
         string? result = (task) ? LocalizationResourceManager["Success"].ToString() : LocalizationResourceManager["DestinationHostUn"].ToString();
         alert.DisplayMessage(result);
@@ -103,7 +99,7 @@ public partial class NetworkPage : ContentPage
     private void SavePSWD(object sender, EventArgs e)
     {
         string password = PasswordEntry.Text;
-        settings.Password = password;
+        AppShell.settings.Password = password;
         _ = SecureStorage.SetAsync("SavedPasswordServer", password);
         alert.DisplayMessage(LocalizationResourceManager["PSWDServer"].ToString());
     } 

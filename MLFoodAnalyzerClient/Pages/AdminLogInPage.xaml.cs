@@ -8,7 +8,6 @@ namespace MLFoodAnalyzerClient.Pages;
 public partial class AdminLogInPage : ContentPage
 {
     public LocalizationResourceManager LocalizationResourceManager => LocalizationResourceManager.Instance;
-    private static Settings settings = AppShell.settings;
     private bool IsFlag = true;
     private AlertService? alert;
 
@@ -16,9 +15,8 @@ public partial class AdminLogInPage : ContentPage
     {
         InitializeComponent();
 
-        settings = (Settings)Resources["settings"];
-        TitleLabel.FontSize = settings.FSize + 5;
-        SavingCheckBox.IsChecked = !string.IsNullOrEmpty(settings.Login);
+        TitleLabel.FontSize = AppShell.settings.FSize + 5;
+        SavingCheckBox.IsChecked = !string.IsNullOrEmpty(AppShell.settings.Login);
     }
 
     private void DisplayPassword_Changed(object sender, CheckedChangedEventArgs e) => PasswordEntry.IsPassword = !e.Value;
@@ -27,7 +25,7 @@ public partial class AdminLogInPage : ContentPage
     {
         if (!IsFlag) return;
 
-        if (string.IsNullOrEmpty(settings.Ip) || settings.Port == 0)
+        if (string.IsNullOrEmpty(AppShell.settings.Ip) || AppShell.settings.Port == 0)
         {
             alert ??= new();
             IsFlag = true;
@@ -36,25 +34,31 @@ public partial class AdminLogInPage : ContentPage
             return;
         }
 
-        _ = SecureStorage.SetAsync("SavedLogIn", SavingCheckBox.IsChecked ? settings.Login : string.Empty);
-        _ = SecureStorage.SetAsync("SavedPassword", SavingCheckBox.IsChecked ? settings.SavedPassword : string.Empty);
+        _ = SecureStorage.SetAsync("SavedLogIn", SavingCheckBox.IsChecked ? AppShell.settings.Login : string.Empty);
+        _ = SecureStorage.SetAsync("SavedPassword", SavingCheckBox.IsChecked ? AppShell.settings.SavedPassword : string.Empty);
+
+        if (!SavingCheckBox.IsChecked)
+        {
+            AppShell.settings.Login = string.Empty;
+            AppShell.settings.SavedPassword = string.Empty;
+        }
 
         IsFlag = false;
         LogInButton.IsInProgress = true;
 
-        if (string.IsNullOrEmpty(settings.Login) || string.IsNullOrEmpty(settings.SavedPassword))
+        if (string.IsNullOrEmpty(AppShell.settings.Login) || string.IsNullOrEmpty(AppShell.settings.SavedPassword))
         {
             IsFlag = true;
             LogInButton.IsInProgress = false;
             return;
         }
 
-        string encryptText = EncryptText($"{settings.Login}|{settings.SavedPassword}");
+        string encryptText = EncryptText($"{AppShell.settings.Login}|{AppShell.settings.SavedPassword}");
         using TcpClient tcpClient = new();
         string translation = string.Empty;
         try
         {
-            await tcpClient.ConnectAsync(settings.Ip, settings.Port);
+            await tcpClient.ConnectAsync(AppShell.settings.Ip, AppShell.settings.Port);
             var stream = tcpClient.GetStream();
             var response = new List<byte>();
             NetworkStream networkStream = tcpClient.GetStream();
@@ -92,14 +96,14 @@ public partial class AdminLogInPage : ContentPage
             alert.DisplayMessage(LocalizationResourceManager["DestinationHostUn"].ToString());
             return;
         }
-        settings.NickName = translation;
+        AppShell.settings.NickName = translation;
         await Navigation.PushAsync(new AdminStoragePage());
     }
 
     public static string EncryptText(string plainText)
     {
         byte[] toEncryptedArray = Encoding.UTF8.GetBytes(plainText);
-        byte[] securityKeyArray = MD5.HashData(Encoding.UTF8.GetBytes(settings.Password));
+        byte[] securityKeyArray = MD5.HashData(Encoding.UTF8.GetBytes(AppShell.settings.Password));
 
         using TripleDES des = TripleDES.Create();
         des.Key = securityKeyArray;
@@ -115,7 +119,7 @@ public partial class AdminLogInPage : ContentPage
     public static string DecryptText(string CipherText)
     {
         byte[] toEncryptArray = Convert.FromBase64String(CipherText);
-        byte[] securityKeyArray = MD5.HashData(Encoding.UTF8.GetBytes(settings.Password));
+        byte[] securityKeyArray = MD5.HashData(Encoding.UTF8.GetBytes(AppShell.settings.Password));
 
         using TripleDES des = TripleDES.Create();
         des.Key = securityKeyArray;

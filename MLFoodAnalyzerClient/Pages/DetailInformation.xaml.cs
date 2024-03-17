@@ -15,7 +15,7 @@ public partial class DetailInformation : ContentPage
 
         BindingContext = this;
         detailUser.Text = $"{history.NickName}#{history.IdAccount}";
-        detailFood.Text = $"{history.NameFood}#{history.IdFood}";
+        detailFood.Text = $"{history.NameFood[0].ToString().ToUpper()}{history.NameFood[1..]} #{history.IdFood}";
         detailDate.Text = $"{history.LastUpdate}";
         oldDescription.Text = history.Old_Description;
         newDescription.Text = history.New_Description;

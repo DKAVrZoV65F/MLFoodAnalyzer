@@ -9,7 +9,6 @@ public partial class UpdatingStoragePage : ContentPage
     public LocalizationResourceManager LocalizationResourceManager
        => LocalizationResourceManager.Instance;
 
-    private static Settings settings = AppShell.settings;
     private bool IsFlag = true;
     private AlertService? alert;
     private Food foodDetail;
@@ -18,13 +17,11 @@ public partial class UpdatingStoragePage : ContentPage
     {
         InitializeComponent();
 
-        settings = (Settings)Resources["settings"];
-
         BindingContext = this;
 
         foodDetail = xyz;
         IDLabel.Text = $"ID: {foodDetail.Id}";
-        NameLabel.Text = $"{LocalizationResourceManager["Title"]} {foodDetail.Name}";
+        NameLabel.Text = $"{LocalizationResourceManager["Title"]} {foodDetail.Name[0].ToString().ToUpper()}{foodDetail.Name[1..]}";
         DescriptionEntry.Text = $"{foodDetail.Description}";
     }
 
@@ -32,7 +29,7 @@ public partial class UpdatingStoragePage : ContentPage
     {
         if (!IsFlag) return;
 
-        if (string.IsNullOrEmpty(settings.Ip) || settings.Port == 0)
+        if (string.IsNullOrEmpty(AppShell.settings.Ip) || AppShell.settings.Port == 0)
         {
             alert ??= new();
             IsFlag = true;
@@ -48,14 +45,14 @@ public partial class UpdatingStoragePage : ContentPage
         string translation = string.Empty;
         try
         {
-            await tcpClient.ConnectAsync(settings.Ip, settings.Port);
+            await tcpClient.ConnectAsync(AppShell.settings.Ip, AppShell.settings.Port);
             var stream = tcpClient.GetStream();
             var response = new List<byte>();
             NetworkStream networkStream = tcpClient.GetStream();
 
             int bytesRead = 10;
             await stream.WriteAsync(Encoding.UTF8.GetBytes("Update\0"));
-            await stream.WriteAsync(Encoding.UTF8.GetBytes($"{settings.NickName}|{foodDetail.Id}|{DescriptionEntry.Text}\0"));
+            await stream.WriteAsync(Encoding.UTF8.GetBytes($"{AppShell.settings.NickName}|{foodDetail.Id}|{DescriptionEntry.Text}\0"));
 
             while ((bytesRead = stream.ReadByte()) != '\0')
                 response.Add((byte)bytesRead);

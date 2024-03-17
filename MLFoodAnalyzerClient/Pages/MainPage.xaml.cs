@@ -7,7 +7,6 @@ namespace MLFoodAnalyzerClient.Pages;
 public partial class MainPage : ContentPage
 {
     public LocalizationResourceManager LocalizationResourceManager => LocalizationResourceManager.Instance;
-    private static Settings settings = AppShell.settings;
     private AlertService alert;
 
     private const string errorServer = "ErrorConToServ";
@@ -28,8 +27,8 @@ public partial class MainPage : ContentPage
         InitializeComponent();
 
         alert = new();
-        settings = (Settings)Resources["settings"];
-        InfoLabel.FontSize = settings.FSize + 5;
+
+        InfoLabel.FontSize = AppShell.settings.FSize + 5;
     }
 
     private async void GoToPolicy() => await Navigation.PushModalAsync(new PolicyPage());
@@ -168,13 +167,13 @@ public partial class MainPage : ContentPage
 
         using TcpClient tcpClient = new();
         textFromServer = "";
-        if (string.IsNullOrEmpty(settings.Ip) || settings.Port == 0)
+        if (string.IsNullOrEmpty(AppShell.settings.Ip) || AppShell.settings.Port == 0)
         {
             textFromServer += LocalizationResourceManager[errorServer].ToString();
             return;
         }
 
-        await tcpClient.ConnectAsync(settings.Ip, settings.Port);
+        await tcpClient.ConnectAsync(AppShell.settings.Ip, AppShell.settings.Port);
         var stream = tcpClient.GetStream();
 
         //  Buffer for incoming data
@@ -207,7 +206,7 @@ public partial class MainPage : ContentPage
 
     private async Task SendText(string text)
     {
-        if (string.IsNullOrEmpty(settings.Ip))
+        if (string.IsNullOrEmpty(AppShell.settings.Ip))
         {
             textFromServer += LocalizationResourceManager[errorServer].ToString();
             return;
@@ -215,7 +214,7 @@ public partial class MainPage : ContentPage
 
         using TcpClient tcpClient = new();
         textFromServer = "";
-        await tcpClient.ConnectAsync(settings.Ip, settings.Port);
+        await tcpClient.ConnectAsync(AppShell.settings.Ip, AppShell.settings.Port);
         var stream = tcpClient.GetStream();
 
         //  Buffer for incoming data
@@ -235,42 +234,4 @@ public partial class MainPage : ContentPage
         response.Clear();
         networkStream.Close();
     }
-
-    /*    private static string DecryptText(string CipherText)
-        {
-            byte[] toEncryptArray = Convert.FromBase64String(CipherText);
-
-            MD5CryptoServiceProvider objMD5CryptoService = new();
-            byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(Preferences.Get("SavedPasswordServer", "")));
-            objMD5CryptoService.Clear();
-
-            using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
-            {
-                Key = securityKeyArray,
-                Mode = CipherMode.ECB,
-                Padding = PaddingMode.PKCS7
-            };
-            byte[] resultArray = objTripleDESCryptoService.CreateDecryptor().TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
-            objTripleDESCryptoService.Clear();
-            return UTF8Encoding.UTF8.GetString(resultArray);
-        }
-
-        private static string EncryptText(string PlainText)
-        {
-            byte[] toEncryptedArray = UTF8Encoding.UTF8.GetBytes(PlainText);
-
-            MD5CryptoServiceProvider objMD5CryptoService = new();
-            byte[] securityKeyArray = objMD5CryptoService.ComputeHash(UTF8Encoding.UTF8.GetBytes(Preferences.Get("SavedPasswordServer", "")));
-            objMD5CryptoService.Clear();
-
-            using TripleDESCryptoServiceProvider objTripleDESCryptoService = new()
-            {
-                Key = securityKeyArray,
-                Mode = CipherMode.ECB,
-                Padding = PaddingMode.PKCS7
-            };
-            byte[] resultArray = objTripleDESCryptoService.CreateEncryptor().TransformFinalBlock(toEncryptedArray, 0, toEncryptedArray.Length);
-            objTripleDESCryptoService.Clear();
-            return Convert.ToBase64String(resultArray, 0, resultArray.Length);
-        }*/
 }

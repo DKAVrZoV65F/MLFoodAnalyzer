@@ -11,8 +11,8 @@ public class Settings : INotifyPropertyChanged
     private int port = Preferences.Get("SavedPortServer", 0);
     private string? password = (string.IsNullOrEmpty(SecureStorage.GetAsync("SavedPasswordServer").Result?.ToString())) ? "" : SecureStorage.GetAsync("SavedPasswordServer").Result?.ToString();
 
-    private string? login = (string.IsNullOrEmpty(SecureStorage.GetAsync("SavedLogIn").Result?.ToString())) ? "" : SecureStorage.GetAsync("SavedLogIn").Result?.ToString();
-    private string? savedPassword = (string.IsNullOrEmpty(SecureStorage.GetAsync("SavedPassword").Result?.ToString())) ? "" : SecureStorage.GetAsync("SavedPassword").Result?.ToString();
+    private string? login = string.IsNullOrEmpty(SecureStorage.GetAsync("SavedLogIn").Result?.ToString()) ? "" : SecureStorage.GetAsync("SavedLogIn").Result?.ToString();
+    private string? savedPassword = string.IsNullOrEmpty(SecureStorage.GetAsync("SavedPassword").Result?.ToString()) ? "" : SecureStorage.GetAsync("SavedPassword").Result?.ToString();
 
     private string language = Preferences.Get("LanguageApp", "ru-RU");
     private string nickName = string.Empty;

@@ -46,7 +46,7 @@ public partial class HistoryChange : ContentPage
 
     private async void GetHistory(int count)
     {
-        if (string.IsNullOrEmpty(settings.Ip) || settings.Port == 0)
+        if (string.IsNullOrEmpty(AppShell.settings.Ip) || AppShell.settings.Port == 0)
         {
             alert ??= new();
             alert.DisplayMessage(LocalizationResourceManager["ErrorWithIPOrPort"].ToString());
@@ -57,7 +57,7 @@ public partial class HistoryChange : ContentPage
         string translation = string.Empty;
         try
         {
-            await tcpClient.ConnectAsync(settings.Ip, settings.Port);
+            await tcpClient.ConnectAsync(AppShell.settings.Ip, AppShell.settings.Port);
             var stream = tcpClient.GetStream();
             var response = new List<byte>();
             NetworkStream networkStream = tcpClient.GetStream();

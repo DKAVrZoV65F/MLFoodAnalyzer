@@ -6,7 +6,6 @@ public partial class ThemePage : ContentPage
 {
     private LocalizationResourceManager LocalizationResourceManager
         => LocalizationResourceManager.Instance;
-    private static Settings settings = AppShell.settings;
 
     private AlertService? alert;
 
@@ -14,8 +13,7 @@ public partial class ThemePage : ContentPage
     {
         InitializeComponent();
 
-        settings = (Settings)Resources["settings"];
-        TitleLabel.FontSize = settings.FSize + 5;
+        TitleLabel.FontSize = AppShell.settings.FSize + 5;
 
         string getTheme = Preferences.Get("ThemeApp", "Default");
         switch (getTheme)

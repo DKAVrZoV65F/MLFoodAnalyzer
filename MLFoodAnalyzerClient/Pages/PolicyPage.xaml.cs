@@ -4,7 +4,6 @@ namespace MLFoodAnalyzerClient.Pages;
 
 public partial class PolicyPage : ContentPage
 {
-    private static Settings settings = AppShell.settings;
     private List<string> _allImages = [];
     private Random _random = new();
     private bool IsPolicyRead = true;
@@ -18,10 +17,9 @@ public partial class PolicyPage : ContentPage
     {
         InitializeComponent();
 
-        settings = (Settings)Resources["settings"];
-        PolicyLabel.FontSize = settings.FSize;
-        InformationLabel.FontSize = settings.FSize;
-        AcceptButton.FontSize = settings.FSize;
+        PolicyLabel.FontSize = AppShell.settings.FSize;
+        InformationLabel.FontSize = AppShell.settings.FSize;
+        AcceptButton.FontSize = AppShell.settings.FSize;
 
         IsPolicyRead = Preferences.Get("IsPolicyRead", true);
         InformationLabel.IsEnabled = IsPolicyRead;
