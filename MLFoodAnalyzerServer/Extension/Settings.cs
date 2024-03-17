@@ -9,7 +9,6 @@ public class Settings
 
 
     /*
-     SQL : name of db + path to store db
      Logging : name of file and where to store 
      */
     //private string path;
@@ -26,8 +25,11 @@ public class Settings
     public string GetInfo() {
         TCPServer tcpServer = MLFoodAnalyzerServer.server;
         Store store = MLFoodAnalyzerServer.store;
+        Database database = MLFoodAnalyzerServer.database;
+
         return $"\nServer Info{indent}{tcpServer.GetInfo()}{indent}" +
             $"\nStore {indent}{store.GetInfo()}{indent}" +
+            $"\nDatabase{indent}{database.Info()}{indent}" +
             $"\nApp info{indent}{title} for {osPlatform} {version:V#'.'#'.'#}{indent}" +
             $"\nPress any button to continue.";
     }

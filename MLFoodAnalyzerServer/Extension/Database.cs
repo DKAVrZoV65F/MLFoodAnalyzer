@@ -4,25 +4,14 @@ namespace MLFoodAnalyzerServer.Extension;
 
 public class Database
 {
-
-    private readonly string connectionString = "Server=(localdb)\\Local;Database=MLF3A7;Trusted_Connection=True;";
-
+    private static readonly string nameDB = "MLF3A7";
+    private static readonly string retUpdDesc = "success";
+    private static readonly string retDBLogIn = "0";
+    private readonly string connectionString = $"Server=(localdb)\\Local;Database={nameDB};Trusted_Connection=True;";
 
     public Database(string connectionString = "Server=(localdb)\\Local;Database=MLF3A7;Trusted_Connection=True;") => this.connectionString = connectionString;
 
-    public async void Info()
-    {
-        using SqlConnection connection = new(connectionString);
-        await connection.OpenAsync();
-        Console.WriteLine("Connection is open");
-        Console.WriteLine("Connection Properties:");
-        Console.WriteLine($"\tConnection string: {connection.ConnectionString}");
-        Console.WriteLine($"\tThe database: {connection.Database}");
-        Console.WriteLine($"\tServer: {connection.DataSource}");
-        Console.WriteLine($"\tServer Version: {connection.ServerVersion}");
-        Console.WriteLine($"\tState: {connection.State}");
-        Console.WriteLine($"\tWorkstation Id: {connection.WorkstationId}\n");
-    }
+    public string Info() => $"The database name: {nameDB}";
 
     public async Task<string?> DBLogIn(string login, string password)
     {
@@ -48,7 +37,7 @@ public class Database
             return nickname?.ToString();
         }
         await reader.CloseAsync();
-        return "0";
+        return retDBLogIn;
     }
 
 
@@ -94,21 +83,7 @@ public class Database
 
         SqlCommand command = new(sqlExpression, connection);
         SqlDataReader reader = await command.ExecuteReaderAsync();
-        string? results = string.Empty;
-        if (reader.HasRows)
-        {
-            object[] values = new object[3];
-            while (await reader.ReadAsync())
-            {
-                for (int j = 0; j < values.Length; j++)
-                {
-                    values[j] = reader.GetValue(j);
-                }
-                results += string.Join("\t", values);
-                results += '\n';
-            }
-        }
-
+        string? results = Result(reader, 3).Result;
         await reader.CloseAsync();
         return results;
     }
@@ -124,10 +99,17 @@ public class Database
         SqlParameter countParam = new("@count", count);
         command.Parameters.Add(countParam);
         SqlDataReader reader = await command.ExecuteReaderAsync();
-        string? results = string.Empty;
+        string? results = Result(reader, 7).Result;
+        await reader.CloseAsync();
+        return results;
+    }
+
+    private async Task<string?> Result(SqlDataReader reader, int count)
+    {
+        string results = string.Empty;
         if (reader.HasRows)
         {
-            object[] values = new object[7];
+            object[] values = new object[count];
             while (await reader.ReadAsync())
             {
                 for (int j = 0; j < values.Length; j++)
@@ -138,14 +120,14 @@ public class Database
                 results += '\n';
             }
         }
-
-        await reader.CloseAsync();
         return results;
     }
 
     public async Task<string?> UpdateDescriptionFood(string nickname, int foodId, string foodDescription)
     {
-        string sqlExpression = $"DECLARE @accountId INT;DECLARE @Old_Description nvarchar(max);DECLARE @NameFood Varchar(50);" +
+        string sqlExpression = $"DECLARE @accountId INT;" +
+            $"DECLARE @Old_Description nvarchar(max);" +
+            $"DECLARE @NameFood Varchar(50);" +
             $"SELECT @accountId = Id FROM Account WHERE NickName = @nickname;SELECT @Old_Description = Description FROM Food WHERE Id = @foodId;" +
             $"SELECT @NameFood = Name FROM Food WHERE Id = @foodId;UPDATE Food SET Description = @foodDescription WHERE Id = @foodId;" +
             $"Insert into History (IdFood, NameFood, IdAccount, NickName, Old_Description, New_Description, LastUpdate) " +
@@ -165,6 +147,38 @@ public class Database
 
         await command.ExecuteNonQueryAsync();
 
-        return "success";
+        return retUpdDesc;
     }
 }
+
+
+
+
+
+/*
+                  ``
+  `.              `ys
+  +h+             +yh-
+  yyh:           .hyys
+ .hyyh.          oyyyh`
+ /yyyyy`        .hyydy/
+ syyhhy+        oyyhsys
+ hyyyoyh.      .hyyy:hh`
+.hyyyy:ho      +yyys-yh-
+:hyyyh-oh.    `hyyyo-oy/
+/yyyyh-:h+    -hyyh/-oy+
++yyyyh:-yy    +yyyh--oyo
++yyyyh/-sh.   syyyh--oyo
++yyyyh/-oy/  `hyyyy--syo
++yyyyh/-+y+  `hyyys--yy+
+:yyyyh/-+ys  .hyyyo-:hy:
+.hyyyh+-+ys  .hyyyo-oyh`
+`yyyyyo-oyy  .hyyy+-yyy
+ +yyyys-syy  `hyyh/oyy/
+ .hyyyh-hyy  `hyyh/hyh
+  oyyyhshys   yyyhyyy+
+  oyyyhshys   yyyhyyy+
+   /hyyyyyo`.-oyyyyh/
+   `syyyyyyyhyyyyyyho.
+    .hyyyyhNdyyyyyyymh/`
+*/

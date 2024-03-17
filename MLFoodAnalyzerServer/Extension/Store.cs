@@ -9,15 +9,14 @@ public class Store
     private int width;
     private int height;
     private int bitsPerPixel;
-    private static readonly string[] formats = ["png", "jpeg", "jpg", "bmp"];
+    private static readonly string[] formats = ["png", "jpeg", "jpg"];
     private string path;
     private long size;
 
-    private readonly string success = "Settings applied sucessfully";
-    private readonly string unsuccess = "Settings applied unsucessfully";
+    private readonly string success = "Settings applied successfully";
+    private readonly string unsuccess = "Settings applied unsuccessfully";
     private static readonly int minSizeImg = 0;
     private static readonly int maxSizeImg = 3840;
-    private static readonly long minSizeFolder = 0;
     private static readonly long maxSizeFolder = 100000;
 
 
@@ -27,7 +26,6 @@ public class Store
         format = "png";
         width = 500;
         height = 500;
-        bitsPerPixel = 18;
         path = $"C:\\Users\\{Environment.UserName}\\SFVPicture";
         size = 10;
     }
@@ -47,8 +45,7 @@ public class Store
         }
     }
 
-
-    public string GetInfo() => $"Name: {name}\nFormat: {format}\nWidth x Height: {width} x {height}\nBitsPerPixel: {bitsPerPixel}\nPath: {path}\nMax size of folder: {size}";
+    public string GetInfo() => $"Name: {name}\nFormat: {format}\nWidth x Height: {width} x {height}\nPath: {path}\nMax size of folder: {size} GB";
 
     public string GetPath() => path;
 
@@ -141,7 +138,7 @@ public class Store
 
     private static bool IsValidPath(string pathFolder) => Path.Exists(pathFolder);
 
-    private static bool IsValidSize(long input) => input > minSizeFolder && input < maxSizeFolder;
+    private static bool IsValidSize(long input) => input < maxSizeFolder;
 
     private static bool IsValidName(string input)
     {
@@ -169,7 +166,7 @@ public class Store
             if (Directory.Exists(folderPath))
             {
                 var directorySize = GetDirectorySize(folderPath);
-                var totalSize = directorySize / (1024 * 1024 * 1024); // size in GB
+                var totalSize = directorySize / (1024 * 1024 * 1024);
 
                 if (totalSize > size)
                 {
@@ -180,10 +177,7 @@ public class Store
             }
             else
             {
-                // Create the directory.
                 DirectoryInfo directory = Directory.CreateDirectory(folderPath);
-
-                // Print a message indicating that the directory was successfully created.
                 Console.WriteLine("Directory created at: " + directory.FullName);
             }
             return true;
@@ -201,14 +195,14 @@ public class Store
 
 
 /*
-              ``
-`.              `ys
-+h+             +yh-
-yyh:           .hyys
-.hyyh.          oyyyh`
-/yyyyy`        .hyydy/
-syyhhy+        oyyhsys
-hyyyoyh.      .hyyy:hh`
+                  ``
+  `.              `ys
+  +h+             +yh-
+  yyh:           .hyys
+ .hyyh.          oyyyh`
+ /yyyyy`        .hyydy/
+ syyhhy+        oyyhsys
+ hyyyoyh.      .hyyy:hh`
 .hyyyy:ho      +yyys-yh-
 :hyyyh-oh.    `hyyyo-oy/
 /yyyyh-:h+    -hyyh/-oy+
@@ -219,11 +213,11 @@ hyyyoyh.      .hyyy:hh`
 :yyyyh/-+ys  .hyyyo-:hy:
 .hyyyh+-+ys  .hyyyo-oyh`
 `yyyyyo-oyy  .hyyy+-yyy
-+yyyys-syy  `hyyh/oyy/
-.hyyyh-hyy  `hyyh/hyh
-oyyyhshys   yyyhyyy+
-oyyyhshys   yyyhyyy+
-/hyyyyyo`.-oyyyyh/
-`syyyyyyyhyyyyyyho.
-.hyyyyhNdyyyyyyymh/`
+ +yyyys-syy  `hyyh/oyy/
+ .hyyyh-hyy  `hyyh/hyh
+  oyyyhshys   yyyhyyy+
+  oyyyhshys   yyyhyyy+
+   /hyyyyyo`.-oyyyyh/
+   `syyyyyyyhyyyyyyho.
+    .hyyyyhNdyyyyyyymh/`
 */

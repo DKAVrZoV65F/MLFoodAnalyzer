@@ -12,9 +12,6 @@ public class TCPServer
     private TcpClient tcpClient;
     private NetworkStream stream;
     private TcpListener tcpListener;
-    // private readonly Settings settings;
-    private Store store;
-    private Database database;
     private static DateTime startUserOperation;
     private readonly string success = "Settings applied successfully";
     private readonly string unsuccess = "Settings applied unsuccessfully";
@@ -28,27 +25,18 @@ public class TCPServer
         this.timeout = timeout;
         ip = GetIp();
         tcpListener = new TcpListener(ip, port);
-        // settings = MLFoodAnalyzerServer.settings;
-        store = MLFoodAnalyzerServer.store;
-        database = MLFoodAnalyzerServer.database;
         Console.CancelKeyPress += new ConsoleCancelEventHandler(MyHandler!);
     }
 
 
     protected void MyHandler(object sender, ConsoleCancelEventArgs args)
     {
-        Console.WriteLine("\nThe read operation has been interrupted.");
-        Console.WriteLine($"  Key pressed: {args.SpecialKey}");
-        Console.WriteLine($"  Cancel property: {args.Cancel}");
-        Console.WriteLine("Setting the Cancel property to true...");
+        Console.WriteLine("\nServer close.");
         args.Cancel = true;
-        Console.WriteLine($"  Cancel property: {args.Cancel}");
-        Console.WriteLine("The read operation will resume...\n");
 
-
-        stream.Close();
-        tcpClient.Close();
-        tcpListener.Stop();
+        if(stream != null) stream.Close();
+        if (tcpClient != null) tcpClient.Close();
+        if (tcpListener != null) tcpListener.Stop();
     }
 
     public async Task Run()
@@ -88,7 +76,6 @@ public class TCPServer
     private async Task GetCommand()
     {
         int bytesRead;
-        store = MLFoodAnalyzerServer.store;
         var response = new List<byte>();
         while ((bytesRead = stream.ReadByte()) != '\0')
         {
@@ -99,7 +86,7 @@ public class TCPServer
         switch (word)
         {
             case "IMAGE":
-                await ProcessImage(store.GetPath());
+                await ProcessImage(MLFoodAnalyzerServer.store.GetPath());
                 break;
             case "TEXT":
                 await ProcessText();
@@ -142,7 +129,7 @@ public class TCPServer
         int numberOfFiles = files.Length;
         long sum = 0;
 
-        string fileName = $"{store.GetName()}_{numberOfFiles}.{store.GetFormat()}";
+        string fileName = $"{MLFoodAnalyzerServer.store.GetName()}_{numberOfFiles}.{MLFoodAnalyzerServer.store.GetFormat()}";
         Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a picture \"{fileName}\"");
 
         while ((bytesRead = stream.ReadByte()) != '\0')
@@ -164,7 +151,7 @@ public class TCPServer
 
         MLFood mLFood = new();
         string?[] message = mLFood.SetImage(filePath);
-        message = await database.SelectDescriptionFood(message!);
+        message = await MLFoodAnalyzerServer.database.SelectDescriptionFood(message!);
         await Send(message);
         Stop();
     }
@@ -174,14 +161,13 @@ public class TCPServer
         Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a text");
 
         int bytesRead;
-        store = MLFoodAnalyzerServer.store;
         List<byte> response = [];
         while ((bytesRead = stream.ReadByte()) != '\0')
             response.Add((byte)bytesRead);
         string word = Encoding.UTF8.GetString(response.ToArray());
         MLFood mLFood = new();
         string?[] message = mLFood.SetText(word);
-        message = await database.SelectDescriptionFood(message!);
+        message = await MLFoodAnalyzerServer.database.SelectDescriptionFood(message!);
         await Send(message);
         Stop();
     }
@@ -206,7 +192,7 @@ public class TCPServer
         string word = Encoding.UTF8.GetString(response.ToArray());
         word = Encryption.DecryptText(word);
         string[] textSplit = word.Split('|');
-        string? message = await database.DBLogIn(Encryption.ConvertToHash(textSplit[0]), Encryption.ConvertToHash(textSplit[1]));
+        string? message = await MLFoodAnalyzerServer.database.DBLogIn(Encryption.ConvertToHash(textSplit[0]), Encryption.ConvertToHash(textSplit[1]));
         message = Encryption.EncryptText(message!);
         await Send(message);
         Stop();
@@ -216,7 +202,7 @@ public class TCPServer
     {
         Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a foods");
 
-        string? message = await database.FoodSelect();
+        string? message = await MLFoodAnalyzerServer.database.FoodSelect();
         await Send(message);
         Stop();
     }
@@ -230,7 +216,7 @@ public class TCPServer
         while ((bytesRead = stream.ReadByte()) != '\0')
             response.Add((byte)bytesRead);
         string word = Encoding.UTF8.GetString(response.ToArray());
-        string? message = await database.History(int.Parse(word));
+        string? message = await MLFoodAnalyzerServer.database.History(int.Parse(word));
         await Send(message);
         Stop();
     }
@@ -245,12 +231,12 @@ public class TCPServer
             response.Add((byte)bytesRead);
         string word = Encoding.UTF8.GetString(response.ToArray());
         string[] textSplit = word.Split('|');
-        string? message = await database.UpdateDescriptionFood(textSplit[0], int.Parse(textSplit[1]), textSplit[2]);
+        string? message = await MLFoodAnalyzerServer.database.UpdateDescriptionFood(textSplit[0], int.Parse(textSplit[1]), textSplit[2]);
         await Send(message);
         Stop();
     }
 
-    public string GetInfo() => $"IP: {ip}\nPort: {port}\nTimeout: {timeout}";
+    public string GetInfo() => $"IP: {ip}\nPort: {port}\nTimeout: {timeout} ms";
 
     public IPAddress GetIp()
     {

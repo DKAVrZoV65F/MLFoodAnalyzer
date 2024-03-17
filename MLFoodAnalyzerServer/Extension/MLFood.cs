@@ -1,7 +1,4 @@
-﻿using System.Text;
-using Tensorflow;
-
-namespace MLFoodAnalyzerServer.Extension;
+﻿namespace MLFoodAnalyzerServer.Extension;
 
 public class MLFood
 {

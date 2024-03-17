@@ -1,4 +1,6 @@
-﻿using MLFoodAnalyzerServer.Extension;
+﻿using Newtonsoft.Json;
+using MLFoodAnalyzerServer.Extension;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace MLFoodAnalyzerServer;
 
@@ -9,6 +11,10 @@ internal class MLFoodAnalyzerServer
     public static Settings settings = new();
     public static TCPServer server = new();
     public static Store store = new();
+
+    private static string filePath = "C:\\Users\\an0ni\\OneDrive\\Documentos\\file1.json";
+    private static bool IsFlag = true;
+    private static readonly string[] searchingIcons = [" |", " /", "--", " \\"];
 
     private static async Task Main()
     {
@@ -29,9 +35,19 @@ internal class MLFoodAnalyzerServer
             switch (selectedOption)
             {
                 case 1:
-                    QRGenerate();
-                    Console.WriteLine("QRCode generate.");
-                    Console.WriteLine("Running server.");
+                    Thread backgroundThread = new(new ThreadStart(LoadAll));
+                    backgroundThread.Start();
+
+                    while (IsFlag)
+                    {
+                        foreach (string icon in searchingIcons)
+                        {
+                            Console.Write($"\rLoading {icon}");
+                            Thread.Sleep(100);
+                        }
+                    }
+                    Console.Write($"\r{new String(' ', Console.BufferWidth)}");
+                    Console.Clear();
                     await server.Run();
                     break;
                 case 2:
@@ -53,6 +69,28 @@ internal class MLFoodAnalyzerServer
         } while (selectedOption != 4);
     }
 
+    private static void LoadAll()
+    {
+        QRGenerate();
+        LoadMLImage();
+        LoadMLText();
+        IsFlag = false;
+    }
+
+    private static void LoadMLImage()
+    {
+        Console.WriteLine("\rLoad ML Image.");
+        MLFood? mLFood = new();
+        mLFood.SetImage(Path.GetFullPath("Extension\\apple.jpg"));
+    }
+
+    private static void LoadMLText()
+    {
+        Console.WriteLine("\rLoad ML Text.");
+        MLFood? mLFood = new();
+        mLFood.SetText("apple");
+    }
+
     private static void Settings()
     {
         int selectedOption;
@@ -61,9 +99,9 @@ internal class MLFoodAnalyzerServer
             Console.WriteLine("Settings.");
             Console.WriteLine("Menu:");
             Console.WriteLine($"1. Port. Default = \"{server.GetPort()}\"");
-            Console.WriteLine($"2. Timeout. Default = \"{server.GetTimeout()}\"");
+            Console.WriteLine($"2. Timeout. Default = \"{server.GetTimeout()}\" ms");
             Console.WriteLine($"3. Store images. Default = \"{store.GetPath()}\"");
-            Console.WriteLine($"4. Size of folder. Default = \"{store.GetSize()}\"GB");
+            Console.WriteLine($"4. Size of folder. Default = \"{store.GetSize()}\" GB");
             Console.WriteLine($"5. Name of image. Default = \"{store.GetName()}\"");
             Console.WriteLine($"6. Format image. Default = \"{store.GetFormat()}\"");
             Console.WriteLine($"7. Width image. Default = \"{store.GetWidth()}\"");
@@ -133,12 +171,36 @@ internal class MLFoodAnalyzerServer
 
     private static void QRGenerate()
     {
+        Console.WriteLine("\rGenerate QRCode.");
         MessagingToolkit.QRCode.Codec.QRCodeEncoder encoder = new()
         {
             QRCodeScale = 8
         };
         System.Drawing.Bitmap bmp = encoder.Encode($"{server.GetIp()}|{server.GetPort()}");
-        bmp.Save(filename: "QRServer.png");
+        bmp.Save(filename: $"{store.GetPath()}\\QRServer.png");
+    }
+
+
+    private static void LoadJS()
+    {
+        /*YT? deserialized = JsonConvert.DeserializeObject<YT>(json);
+        if (deserialized == null) return;
+        Console.WriteLine(deserialized.Name);
+        Console.WriteLine(deserialized.Channel);
+        Console.WriteLine(deserialized.Active);
+
+        Console.WriteLine();
+
+        YY? deserialized1 = JsonConvert.DeserializeObject<YY>(json);
+        if (deserialized1 == null) return;
+        Console.WriteLine(deserialized1.ID);
+        Console.WriteLine(deserialized1.Active2);*/
+    }
+
+    private static void SaveJS()
+    {
+        string jsonString = JsonConvert.SerializeObject(database, Formatting.Indented);
+        if (File.Exists(filePath)) File.WriteAllText(filePath, jsonString);
     }
 }
 
