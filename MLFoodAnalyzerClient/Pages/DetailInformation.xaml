@@ -22,7 +22,7 @@
         <Label
             x:Name="detailUser"
             Margin="0, 10"
-            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource Wh      ite100}}"
+            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
             FontFamily="RegularFont"
             FontSize="{Binding Path=FSize}"/>
 
