@@ -9,14 +9,11 @@ public partial class HistoryChange : ContentPage
 {
     private ObservableCollection<History> Histories { get; set; } = new();
     public LocalizationResourceManager LocalizationResourceManager => LocalizationResourceManager.Instance;
-    private static Settings settings = AppShell.settings;
     private AlertService? alert;
 
     public HistoryChange()
     {
         InitializeComponent();
-
-        settings = (Settings)Resources["settings"];
 
         BindingContext = this;
         GetHistory(Histories.Count);
@@ -76,10 +73,9 @@ public partial class HistoryChange : ContentPage
             {
                 string[] words = row.Split('\t');
                 DateTime dateTimeValue = DateTime.Now;
-                DateTime.TryParseExact(words[6], "M/d/yyyy h:mm:ss tt", null, System.Globalization.DateTimeStyles.None, out dateTimeValue);
-
-                History food = new(int.Parse(words[0]), words[1], int.Parse(words[2]), words[3], words[4], words[5], dateTimeValue);
-                Histories.Add(food);
+                DateTime.TryParseExact(words[6], "M / d / yyyy h:mm:ss tt", null, System.Globalization.DateTimeStyles.None, out dateTimeValue);
+                History history = new(int.Parse(words[0]), $"{words[1][0].ToString().ToUpper()}{words[1][1..]}", int.Parse(words[2]), words[3], words[4], words[5], dateTimeValue);
+                Histories.Add(history);
             }
             response.Clear();
             networkStream.Close();

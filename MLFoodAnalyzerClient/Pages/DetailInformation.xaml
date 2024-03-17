@@ -44,7 +44,7 @@
             VerticalTextAlignment="Center"
             Margin="0, 10"
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
-            FontFamily="RegularFont"
+            FontFamily="BoldFont"
             FontSize="{Binding Path=FSize}"/>
 
         <!-- Old Description -->
