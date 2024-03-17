@@ -15,7 +15,7 @@ public class Settings : INotifyPropertyChanged
     private string? savedPassword = (string.IsNullOrEmpty(SecureStorage.GetAsync("SavedPassword").Result?.ToString())) ? "" : SecureStorage.GetAsync("SavedPassword").Result?.ToString();
 
     private string language = Preferences.Get("LanguageApp", "ru-RU");
-    private String nickName = string.Empty;
+    private string nickName = string.Empty;
 
 
     public event PropertyChangedEventHandler? PropertyChanged;

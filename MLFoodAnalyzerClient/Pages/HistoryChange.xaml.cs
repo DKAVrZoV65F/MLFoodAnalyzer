@@ -75,7 +75,10 @@ public partial class HistoryChange : ContentPage
             foreach (string row in rows)
             {
                 string[] words = row.Split('\t');
-                History food = new(int.Parse(words[0]), words[1], int.Parse(words[2]), words[4], words[5], words[6], DateTime.Parse(words[7]));
+                DateTime dateTimeValue = DateTime.Now;
+                DateTime.TryParseExact(words[6], "M/d/yyyy h:mm:ss tt", null, System.Globalization.DateTimeStyles.None, out dateTimeValue);
+
+                History food = new(int.Parse(words[0]), words[1], int.Parse(words[2]), words[3], words[4], words[5], dateTimeValue);
                 Histories.Add(food);
             }
             response.Clear();
