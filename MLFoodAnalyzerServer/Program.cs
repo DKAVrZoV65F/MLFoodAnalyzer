@@ -1,5 +1,4 @@
 ﻿using MLFoodAnalyzerServer.Extension;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace MLFoodAnalyzerServer;
 
@@ -8,7 +7,7 @@ internal class MLFoodAnalyzerServer
     public static Settings settings = new();
     public static Database? database;
     public static Encryption? encryption;
-    
+
     public static TCPServer? server;
     public static Store? store;
     public static WorkJson? workJson;

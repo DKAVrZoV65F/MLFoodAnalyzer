@@ -191,6 +191,8 @@ public class TCPServer
         while ((bytesRead = stream.ReadByte()) != '\0')
             response.Add((byte)bytesRead);
         string word = Encoding.UTF8.GetString(response.ToArray());
+        
+        encryption = MLFoodAnalyzerServer.encryption;
         word = encryption!.DecryptText(word);
         string[] textSplit = word.Split('|');
         string? message = await MLFoodAnalyzerServer.database!.DBLogIn(Encryption.ConvertToHash(textSplit[0]), Encryption.ConvertToHash(textSplit[1]));
