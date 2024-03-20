@@ -7,7 +7,7 @@ namespace MLFoodAnalyzerClient.Pages;
 public partial class MainPage : ContentPage
 {
     public LocalizationResourceManager LocalizationResourceManager => LocalizationResourceManager.Instance;
-    private AlertService alert;
+    private AlertService? alert;
 
     private const string errorServer = "ErrorConToServ";
     private string text = "";
@@ -25,8 +25,6 @@ public partial class MainPage : ContentPage
         if (IsPolicyRead) GoToPolicy();
 
         InitializeComponent();
-
-        alert = new();
 
         InfoLabel.FontSize = AppShell.settings.FSize + 5;
     }
@@ -50,13 +48,7 @@ public partial class MainPage : ContentPage
         SendPictureButton.IsInProgress = true;
         QueryEditor.Text = "";
 
-        ResultEditor.Text += LocalizationResourceManager["You"].ToString();
-        foreach (var item in text)
-        {
-            ResultEditor.Text += item;
-            await Task.Delay(rnd.Next(minValue, maxValue));
-        }
-        ResultEditor.Text += '\n';
+        ResultEditor.Text += LocalizationResourceManager["AttachedAText"].ToString() + '\n';
 
         await SendText(text);
         ResultEditor.Text += LocalizationResourceManager["Server"].ToString();
@@ -104,13 +96,7 @@ public partial class MainPage : ContentPage
             return;
         }
 
-        ResultEditor.Text += LocalizationResourceManager["AttachedAPicture"].ToString() + '\"';
-        foreach (var item in path)
-        {
-            ResultEditor.Text += item;
-            await Task.Delay(rnd.Next(minValue, maxValue));
-        }
-        ResultEditor.Text += "\"\n";
+        ResultEditor.Text += LocalizationResourceManager["AttachedAPicture"].ToString() +'\n';
         await SendPicture(path);
 
         ResultEditor.Text += LocalizationResourceManager["Server"].ToString();
@@ -128,6 +114,7 @@ public partial class MainPage : ContentPage
     private async Task<string> GetPicturePath()
     {
 #if ANDROID || IOS
+        alert ??= new();
         bool result = await alert.DisplayMessage(LocalizationResourceManager["SelectAnAction"].ToString(), LocalizationResourceManager["TakeAPicture"].ToString(), LocalizationResourceManager["Gallery"].ToString());
         string res = (result) ? await GetPicture() : await GetMedia();
         return res;
@@ -160,7 +147,8 @@ public partial class MainPage : ContentPage
 
         if (fileSize >= 8_000_000)
         {
-            alert.DisplayMessage($"The image must not exceed 8MB! You are uploading a picture with the size {fileSize / 1_000_000} MB");
+            alert ??= new();
+            alert.DisplayMessage($"{LocalizationResourceManager["LimitImage"]}{fileSize / 1_000_000} MB");
             return;
         }
 
@@ -176,11 +164,10 @@ public partial class MainPage : ContentPage
         await tcpClient.ConnectAsync(AppShell.settings.Ip, AppShell.settings.Port);
         var stream = tcpClient.GetStream();
 
-        //  Buffer for incoming data
         var response = new List<byte>();
         NetworkStream networkStream = tcpClient.GetStream();
 
-        int bytesRead = 10; //  To read bytes from a stream
+        int bytesRead = 10;
         await stream.WriteAsync(Encoding.UTF8.GetBytes("IMAGE\0"));
         await stream.WriteAsync(Encoding.UTF8.GetBytes($"{fileSize}\0"));
 
@@ -195,7 +182,7 @@ public partial class MainPage : ContentPage
         }
         fileStream.Close();
 
-        while ((bytesRead = stream.ReadByte()) != '\0') response.Add((byte)bytesRead);  //  Adding to the buffer
+        while ((bytesRead = stream.ReadByte()) != '\0') response.Add((byte)bytesRead);
 
         string translation = Encoding.UTF8.GetString(response.ToArray());
         textFromServer = translation + '\n';
@@ -226,7 +213,7 @@ public partial class MainPage : ContentPage
         await stream.WriteAsync(Encoding.UTF8.GetBytes($"{text}\0"));
 
         while ((bytesRead = stream.ReadByte()) != '\0')
-            response.Add((byte)bytesRead);  //  Adding to the buffer
+            response.Add((byte)bytesRead);
 
         string translation = Encoding.UTF8.GetString(response.ToArray());
         textFromServer = translation + '\n';

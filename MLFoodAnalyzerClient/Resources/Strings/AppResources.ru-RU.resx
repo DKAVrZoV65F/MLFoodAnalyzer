@@ -130,7 +130,10 @@
     <value>MLFoodAnalyzer</value>
   </data>
   <data name="AttachedAPicture" xml:space="preserve">
-    <value>Вы прикрепили картинку </value>
+    <value>Картинка отправлена на сервер, дождитесь результатов</value>
+  </data>
+  <data name="AttachedAText" xml:space="preserve">
+    <value>Текст отправлен на сервер, дождитесь результатов.</value>
   </data>
   <data name="Back" xml:space="preserve">
     <value>Назад</value>
@@ -206,6 +209,9 @@
   </data>
   <data name="LightTheme" xml:space="preserve">
     <value>Светлая тема</value>
+  </data>
+  <data name="LimitImage" xml:space="preserve">
+    <value>Размер изображения не должен превышать 8 МБ! Вы загружаете изображение размером </value>
   </data>
   <data name="LogIn" xml:space="preserve">
     <value>Авторизоваться</value>
@@ -320,8 +326,5 @@
   </data>
   <data name="Welcome" xml:space="preserve">
     <value>Добро пожаловать!</value>
-  </data>
-  <data name="You" xml:space="preserve">
-    <value>Вы: </value>
   </data>
 </root>

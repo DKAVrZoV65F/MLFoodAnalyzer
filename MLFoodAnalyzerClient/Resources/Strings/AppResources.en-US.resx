@@ -130,7 +130,10 @@
     <value>MLFoodAnalyzer</value>
   </data>
   <data name="AttachedAPicture" xml:space="preserve">
-    <value>You have attached a picture </value>
+    <value>The picture has been sent to the server, wait for the results</value>
+  </data>
+  <data name="AttachedAText" xml:space="preserve">
+    <value>The text has been sent to the server, wait for the results.</value>
   </data>
   <data name="Back" xml:space="preserve">
     <value>Back</value>
@@ -206,6 +209,9 @@
   </data>
   <data name="LightTheme" xml:space="preserve">
     <value>Light theme</value>
+  </data>
+  <data name="LimitImage" xml:space="preserve">
+    <value>The image must not exceed 8MB! You are uploading a picture with the size </value>
   </data>
   <data name="LogIn" xml:space="preserve">
     <value>Log in</value>
@@ -320,8 +326,5 @@
   </data>
   <data name="Welcome" xml:space="preserve">
     <value>Welcome!</value>
-  </data>
-  <data name="You" xml:space="preserve">
-    <value>You: </value>
   </data>
 </root>

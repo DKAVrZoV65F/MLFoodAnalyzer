@@ -97,11 +97,20 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You have attached a picture .
+        ///   Looks up a localized string similar to The picture has been sent to the server, wait for the results.
         /// </summary>
         internal static string AttachedAPicture {
             get {
                 return ResourceManager.GetString("AttachedAPicture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The text has been sent to the server, wait for the results..
+        /// </summary>
+        internal static string AttachedAText {
+            get {
+                return ResourceManager.GetString("AttachedAText", resourceCulture);
             }
         }
         
@@ -327,6 +336,15 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         internal static string LightTheme {
             get {
                 return ResourceManager.GetString("LightTheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The image must not exceed 8MB! You are uploading a picture with the size .
+        /// </summary>
+        internal static string LimitImage {
+            get {
+                return ResourceManager.GetString("LimitImage", resourceCulture);
             }
         }
         
@@ -669,15 +687,6 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         internal static string Welcome {
             get {
                 return ResourceManager.GetString("Welcome", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You: .
-        /// </summary>
-        internal static string You {
-            get {
-                return ResourceManager.GetString("You", resourceCulture);
             }
         }
     }
