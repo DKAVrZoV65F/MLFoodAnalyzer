@@ -6,8 +6,8 @@
     xmlns:local="clr-namespace:MLFoodAnalyzerClient.Pages"
     xmlns:extension="clr-namespace:MLFoodAnalyzerClient.Extension"
     xmlns:strings="clr-namespace:MLFoodAnalyzerClient.Resources.Strings"
-    Shell.BackgroundColor="{AppThemeBinding Default={StaticResource Black}, Light={StaticResource White200}, Dark={StaticResource Black}}"
-    FlyoutIcon="{AppThemeBinding Light=menu_dark.png, Dark=menu_light.png}"
+    Shell.BackgroundColor="{AppThemeBinding Default={StaticResource Black}, Light={StaticResource Gray900}, Dark={StaticResource Black}}"
+    FlyoutIcon="menu_light.png"
     Shell.FlyoutWidth="270">
 
     <Shell.FlyoutHeader>
