@@ -1,23 +1,31 @@
-﻿using Newtonsoft.Json;
-using MLFoodAnalyzerServer.Extension;
+﻿using MLFoodAnalyzerServer.Extension;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace MLFoodAnalyzerServer;
 
 internal class MLFoodAnalyzerServer
 {
-    public static Database database = new();
-    public static Encryption encryption = new();
     public static Settings settings = new();
-    public static TCPServer server = new();
-    public static Store store = new();
+    public static Database? database;
+    public static Encryption? encryption;
+    
+    public static TCPServer? server;
+    public static Store? store;
+    public static WorkJson? workJson;
 
-    private static string filePath = "C:\\Users\\an0ni\\OneDrive\\Documentos\\file1.json";
     private static bool IsFlag = true;
     private static readonly string[] searchingIcons = [" |", " /", "--", " \\"];
 
     private static async Task Main()
     {
+        workJson = new();
+        workJson.LoadJS();
+
+        database = WorkJson.database;
+        encryption = WorkJson.encryption;
+        server = WorkJson.server;
+        store = WorkJson.store;
+
         Console.Title = settings.GetTitle();
         int selectedOption;
         do
@@ -48,7 +56,7 @@ internal class MLFoodAnalyzerServer
                     }
                     Console.Write($"\r{new String(' ', Console.BufferWidth)}");
                     Console.Clear();
-                    await server.Run();
+                    await server!.Run();
                     break;
                 case 2:
                     Settings();
@@ -96,17 +104,21 @@ internal class MLFoodAnalyzerServer
         int selectedOption;
         do
         {
+            server ??= new();
+            store ??= new();
+            database ??= new();
+            encryption ??= new();
+
             Console.WriteLine("Settings.");
             Console.WriteLine("Menu:");
-            Console.WriteLine($"1. Port. Default = \"{server.GetPort()}\"");
+            Console.WriteLine($"1. Port. Default = \"{server!.GetPort()}\"");
             Console.WriteLine($"2. Timeout. Default = \"{server.GetTimeout()}\" ms");
-            Console.WriteLine($"3. Store images. Default = \"{store.GetPath()}\"");
+            Console.WriteLine($"3. Store images. Default = \"{store!.GetPath()}\"");
             Console.WriteLine($"4. Size of folder. Default = \"{store.GetSize()}\" GB");
             Console.WriteLine($"5. Name of image. Default = \"{store.GetName()}\"");
             Console.WriteLine($"6. Format image. Default = \"{store.GetFormat()}\"");
             Console.WriteLine($"7. Width image. Default = \"{store.GetWidth()}\"");
             Console.WriteLine($"8. Height image. Default = \"{store.GetHeight()}\"");
-            Console.WriteLine($"9. Bits per pixel image. Default = \"{store.GetBitsPerPixel()}\"");
             Console.WriteLine("10. Exit");
             Console.Write("Please enter your selection: ");
             _ = int.TryParse(Console.ReadLine(), out selectedOption);
@@ -153,11 +165,6 @@ internal class MLFoodAnalyzerServer
                     Console.WriteLine(store.SetHeight(Console.ReadLine()!));
                     Console.ReadLine();
                     break;
-                case 9:
-                    Console.WriteLine("\nWrite new bits per pixel image:");
-                    Console.WriteLine(store.SetBitsPerPixel(Console.ReadLine()!));
-                    Console.ReadLine();
-                    break;
                 case 10:
                     break;
                 default:
@@ -165,6 +172,8 @@ internal class MLFoodAnalyzerServer
                     Console.ReadLine();
                     break;
             }
+            workJson!.Size = (int)store.GetSize();
+            workJson!.SaveJS(new(DatabaseName: "MLF3A7", SecurityKey: encryption.GetPassword(), Size: (int)store.GetSize(), Port: int.Parse(server.GetPort()), Timeout: int.Parse(server.GetTimeout()), PathFolder: store.GetPath(), ImageFormat: store.GetFormat(), NameFiles: store.GetName()));
             Console.Clear();
         } while (selectedOption != 10);
     }
@@ -176,31 +185,8 @@ internal class MLFoodAnalyzerServer
         {
             QRCodeScale = 8
         };
-        System.Drawing.Bitmap bmp = encoder.Encode($"{server.GetIp()}|{server.GetPort()}");
-        bmp.Save(filename: $"{store.GetPath()}\\QRServer.png");
-    }
-
-
-    private static void LoadJS()
-    {
-        /*YT? deserialized = JsonConvert.DeserializeObject<YT>(json);
-        if (deserialized == null) return;
-        Console.WriteLine(deserialized.Name);
-        Console.WriteLine(deserialized.Channel);
-        Console.WriteLine(deserialized.Active);
-
-        Console.WriteLine();
-
-        YY? deserialized1 = JsonConvert.DeserializeObject<YY>(json);
-        if (deserialized1 == null) return;
-        Console.WriteLine(deserialized1.ID);
-        Console.WriteLine(deserialized1.Active2);*/
-    }
-
-    private static void SaveJS()
-    {
-        string jsonString = JsonConvert.SerializeObject(database, Formatting.Indented);
-        if (File.Exists(filePath)) File.WriteAllText(filePath, jsonString);
+        System.Drawing.Bitmap bmp = encoder.Encode($"{server!.GetIp()}|{server.GetPort()}");
+        bmp.Save(filename: $"{store!.GetPath()}\\QRServer.png");
     }
 }
 

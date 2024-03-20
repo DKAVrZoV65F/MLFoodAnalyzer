@@ -15,6 +15,7 @@ public class TCPServer
     private static DateTime startUserOperation;
     private readonly string success = "Settings applied successfully";
     private readonly string unsuccess = "Settings applied unsuccessfully";
+    private Encryption? encryption = MLFoodAnalyzerServer.encryption;
 
 
     public TCPServer(int port = 55555, int timeout = 10000)
@@ -86,7 +87,7 @@ public class TCPServer
         switch (word)
         {
             case "IMAGE":
-                await ProcessImage(MLFoodAnalyzerServer.store.GetPath());
+                await ProcessImage(MLFoodAnalyzerServer.store!.GetPath());
                 break;
             case "TEXT":
                 await ProcessText();
@@ -120,16 +121,16 @@ public class TCPServer
         Stop();
     }
 
-    private async Task ProcessImage(string folderPath)
+    private async Task ProcessImage(string? folderPath)
     {
         int bytesRead;
         byte[] buffer = new byte[1024];
         var response = new List<byte>();
-        string[] files = Directory.GetFiles(folderPath);
+        string[] files = Directory.GetFiles(folderPath!);
         int numberOfFiles = files.Length;
         long sum = 0;
 
-        string fileName = $"{MLFoodAnalyzerServer.store.GetName()}_{numberOfFiles}.{MLFoodAnalyzerServer.store.GetFormat()}";
+        string? fileName = $"{MLFoodAnalyzerServer.store!.GetName()}_{numberOfFiles}.{MLFoodAnalyzerServer.store.GetFormat()}";
         Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a picture \"{fileName}\"");
 
         while ((bytesRead = stream.ReadByte()) != '\0')
@@ -151,7 +152,7 @@ public class TCPServer
 
         MLFood mLFood = new();
         string?[] message = mLFood.SetImage(filePath);
-        message = await MLFoodAnalyzerServer.database.SelectDescriptionFood(message!);
+        message = await MLFoodAnalyzerServer.database!.SelectDescriptionFood(message!);
         await Send(message);
         Stop();
     }
@@ -167,7 +168,7 @@ public class TCPServer
         string word = Encoding.UTF8.GetString(response.ToArray());
         MLFood mLFood = new();
         string?[] message = mLFood.SetText(word);
-        message = await MLFoodAnalyzerServer.database.SelectDescriptionFood(message!);
+        message = await MLFoodAnalyzerServer.database!.SelectDescriptionFood(message!);
         await Send(message);
         Stop();
     }
@@ -190,10 +191,10 @@ public class TCPServer
         while ((bytesRead = stream.ReadByte()) != '\0')
             response.Add((byte)bytesRead);
         string word = Encoding.UTF8.GetString(response.ToArray());
-        word = Encryption.DecryptText(word);
+        word = encryption!.DecryptText(word);
         string[] textSplit = word.Split('|');
-        string? message = await MLFoodAnalyzerServer.database.DBLogIn(Encryption.ConvertToHash(textSplit[0]), Encryption.ConvertToHash(textSplit[1]));
-        message = Encryption.EncryptText(message!);
+        string? message = await MLFoodAnalyzerServer.database!.DBLogIn(Encryption.ConvertToHash(textSplit[0]), Encryption.ConvertToHash(textSplit[1]));
+        message = encryption.EncryptText(message!);
         await Send(message);
         Stop();
     }
@@ -202,7 +203,7 @@ public class TCPServer
     {
         Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a foods");
 
-        string? message = await MLFoodAnalyzerServer.database.FoodSelect();
+        string? message = await MLFoodAnalyzerServer.database!.FoodSelect();
         await Send(message);
         Stop();
     }
@@ -216,7 +217,7 @@ public class TCPServer
         while ((bytesRead = stream.ReadByte()) != '\0')
             response.Add((byte)bytesRead);
         string word = Encoding.UTF8.GetString(response.ToArray());
-        string? message = await MLFoodAnalyzerServer.database.History(int.Parse(word));
+        string? message = await MLFoodAnalyzerServer.database!.History(int.Parse(word));
         await Send(message);
         Stop();
     }
@@ -231,7 +232,7 @@ public class TCPServer
             response.Add((byte)bytesRead);
         string word = Encoding.UTF8.GetString(response.ToArray());
         string[] textSplit = word.Split('|');
-        string? message = await MLFoodAnalyzerServer.database.UpdateDescriptionFood(textSplit[0], int.Parse(textSplit[1]), textSplit[2]);
+        string? message = await MLFoodAnalyzerServer.database!.UpdateDescriptionFood(textSplit[0], int.Parse(textSplit[1]), textSplit[2]);
         await Send(message);
         Stop();
     }

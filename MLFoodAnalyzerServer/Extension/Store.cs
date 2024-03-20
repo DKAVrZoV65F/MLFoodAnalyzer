@@ -4,13 +4,12 @@ namespace MLFoodAnalyzerServer.Extension;
 
 public class Store
 {
-    private string name;
-    private string format;
+    private string nameFiles;
+    private string imageFormat;
     private int width;
     private int height;
-    private int bitsPerPixel;
     private static readonly string[] formats = ["png", "jpeg", "jpg"];
-    private string path;
+    private string pathFolder;
     private long size;
 
     private readonly string success = "Settings applied successfully";
@@ -20,14 +19,14 @@ public class Store
     private static readonly long maxSizeFolder = 100000;
 
 
-    public Store()
+    public Store(string? pathFolder = null, string? nameFiles = "img", string? imageFormat = "png", int size = 10)
     {
-        name = "img";
-        format = "png";
+        this.nameFiles = nameFiles!;
+        this.imageFormat = imageFormat!;
+        this.pathFolder = (pathFolder == null) ?  $"C:\\Users\\{Environment.UserName}\\SFVPicture" : pathFolder;
+        this.size = size;
         width = 500;
         height = 500;
-        path = $"C:\\Users\\{Environment.UserName}\\SFVPicture";
-        size = 10;
     }
 
     private static void ClearDirectory(string path)
@@ -45,21 +44,20 @@ public class Store
         }
     }
 
-    public string GetInfo() => $"Name: {name}\nFormat: {format}\nWidth x Height: {width} x {height}\nPath: {path}\nMax size of folder: {size} GB";
+    public string GetInfo() => $"Name: {nameFiles}\nFormat: {imageFormat}\nWidth x Height: {width} x {height}\nPath: {pathFolder}\nMax size of folder: {size} GB";
 
-    public string GetPath() => path;
+    public string GetPath() => pathFolder;
 
     public long GetSize() => size;
 
-    public string GetName() => string.IsNullOrEmpty(name) ? "{Name of image is increment}" : name;
+    public string? GetName() => string.IsNullOrWhiteSpace(nameFiles) ? "{Name of image is increment}" : nameFiles;
 
-    public string GetFormat() => format;
+    public string GetFormat() => imageFormat;
 
     public string GetWidth() => width.ToString();
 
     public string GetHeight() => height.ToString();
 
-    public string GetBitsPerPixel() => bitsPerPixel.ToString();
 
     private static long GetDirectorySize(string path)
     {
@@ -85,7 +83,7 @@ public class Store
     public string SetPath(string pathFolder)
     {
         bool validation = IsValidPath(pathFolder) && IsValidFolderSize(pathFolder);
-        path = validation ? pathFolder : path;
+        pathFolder = validation ? pathFolder : pathFolder;
         return validation ? success : unsuccess;
     }
 
@@ -100,14 +98,14 @@ public class Store
     public string SetName(string name)
     {
         bool validation = IsValidName(name);
-        this.name = validation ? name : this.name;
+        this.nameFiles = validation ? name : this.nameFiles;
         return validation ? success : unsuccess;
     }
 
     public string SetFormat(string format)
     {
         bool validation = IsValidFormat(format);
-        this.format = validation ? format : this.format;
+        this.imageFormat = validation ? format : this.imageFormat;
         return validation ? success : unsuccess;
     }
 
@@ -124,14 +122,6 @@ public class Store
         _ = int.TryParse($"{height:D}", out int outputParse);
         bool validation = IsValidImageSize(outputParse);
         this.height = validation ? outputParse : this.height;
-        return validation ? success : unsuccess;
-    }
-
-    public string SetBitsPerPixel(string bitsPerPixel)
-    {
-        _ = int.TryParse($"{bitsPerPixel:D}", out int outputParse);
-        bool validation = IsValidBitsPerPixel(outputParse);
-        this.bitsPerPixel = validation ? outputParse : this.bitsPerPixel;
         return validation ? success : unsuccess;
     }
 
@@ -156,8 +146,6 @@ public class Store
     }
 
     private static bool IsValidImageSize(int input) => input > minSizeImg && input <= maxSizeImg;
-
-    private static bool IsValidBitsPerPixel(int input) => input == 8 || input == 16 || input == 24 || input == 32 || input == 48;
 
     private bool IsValidFolderSize(string folderPath)
     {

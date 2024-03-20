@@ -4,14 +4,18 @@ namespace MLFoodAnalyzerServer.Extension;
 
 public class Database
 {
-    private static readonly string nameDB = "MLF3A7";
+    private string? databaseName = null;
     private static readonly string retUpdDesc = "success";
     private static readonly string retDBLogIn = "0";
-    private readonly string connectionString = $"Server=(localdb)\\Local;Database={nameDB};Trusted_Connection=True;";
+    private string? connectionString = null;
 
-    public Database(string connectionString = "Server=(localdb)\\Local;Database=MLF3A7;Trusted_Connection=True;") => this.connectionString = connectionString;
+    public Database(string databaseName = "MLF3A7")
+    {
+        this.databaseName = databaseName;
+        connectionString = $"Server=(localdb)\\Local;Database={this.databaseName};Trusted_Connection=True;";
+    }
 
-    public string Info() => $"The database name: {nameDB}";
+    public string Info() => $"The database name: {databaseName}";
 
     public async Task<string?> DBLogIn(string login, string password)
     {
@@ -48,7 +52,7 @@ public class Database
         List<string?> results = [];
         foreach (string foodName in foodNames)
         {
-            if (string.IsNullOrEmpty(foodName)) results.Add("Nothing");
+            if (string.IsNullOrWhiteSpace(foodName)) results.Add("Nothing");
             string sqlExpression = "select Description from Food where Name = @foodName";
 
             using SqlConnection connection = new(connectionString);

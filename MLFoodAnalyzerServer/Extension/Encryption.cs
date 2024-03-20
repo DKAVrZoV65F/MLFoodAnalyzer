@@ -5,14 +5,17 @@ namespace MLFoodAnalyzerServer.Extension
 {
     public class Encryption
     {
-        private const string SecurityKey = "QWERTY";
+        private string? SecurityKey = null;
 
-        public Encryption() { }
+        public Encryption(string SecurityKey = "QWERTY") 
+        { 
+            this.SecurityKey = SecurityKey;
+        }
 
-        public static string EncryptText(string plainText)
+        public string EncryptText(string plainText)
         {
             byte[] toEncryptedArray = Encoding.UTF8.GetBytes(plainText);
-            byte[] securityKeyArray = MD5.HashData(Encoding.UTF8.GetBytes(SecurityKey));
+            byte[] securityKeyArray = MD5.HashData(Encoding.UTF8.GetBytes(SecurityKey!));
 
             using TripleDES des = TripleDES.Create();
             des.Key = securityKeyArray;
@@ -25,10 +28,10 @@ namespace MLFoodAnalyzerServer.Extension
             return Convert.ToBase64String(resultArray, 0, resultArray.Length);
         }
 
-        public static string DecryptText(string CipherText)
+        public string DecryptText(string CipherText)
         {
             byte[] toEncryptArray = Convert.FromBase64String(CipherText);
-            byte[] securityKeyArray = MD5.HashData(Encoding.UTF8.GetBytes(SecurityKey));
+            byte[] securityKeyArray = MD5.HashData(Encoding.UTF8.GetBytes(SecurityKey!));
 
             using TripleDES des = TripleDES.Create();
             des.Key = securityKeyArray;
@@ -43,7 +46,7 @@ namespace MLFoodAnalyzerServer.Extension
 
         public static string ConvertToHash(string input) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(input)));
 
-        public static string GetPassword() => SecurityKey;
+        public string? GetPassword() => SecurityKey;
     }
 }
 

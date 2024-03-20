@@ -13,14 +13,14 @@ public class MLFood
 
     public string[] SetImage(string filePath)
     {
-        if (string.IsNullOrEmpty(filePath) && !File.Exists(filePath)) return ["Error on server (1)"];
+        if (string.IsNullOrWhiteSpace(filePath) && !File.Exists(filePath)) return ["Error on server (1)"];
         this.filePath = filePath;
         return PredictImage();
     }
 
     public string[] SetText(string text)
     {
-        if (string.IsNullOrEmpty(text)) return ["Error on server (1)"];
+        if (string.IsNullOrWhiteSpace(text)) return ["Error on server (1)"];
         this.text = text.ToLower();
         return PredictText();
     }
