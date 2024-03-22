@@ -46,7 +46,7 @@ public partial class AdminStoragePage : ContentPage
 
     private async void GetFruits()
     {
-        if (string.IsNullOrEmpty(AppShell.settings.Ip) || AppShell.settings.Port == 0)
+        if (string.IsNullOrWhiteSpace(AppShell.settings.Ip) || AppShell.settings.Port == 0)
         {
             alert ??= new();
             alert.DisplayMessage(LocalizationResourceManager["ErrorWithIPOrPort"].ToString());

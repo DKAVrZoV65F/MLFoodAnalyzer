@@ -17,7 +17,7 @@ public partial class AdminLogInPage : ContentPage
 
         TitleLabel.FontSize = AppShell.settings.FSize + 5;
         AppShell.settings = (Settings)Resources["settings"];
-        SavingCheckBox.IsChecked = !string.IsNullOrEmpty(AppShell.settings.Login);
+        SavingCheckBox.IsChecked = !string.IsNullOrWhiteSpace(AppShell.settings.Login);
     }
 
     private void DisplayPassword_Changed(object sender, CheckedChangedEventArgs e) => PasswordEntry.IsPassword = !e.Value;
@@ -26,7 +26,7 @@ public partial class AdminLogInPage : ContentPage
     {
         if (!IsFlag) return;
 
-        if (string.IsNullOrEmpty(AppShell.settings.Ip) || AppShell.settings.Port == 0)
+        if (string.IsNullOrWhiteSpace(AppShell.settings.Ip) || AppShell.settings.Port == 0)
         {
             alert ??= new();
             IsFlag = true;
@@ -47,7 +47,7 @@ public partial class AdminLogInPage : ContentPage
         IsFlag = false;
         LogInButton.IsInProgress = true;
 
-        if (string.IsNullOrEmpty(AppShell.settings.Login) || string.IsNullOrEmpty(AppShell.settings.SavedPassword))
+        if (string.IsNullOrWhiteSpace(AppShell.settings.Login) || string.IsNullOrWhiteSpace(AppShell.settings.SavedPassword))
         {
             IsFlag = true;
             LogInButton.IsInProgress = false;
@@ -85,13 +85,13 @@ public partial class AdminLogInPage : ContentPage
 
         IsFlag = true;
         LogInButton.IsInProgress = false;
-        if (translation.Equals("0") && !string.IsNullOrEmpty(translation))
+        if (translation.Equals("0") && !string.IsNullOrWhiteSpace(translation))
         {
             alert ??= new();
             alert.DisplayMessage(LocalizationResourceManager["ErrorLogIn"].ToString());
             return;
         }
-        else if (string.IsNullOrEmpty(translation))
+        else if (string.IsNullOrWhiteSpace(translation))
         {
             alert ??= new();
             alert.DisplayMessage(LocalizationResourceManager["DestinationHostUn"].ToString());

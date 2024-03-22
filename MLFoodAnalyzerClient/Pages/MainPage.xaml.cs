@@ -9,9 +9,37 @@ public partial class MainPage : ContentPage
     public LocalizationResourceManager LocalizationResourceManager => LocalizationResourceManager.Instance;
     private AlertService? alert;
 
+
+    private const string logo = """
+                          ``
+          `.              `ys
+          +h+             +yh-
+          yyh:           .hyys
+         .hyyh.          oyyyh`
+         /yyyyy`        .hyydy/
+         syyhhy+        oyyhsys
+         hyyyoyh.      .hyyy:hh`
+        .hyyyy:ho      +yyys-yh-
+        :hyyyh-oh.    `hyyyo-oy/
+        /yyyyh-:h+    -hyyh/-oy+
+        +yyyyh:-yy    +yyyh--oyo
+        +yyyyh/-sh.   syyyh--oyo
+        +yyyyh/-oy/  `hyyyy--syo
+        +yyyyh/-+y+  `hyyys--yy+
+        :yyyyh/-+ys  .hyyyo-:hy:
+        .hyyyh+-+ys  .hyyyo-oyh`
+        `yyyyyo-oyy  .hyyy+-yyy
+         +yyyys-syy  `hyyh/oyy/
+         .hyyyh-hyy  `hyyh/hyh
+          oyyyhshys   yyyhyyy+
+          oyyyhshys   yyyhyyy+
+           /hyyyyyo`.-oyyyyh/
+           `syyyyyyyhyyyyyyho.
+            .hyyyyhNdyyyyyyymh/`
+        """;
     private const string errorServer = "ErrorConToServ";
-    private string text = "";
-    private string textFromServer = "";
+    private string text = string.Empty;
+    private string textFromServer = string.Empty;
     private bool IsFlag = true;
     bool IsPolicyRead;
 
@@ -41,12 +69,22 @@ public partial class MainPage : ContentPage
         }
 
         text = QueryEditor.Text;
-        if (string.IsNullOrEmpty(text) || !IsFlag) return;
+        QueryEditor.Text = string.Empty;
+        if (string.IsNullOrWhiteSpace(text) || !IsFlag) return;
 
         IsFlag = false;
         SendTextButton.IsInProgress = true;
         SendPictureButton.IsInProgress = true;
-        QueryEditor.Text = "";
+
+        if (text[0].Equals('/'))
+        {
+            await Command(text[1..]);
+            SendTextButton.IsInProgress = false;
+            SendPictureButton.IsInProgress = false;
+            text = string.Empty;
+            IsFlag = true;
+            return;
+        }
 
         ResultEditor.Text += LocalizationResourceManager["AttachedAText"].ToString() + '\n';
 
@@ -60,7 +98,7 @@ public partial class MainPage : ContentPage
 
         SendTextButton.IsInProgress = false;
         SendPictureButton.IsInProgress = false;
-        text = "";
+        text = string.Empty;
         IsFlag = true;
     }
 
@@ -68,8 +106,8 @@ public partial class MainPage : ContentPage
     {
         if (SendPictureButton == null || SendTextButton == null) return;
 
-        SendPictureButton.IsVisible = string.IsNullOrEmpty(QueryEditor.Text);
-        SendTextButton.IsVisible = !string.IsNullOrEmpty(QueryEditor.Text);
+        SendPictureButton.IsVisible = string.IsNullOrWhiteSpace(QueryEditor.Text);
+        SendTextButton.IsVisible = !string.IsNullOrWhiteSpace(QueryEditor.Text);
     }
 
     private async void SendPicture_Tapped(object sender, EventArgs e)
@@ -88,7 +126,7 @@ public partial class MainPage : ContentPage
         SendPictureButton.IsInProgress = true;
 
         string path = await GetPicturePath();
-        if (string.IsNullOrEmpty(path))
+        if (string.IsNullOrWhiteSpace(path))
         {
             SendTextButton.IsInProgress = false;
             SendPictureButton.IsInProgress = false;
@@ -96,7 +134,7 @@ public partial class MainPage : ContentPage
             return;
         }
 
-        ResultEditor.Text += LocalizationResourceManager["AttachedAPicture"].ToString() +'\n';
+        ResultEditor.Text += LocalizationResourceManager["AttachedAPicture"].ToString() + '\n';
         await SendPicture(path);
 
         ResultEditor.Text += LocalizationResourceManager["Server"].ToString();
@@ -130,7 +168,7 @@ public partial class MainPage : ContentPage
 
     private async Task<string> GetPathToImage(FileResult? myPhoto)
     {
-        if (myPhoto == null) return "";
+        if (myPhoto == null) return string.Empty;
         string localFilePath = Path.Combine(FileSystem.CacheDirectory, myPhoto.FileName);
         using Stream sourceStream = await myPhoto.OpenReadAsync();
         using FileStream localFileStream = File.OpenWrite(localFilePath);
@@ -154,8 +192,8 @@ public partial class MainPage : ContentPage
 
 
         using TcpClient tcpClient = new();
-        textFromServer = "";
-        if (string.IsNullOrEmpty(AppShell.settings.Ip) || AppShell.settings.Port == 0)
+        textFromServer = string.Empty;
+        if (string.IsNullOrWhiteSpace(AppShell.settings.Ip) || AppShell.settings.Port == 0)
         {
             textFromServer += LocalizationResourceManager[errorServer].ToString();
             return;
@@ -193,14 +231,14 @@ public partial class MainPage : ContentPage
 
     private async Task SendText(string text)
     {
-        if (string.IsNullOrEmpty(AppShell.settings.Ip))
+        if (string.IsNullOrWhiteSpace(AppShell.settings.Ip))
         {
             textFromServer += LocalizationResourceManager[errorServer].ToString();
             return;
         }
 
         using TcpClient tcpClient = new();
-        textFromServer = "";
+        textFromServer = string.Empty;
         await tcpClient.ConnectAsync(AppShell.settings.Ip, AppShell.settings.Port);
         var stream = tcpClient.GetStream();
 
@@ -221,4 +259,55 @@ public partial class MainPage : ContentPage
         response.Clear();
         networkStream.Close();
     }
+
+    private async Task Command(string command)
+    {
+        switch (command)
+        {
+            case ("clear"):
+                ResultEditor.Text = string.Empty;
+                break;
+            case ("Kamchatka"):
+                ResultEditor.FontFamily = "LogoFont";
+                ResultEditor.Text = logo;
+                await Task.Delay(5000);
+                ResultEditor.Text = string.Empty;
+                ResultEditor.FontFamily = "RegularFont";
+                break;
+            default:
+                break;
+        }
+    }
 }
+
+
+
+
+
+/*
+                  ``
+  `.              `ys
+  +h+             +yh-
+  yyh:           .hyys
+ .hyyh.          oyyyh`
+ /yyyyy`        .hyydy/
+ syyhhy+        oyyhsys
+ hyyyoyh.      .hyyy:hh`
+.hyyyy:ho      +yyys-yh-
+:hyyyh-oh.    `hyyyo-oy/
+/yyyyh-:h+    -hyyh/-oy+
++yyyyh:-yy    +yyyh--oyo
++yyyyh/-sh.   syyyh--oyo
++yyyyh/-oy/  `hyyyy--syo
++yyyyh/-+y+  `hyyys--yy+
+:yyyyh/-+ys  .hyyyo-:hy:
+.hyyyh+-+ys  .hyyyo-oyh`
+`yyyyyo-oyy  .hyyy+-yyy
+ +yyyys-syy  `hyyh/oyy/
+ .hyyyh-hyy  `hyyh/hyh
+  oyyyhshys   yyyhyyy+
+  oyyyhshys   yyyhyyy+
+   /hyyyyyo`.-oyyyyh/
+   `syyyyyyyhyyyyyyho.
+    .hyyyyhNdyyyyyyymh/`
+*/

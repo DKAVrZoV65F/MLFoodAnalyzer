@@ -60,6 +60,7 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 	<ItemGroup>
+	  <None Remove="Resources\Fonts\Cascade-Code.ttf" />
 	  <None Remove="Resources\Images\menu_dark.png" />
 	  <None Remove="Resources\Images\menu_light.png" />
 	  <None Remove="Resources\Images\qr_code.png" />

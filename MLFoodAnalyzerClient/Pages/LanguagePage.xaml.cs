@@ -34,7 +34,7 @@ public partial class LanguagePage : ContentPage
     {
         RadioButton selectedRadioButton = (RadioButton)sender;
         string? checkBoxValue = (selectedRadioButton.Value != null) ? selectedRadioButton.Value.ToString() : string.Empty;
-        if (string.IsNullOrEmpty(checkBoxValue) || checkBoxValue == AppShell.settings.Language) return;
+        if (string.IsNullOrWhiteSpace(checkBoxValue) || checkBoxValue == AppShell.settings.Language) return;
         Preferences.Set("LanguageApp", checkBoxValue);
 
         alert.DisplayMessage(LocalizationResourceManager["ReloadApp"].ToString());

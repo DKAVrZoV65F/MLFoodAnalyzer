@@ -29,7 +29,7 @@ public partial class ButtonControl : Frame
         propertyName: nameof(Text),
         returnType: typeof(string),
         declaringType: typeof(ButtonControl),
-        defaultValue: "",
+        defaultValue: string.Empty,
         defaultBindingMode: BindingMode.TwoWay
         );
 
@@ -43,7 +43,7 @@ public partial class ButtonControl : Frame
         propertyName: nameof(Text),
         returnType: typeof(string),
         declaringType: typeof(ButtonControl),
-        defaultValue: "",
+        defaultValue: string.Empty,
         defaultBindingMode: BindingMode.OneWay
         );
 

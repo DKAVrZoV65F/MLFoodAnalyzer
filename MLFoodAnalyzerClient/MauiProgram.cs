@@ -14,6 +14,7 @@ public static class MauiProgram
             {
                 fonts.AddFont("Carlito-Bold.ttf", "BoldFont");
                 fonts.AddFont("Carlito-Regular.ttf", "RegularFont");
+                fonts.AddFont("Cascade-Code.ttf", "LogoFont");
             })
             .UseBarcodeReader();
 

@@ -30,7 +30,7 @@ public partial class NetworkPage : ContentPage
         IsFlag = false;
         CheckIpPortButton.IsInProgress = true;
 
-        if ((string.IsNullOrEmpty(AppShell.settings.Ip) || AppShell.settings.Port == 0) || !IsValidIpAddress(AppShell.settings.Ip) || !IsValidPort(AppShell.settings.Port))
+        if ((string.IsNullOrWhiteSpace(AppShell.settings.Ip) || AppShell.settings.Port == 0) || !IsValidIpAddress(AppShell.settings.Ip) || !IsValidPort(AppShell.settings.Port))
         {
             IsFlag = true;
             CheckIpPortButton.IsInProgress = false;
@@ -59,7 +59,7 @@ public partial class NetworkPage : ContentPage
 
     private async Task PingServerAsync(string ipAddress, int port)
     {
-        if (string.IsNullOrEmpty(ipAddress)) return;
+        if (string.IsNullOrWhiteSpace(ipAddress)) return;
 
         using TcpClient tcpClient = new();
         try

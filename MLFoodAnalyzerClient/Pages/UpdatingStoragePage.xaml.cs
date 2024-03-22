@@ -29,7 +29,7 @@ public partial class UpdatingStoragePage : ContentPage
     {
         if (!IsFlag) return;
 
-        if (string.IsNullOrEmpty(AppShell.settings.Ip) || AppShell.settings.Port == 0)
+        if (string.IsNullOrWhiteSpace(AppShell.settings.Ip) || AppShell.settings.Port == 0)
         {
             alert ??= new();
             IsFlag = true;

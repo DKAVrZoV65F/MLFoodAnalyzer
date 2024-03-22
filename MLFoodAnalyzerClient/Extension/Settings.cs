@@ -9,10 +9,10 @@ public class Settings : INotifyPropertyChanged
 
     private string ip = Preferences.Get("SavedIpServer", string.Empty);
     private int port = Preferences.Get("SavedPortServer", 0);
-    private string? password = (string.IsNullOrEmpty(SecureStorage.GetAsync("SavedPasswordServer").Result?.ToString())) ? "" : SecureStorage.GetAsync("SavedPasswordServer").Result?.ToString();
+    private string? password = (string.IsNullOrWhiteSpace(SecureStorage.GetAsync("SavedPasswordServer").Result?.ToString())) ? string.Empty : SecureStorage.GetAsync("SavedPasswordServer").Result?.ToString();
 
-    private string? login = string.IsNullOrEmpty(SecureStorage.GetAsync("SavedLogIn").Result?.ToString()) ? "" : SecureStorage.GetAsync("SavedLogIn").Result?.ToString();
-    private string? savedPassword = string.IsNullOrEmpty(SecureStorage.GetAsync("SavedPassword").Result?.ToString()) ? "" : SecureStorage.GetAsync("SavedPassword").Result?.ToString();
+    private string? login = string.IsNullOrWhiteSpace(SecureStorage.GetAsync("SavedLogIn").Result?.ToString()) ? string.Empty : SecureStorage.GetAsync("SavedLogIn").Result?.ToString();
+    private string? savedPassword = string.IsNullOrWhiteSpace(SecureStorage.GetAsync("SavedPassword").Result?.ToString()) ? string.Empty : SecureStorage.GetAsync("SavedPassword").Result?.ToString();
 
     private string language = Preferences.Get("LanguageApp", "ru-RU");
     private string nickName = string.Empty;
@@ -62,7 +62,7 @@ public class Settings : INotifyPropertyChanged
 
     public string Password
     {
-        get => password ?? "";
+        get => password ?? string.Empty;
         set
         {
             if (password != value)
@@ -75,7 +75,7 @@ public class Settings : INotifyPropertyChanged
 
     public string Login
     {
-        get => login ?? "";
+        get => login ?? string.Empty;
         set
         {
             if (login != value)
@@ -88,7 +88,7 @@ public class Settings : INotifyPropertyChanged
 
     public string SavedPassword
     {
-        get => savedPassword ?? "";
+        get => savedPassword ?? string.Empty;
         set
         {
             if (savedPassword != value)

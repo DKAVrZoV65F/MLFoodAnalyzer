@@ -33,8 +33,8 @@ public partial class ThemePage : ContentPage
     private void Theme_Changed(object sender, CheckedChangedEventArgs e)
     {
         RadioButton selectedRadioButton = ((RadioButton)sender);
-        string? checkBoxValue = (selectedRadioButton.Value != null) ? selectedRadioButton.Value.ToString() : "";
-        if (string.IsNullOrEmpty(checkBoxValue)) return;
+        string? checkBoxValue = (selectedRadioButton.Value != null) ? selectedRadioButton.Value.ToString() : string.Empty;
+        if (string.IsNullOrWhiteSpace(checkBoxValue)) return;
 
         Application.Current!.UserAppTheme = checkBoxValue switch
         {
