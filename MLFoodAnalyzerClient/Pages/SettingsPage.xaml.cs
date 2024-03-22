@@ -11,7 +11,7 @@ public partial class SettingsPage : ContentPage
 
     private int counter = 0;
     private bool IsFlag = false;
-    private readonly string email = "gw9ckwfsp@mozmail.com";
+    private const string email = "gw9ckwfsp@mozmail.com";
 
     public SettingsPage()
     {
@@ -51,10 +51,7 @@ public partial class SettingsPage : ContentPage
     private async void MailLabel_Tapped(object sender, TappedEventArgs e)
     {
         await Clipboard.SetTextAsync(email);
-        if (alert is null)
-        {
-            alert = new();
-        }
+        alert ??= new();
         alert.DisplayMessage(LocalizationResourceManager["MailMessage"].ToString());
     }
 
@@ -66,10 +63,7 @@ public partial class SettingsPage : ContentPage
             Preferences.Set("IsAdminPanel", true);
             IsFlag = true;
 
-            if (alert is null)
-            {
-                alert = new();
-            }
+            alert ??= new();
             alert.DisplayMessage(LocalizationResourceManager["ReloadApp"].ToString());
         }
         else if (counter <= 5) counter++;

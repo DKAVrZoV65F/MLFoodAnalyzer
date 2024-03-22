@@ -28,14 +28,11 @@
             TextColor="#F30A49"
             FontFamily="RegularFont"/>
 
-        <Button
+        <ImageButton
             Grid.Column="2"
             Margin="0,-20, 0 ,20"
-            Text="QR"
-            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
-            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
-            FontFamily="BoldFont"
-            FontSize="{Binding Path=FSize}"
+            Source="qr_code.png"
+            BackgroundColor="Transparent"
             Clicked="QRScanner"
             HorizontalOptions="Fill"
             VerticalOptions="Fill"

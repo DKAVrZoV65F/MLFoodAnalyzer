@@ -19,6 +19,7 @@ public partial class NetworkPage : ContentPage
         InitializeComponent();
 
         TitleLabel.FontSize = AppShell.settings.FSize + 5;
+        AppShell.settings = (Settings)Resources["settings"];
     }
 
 
