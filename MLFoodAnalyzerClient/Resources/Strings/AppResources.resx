@@ -154,7 +154,25 @@
     <value>Description:</value>
   </data>
   <data name="DescriptionPolicy" xml:space="preserve">
-    <value>In common language usage, fruit normally means the seed-associated fleshy structures. Excepteur sint occaecat cupidatat non proident, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, sunt in culpa qui officia deserunt mollit anim id est laborum.</value>
+    <value>License Agreement
+This License Agreement (the "Agreement") is a legal agreement between you and DKAVrZoV65F for the use of the ML Food Analyzer software (the "Software"). By using the Software, you agree to comply with the terms of this Agreement.
+1. License grant
+In accordance with the terms and conditions of this Agreement, DKAVrZoV65F grants you a non-exclusive, non-transferable license to use the Program for personal, non-commercial purposes.
+2. Description of rights and restrictions
+The software is licensed, not sold. You may not use, copy, modify, combine, publish, distribute, sell or transfer the Software or any derivative works based on the Software, except as expressly provided for in this Agreement.
+3. Ownership
+DKAVrZoV65F owns all rights, titles and interests in relation to the Program, including all copyrights, trademarks and other intellectual property rights.
+4. Termination
+This Agreement is valid until terminated by you or DKAVrZoV65F. You may terminate this Agreement at any time by destroying all copies of the Software in your possession or under your control.
+5. Disclaimer of warranties
+The Software is provided "as is" and without warranty of any kind, express or implied, including, but not limited to, implied warranties of merchantability and fitness for a particular purpose.
+6. Limitation of liability
+Under no circumstances will DKAVrZoV65F be liable for any direct, indirect, incidental, special, consequential or punitive damages, including, but not limited to, damages in connection with loss of profit, reputation, use, data or other intangible damages resulting from the use or inability to use the Program.
+7. Governing legislation
+This Agreement shall be governed by and interpreted in accordance with the law.
+8. Completeness of the agreement
+This Agreement constitutes the entire agreement between you and [Licensor's Name] and supersedes all previous agreements and arrangements, regardless of whether they were concluded in writing
+This program is purely for informational purposes.</value>
   </data>
   <data name="DestinationHostUn" xml:space="preserve">
     <value>Destination Host Unreachable</value>

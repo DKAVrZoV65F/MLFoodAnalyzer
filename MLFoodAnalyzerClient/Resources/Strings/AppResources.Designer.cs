@@ -169,7 +169,12 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to In common language usage, fruit normally means the seed-associated fleshy structures. Excepteur sint occaecat cupidatat non proident, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, sunt in culpa qui officia deserunt mollit anim id e [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to License Agreement
+        ///This License Agreement (the &quot;Agreement&quot;) is a legal agreement between you and DKAVrZoV65F for the use of the ML Food Analyzer software (the &quot;Software&quot;). By using the Software, you agree to comply with the terms of this Agreement.
+        ///1. License grant
+        ///In accordance with the terms and conditions of this Agreement, DKAVrZoV65F grants you a non-exclusive, non-transferable license to use the Program for personal, non-commercial purposes.
+        ///2. Description of rights and restrictions
+        ///The software i [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DescriptionPolicy {
             get {
