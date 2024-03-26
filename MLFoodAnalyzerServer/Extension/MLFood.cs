@@ -11,35 +11,37 @@ public class MLFood
         text = "";
     }
 
-    public string[] SetImage(string filePath)
+    public string Text
     {
-        if (string.IsNullOrWhiteSpace(filePath) && !File.Exists(filePath)) return ["Error on server (1)"];
-        this.filePath = filePath;
-        return PredictImage();
+        get => text; 
+        set 
+        {
+            if (!string.IsNullOrWhiteSpace(value)) text = value.ToLower();
+        }
     }
 
-    public string[] SetText(string text)
+    public string Image
     {
-        if (string.IsNullOrWhiteSpace(text)) return ["Error on server (1)"];
-        this.text = text.ToLower();
-        return PredictText();
+        get => filePath;
+        set
+        {
+            if (!string.IsNullOrWhiteSpace(value) && File.Exists(value)) filePath = value;
+        }
     }
 
-    private string[] PredictImage()
+    public string[] PredictImage()
     {
-        // Create single instance of sample data from first line of dataset for model input
         var imageBytes = File.ReadAllBytes(filePath);
         Food.ModelInput sampleData = new()
         {
             ImageSource = imageBytes,
         };
 
-        // Make a single prediction on the sample data and print results.
         var sortedScoresWithLabel = Food.PredictAllLabels(sampleData);
         return PredictResults(sortedScoresWithLabel);
     }
 
-    private string[] PredictText()
+    public string[] PredictText()
     {
         string str = text;
         int engCount = 0;

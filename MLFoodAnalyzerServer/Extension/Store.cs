@@ -23,7 +23,7 @@ public class Store
     {
         this.nameFiles = nameFiles!;
         this.imageFormat = imageFormat!;
-        this.pathFolder = (pathFolder == null) ?  $"C:\\Users\\{Environment.UserName}\\SFVPicture" : pathFolder;
+        this.pathFolder = pathFolder ?? $"C:\\Users\\{Environment.UserName}\\SFVPicture";
         this.size = size;
         width = 500;
         height = 500;
@@ -50,7 +50,7 @@ public class Store
 
     public long GetSize() => size;
 
-    public string? GetName() => string.IsNullOrWhiteSpace(nameFiles) ? "{Name of image is increment}" : nameFiles;
+    public string GetName() => string.IsNullOrWhiteSpace(nameFiles) ? "{Name of image is increment}" : nameFiles;
 
     public string GetFormat() => imageFormat;
 

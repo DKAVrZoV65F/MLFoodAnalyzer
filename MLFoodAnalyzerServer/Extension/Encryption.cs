@@ -1,16 +1,11 @@
-﻿using System.Security.Cryptography;
-using System.Text;
+﻿using System.Text;
+using System.Security.Cryptography;
 
 namespace MLFoodAnalyzerServer.Extension
 {
-    public class Encryption
+    public class Encryption(string SecurityKey = "QWERTY")
     {
-        private string? SecurityKey = null;
-
-        public Encryption(string SecurityKey = "QWERTY") 
-        { 
-            this.SecurityKey = SecurityKey;
-        }
+        private string SecurityKey = SecurityKey;
 
         public string EncryptText(string plainText)
         {
@@ -46,7 +41,11 @@ namespace MLFoodAnalyzerServer.Extension
 
         public static string ConvertToHash(string input) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(input)));
 
-        public string? GetPassword() => SecurityKey;
+        public string Password
+        {
+            get => SecurityKey;
+            set => SecurityKey = value;
+        } 
     }
 }
 

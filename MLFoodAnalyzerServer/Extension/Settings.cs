@@ -8,26 +8,23 @@ public class Settings
     private readonly string indent = $"\n----------\n";
 
 
-    public Settings() 
-    {
-        
-    }
+    public Settings() {}
 
     
 
     public string GetTitle() => title;
 
     public string GetInfo() {
-        TCPServer? tcpServer = MLFoodAnalyzerServer.server;
-        Store? store = MLFoodAnalyzerServer.store;
-        Database? database = MLFoodAnalyzerServer.database;
-        Encryption? encryption = MLFoodAnalyzerServer.encryption;
+        Store store = MLFoodAnalyzerServer.store ??= new();
+        TCPServer tcpServer = MLFoodAnalyzerServer.server ??= new();
+        Database database = MLFoodAnalyzerServer.database ??= new();
+        Encryption encryption = MLFoodAnalyzerServer.encryption ??= new();
 
-        return $"\nServer Info{indent}{tcpServer?.GetInfo()}{indent}" +
-            $"\nStore {indent}{store?.GetInfo()}{indent}" +
-            $"\nDatabase{indent}{database?.Info()}{indent}" + 
-            $"\nEncryption{indent}Password: {encryption?.GetPassword()}{indent}" +
-            $"\nApp info{indent}{title} for {osPlatform} {version:V#'.'#'.'#}{indent}" + 
+        return $"Information.\nServer Info{indent}{tcpServer}{indent}" +
+            $"\nStore {indent}{store.GetInfo()}{indent}" +
+            $"\nDatabase{indent}{database}{indent}" +
+            $"\nEncryption{indent}Password: {encryption.Password}{indent}" +
+            $"\nApp info{indent}{title} for {osPlatform} {version:V#'.'#'.'#}{indent}" +
             $"\nPress any button to continue.";
     }
 }

@@ -1,23 +1,50 @@
 ﻿using Microsoft.Data.SqlClient;
+using System.Text;
 
 namespace MLFoodAnalyzerServer.Extension;
 
 public class Database
 {
+    private const string failExecute = "Error";
+    private const string retUpdDesc = "success";
+    private const string retDBLogIn = "0";
+
     private string? databaseName = null;
-    private static readonly string retUpdDesc = "success";
-    private static readonly string retDBLogIn = "0";
     private string? connectionString = null;
 
-    public Database(string databaseName = "MLF3A7")
+    public Database() : this("MLF3A7") { }
+    public Database(string databaseName)
     {
         this.databaseName = databaseName;
         connectionString = $"Server=(localdb)\\Local;Database={this.databaseName};Trusted_Connection=True;";
     }
 
-    public string Info() => $"The database name: {databaseName}";
+    public async Task<string?> ExecuteQuery(string command, params string[] parameters)
+    {
+        if (Enum.TryParse(command, true, out SQLQuery query))
+        {
+            switch (query)
+            {
+                case SQLQuery.LogIn:
+                    return await DBLogIn(parameters[0], parameters[1]);
+                case SQLQuery.Update:
+                    await UpdateDescriptionFood(parameters[0], int.Parse(parameters[1]), parameters[2]);
+                    break;
+                case SQLQuery.CurrentDescription:
+                    return await SelectDescriptionFood(parameters!);
+                case SQLQuery.AllFood:
+                    return await FoodSelect();
+                case SQLQuery.History:
+                    return await History(int.Parse(parameters[0]));
+            }
+        }
+        return failExecute;
+    }
 
-    public async Task<string?> DBLogIn(string login, string password)
+
+    public override string ToString() => $"The database name: {databaseName}";
+
+    private async Task<string?> DBLogIn(string login, string password)
     {
         string sqlExpression = "SELECT TOP(1) Account.Nickname FROM Account INNER JOIN AccountProperty ON AccountProperty.Id = Account.Id WHERE AccountProperty.Login = @login and AccountProperty.Password = @password";
 
@@ -44,15 +71,14 @@ public class Database
         return retDBLogIn;
     }
 
-
-    public async Task<string?[]> SelectDescriptionFood(string[]? foodNames)
+    private async Task<string?> SelectDescriptionFood(string[] message)
     {
-        if (foodNames == null || foodNames.Length <= 0) return ["Nothing"];
+        if (message == null || message.Length <= 0) return "Nothing\n";
 
-        List<string?> results = [];
-        foreach (string foodName in foodNames)
+        StringBuilder results = new();
+        foreach (string foodName in message)
         {
-            if (string.IsNullOrWhiteSpace(foodName)) results.Add("Nothing");
+            if (string.IsNullOrWhiteSpace(foodName)) results.Append("Nothing\n");
             string sqlExpression = "select Description from Food where Name = @foodName";
 
             using SqlConnection connection = new(connectionString);
@@ -68,17 +94,17 @@ public class Database
                 await reader.ReadAsync();
                 object description = reader.GetValue(0);
                 await reader.CloseAsync();
-                results.Add(description?.ToString());
+                results.Append(description?.ToString() + '\n');
             }
             else
-                results.Add("Nothing");
+                results.Append("Nothing\n");
             await reader.CloseAsync();
         }
 
-        return [.. results];
+        return results.ToString();
     }
 
-    public async Task<string?> FoodSelect()
+    private async Task<string?> FoodSelect()
     {
         string sqlExpression = "SELECT Id, Name, Description, DateUpdate FROM Food;";
 
@@ -92,7 +118,7 @@ public class Database
         return results;
     }
 
-    public async Task<string?> History(int count = 0)
+    private async Task<string?> History(int count = 0)
     {
         string sqlExpression = "SELECT IdFood, NameFood, IdAccount, NickName, Old_Description, New_Description, LastUpdate FROM History ORDER BY LastUpdate DESC OFFSET @count ROWS FETCH FIRST 10 ROWS ONLY;";
 
@@ -108,26 +134,7 @@ public class Database
         return results;
     }
 
-    private async Task<string?> Result(SqlDataReader reader, int count)
-    {
-        string results = string.Empty;
-        if (reader.HasRows)
-        {
-            object[] values = new object[count];
-            while (await reader.ReadAsync())
-            {
-                for (int j = 0; j < values.Length; j++)
-                {
-                    values[j] = reader.GetValue(j);
-                }
-                results += string.Join("\t", values);
-                results += '\n';
-            }
-        }
-        return results;
-    }
-
-    public async Task<string?> UpdateDescriptionFood(string nickname, int foodId, string foodDescription)
+    private async Task<string?> UpdateDescriptionFood(string nickname, int foodId, string foodDescription)
     {
         string sqlExpression = $"DECLARE @accountId INT;" +
             $"DECLARE @Old_Description nvarchar(max);" +
@@ -152,6 +159,34 @@ public class Database
         await command.ExecuteNonQueryAsync();
 
         return retUpdDesc;
+    }
+
+    private async Task<string?> Result(SqlDataReader reader, int count)
+    {
+        string results = string.Empty;
+        if (reader.HasRows)
+        {
+            object[] values = new object[count];
+            while (await reader.ReadAsync())
+            {
+                for (int j = 0; j < values.Length; j++)
+                {
+                    values[j] = reader.GetValue(j);
+                }
+                results += string.Join("\t", values);
+                results += '\n';
+            }
+        }
+        return results;
+    }
+
+    enum SQLQuery
+    {
+        LogIn,
+        Update,
+        CurrentDescription,
+        AllFood,
+        History
     }
 }
 

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
 
 namespace MLFoodAnalyzerServer.Extension;
 
@@ -10,19 +10,19 @@ public class WorkJson
     public static Store? store;
 
 
-    private static string filePath = Path.GetFullPath("Settings.json");
+    private readonly string filePath = Path.GetFullPath("Settings.json");
 
-    public string DatabaseName { get; set; } = string.Empty;    // Database
+    public string DatabaseName { get; init; } = string.Empty;    // Database
 
-    public string SecurityKey { get; set; } = string.Empty;     // Encryption
+    public string SecurityKey { get; init; } = string.Empty;     // Encryption
 
-    public string PathFolder { get; set; } = string.Empty;      // Store
-    public string NameFiles { get; set; } = string.Empty;       // Store
-    public string ImageFormat { get; set; } = string.Empty;     // Store
-    public int Size { get; set; } = 0;                          // Store
+    public string PathFolder { get; init; } = string.Empty;      // Store
+    public string NameFiles { get; init; } = string.Empty;       // Store
+    public string ImageFormat { get; init; } = string.Empty;     // Store
+    public int Size { get; init; } = 0;                          // Store
 
-    public int Port { get; set; } = 0;                          // TCPServer
-    public int Timeout { get; set; } = 0;                       // TCPServer
+    public int Port { get; init; } = 0;                          // TCPServer
+    public int Timeout { get; init; } = 0;                       // TCPServer
 
     public WorkJson() { }
     public WorkJson(string DatabaseName, string SecurityKey, string PathFolder, string NameFiles, string ImageFormat, int Size, int Port, int Timeout)
@@ -41,7 +41,7 @@ public class WorkJson
     {
         if (!File.Exists(filePath)) return;
         string json = File.ReadAllText(filePath);
-        WorkJson? deserialized = JsonConvert.DeserializeObject<WorkJson>(json);
+        WorkJson? deserialized = JsonSerializer.Deserialize<WorkJson>(json);
 
         if (deserialized == null) return;
         database = new(deserialized.DatabaseName);
@@ -50,9 +50,42 @@ public class WorkJson
         server = new(port: deserialized.Port, timeout: deserialized.Timeout);
     }
 
-    public void SaveJS(WorkJson workJson)
+    public void SaveJS(WorkJson workJson, string filePath = "Settings.json")
     {
-        string jsonString = JsonConvert.SerializeObject(workJson, Formatting.Indented);
+        JsonSerializerOptions options = new() { WriteIndented = true };
+        string jsonString = JsonSerializer.Serialize(workJson, options);
         if (File.Exists(filePath)) File.WriteAllText(filePath, jsonString);
     }
 }
+
+
+
+
+
+/*
+                  ``
+  `.              `ys
+  +h+             +yh-
+  yyh:           .hyys
+ .hyyh.          oyyyh`
+ /yyyyy`        .hyydy/
+ syyhhy+        oyyhsys
+ hyyyoyh.      .hyyy:hh`
+.hyyyy:ho      +yyys-yh-
+:hyyyh-oh.    `hyyyo-oy/
+/yyyyh-:h+    -hyyh/-oy+
++yyyyh:-yy    +yyyh--oyo
++yyyyh/-sh.   syyyh--oyo
++yyyyh/-oy/  `hyyyy--syo
++yyyyh/-+y+  `hyyys--yy+
+:yyyyh/-+ys  .hyyyo-:hy:
+.hyyyh+-+ys  .hyyyo-oyh`
+`yyyyyo-oyy  .hyyy+-yyy
+ +yyyys-syy  `hyyh/oyy/
+ .hyyyh-hyy  `hyyh/hyh
+  oyyyhshys   yyyhyyy+
+  oyyyhshys   yyyhyyy+
+   /hyyyyyo`.-oyyyyh/
+   `syyyyyyyhyyyyyyho.
+    .hyyyyhNdyyyyyyymh/`
+*/

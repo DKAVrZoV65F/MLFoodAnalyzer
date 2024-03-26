@@ -8,49 +8,52 @@ public class TCPServer
 {
     private int port;
     private int timeout;
-    private IPAddress ip;
-    private TcpClient tcpClient;
-    private NetworkStream stream;
-    private TcpListener tcpListener;
+    public IPAddress Ip { get; init; }
+    private TcpClient? tcpClient;
+    private NetworkStream stream = null!;
+    private readonly TcpListener tcpListener;
     private static DateTime startUserOperation;
     private readonly string success = "Settings applied successfully";
     private readonly string unsuccess = "Settings applied unsuccessfully";
-    private Encryption? encryption = MLFoodAnalyzerServer.encryption;
 
+    private readonly Database database = MLFoodAnalyzerServer.database ??= new();
+    private readonly Encryption encryption = MLFoodAnalyzerServer.encryption ??= new();
+    private readonly Store store = MLFoodAnalyzerServer.store ??= new();
 
     public TCPServer(int port = 55555, int timeout = 10000)
     {
+        Ip = GetIp();
         this.port = port;
-        stream = null!;
-        tcpClient = new();
         this.timeout = timeout;
-        ip = GetIp();
-        tcpListener = new TcpListener(ip, port);
-        Console.CancelKeyPress += new ConsoleCancelEventHandler(MyHandler!);
+        tcpListener = new TcpListener(Ip, port);
     }
-
 
     protected void MyHandler(object sender, ConsoleCancelEventArgs args)
     {
         Console.WriteLine("\nServer close.");
         args.Cancel = true;
 
-        if(stream != null) stream.Close();
-        if (tcpClient != null) tcpClient.Close();
-        if (tcpListener != null) tcpListener.Stop();
+        stream?.Close();
+        tcpClient?.Close();
+        tcpListener?.Stop();
     }
 
     public async Task Run()
     {
+        Console.CancelKeyPress += new ConsoleCancelEventHandler(MyHandler!);
         try
         {
+            tcpClient = new()
+            {
+                ReceiveTimeout = timeout,
+                SendTimeout = timeout
+            };
+
             tcpListener.Start();
             Console.WriteLine("The server is running. Waiting for connections... ");
             while (true)
             {
                 tcpClient = await tcpListener.AcceptTcpClientAsync();
-                tcpClient.ReceiveTimeout = timeout;
-                tcpClient.SendTimeout = timeout;
                 startUserOperation = DateTime.Now;
                 Console.WriteLine($"[{startUserOperation}] Client {tcpClient.Client.RemoteEndPoint} connected to server");
                 stream = tcpClient.GetStream();
@@ -67,231 +70,179 @@ public class TCPServer
         {
             tcpListener.Stop();
         }
-
-        Console.WriteLine("\nHit enter to continue...");
     }
 
-    private async Task Send(string? text) => await stream.WriteAsync(Encoding.UTF8.GetBytes(text + '\0'));
-    private async Task Send(string?[] text) => await stream.WriteAsync(Encoding.UTF8.GetBytes(string.Join("\n", text) + '\0'));
 
     private async Task GetCommand()
     {
-        int bytesRead;
-        var response = new List<byte>();
-        while ((bytesRead = stream.ReadByte()) != '\0')
-        {
-            response.Add((byte)bytesRead);
-        }
-        var word = Encoding.UTF8.GetString(response.ToArray());
-
-        switch (word)
+        string query = await GetMessage();
+        string? result = string.Empty;
+        Console.WriteLine($"[{DateTime.Now}] Client {tcpClient?.Client.RemoteEndPoint} requested a/an {query}");
+        switch (query)
         {
             case "IMAGE":
-                await ProcessImage(MLFoodAnalyzerServer.store!.GetPath());
+                result = await GetMessage();
+                result = await GetImage(result, store.GetPath());
+                result = await ProcessImage(result);
                 break;
             case "TEXT":
-                await ProcessText();
+                result = await GetMessage();
+                result = await ProcessText(result);
                 break;
             case "PING":
-                await PingServer();
+                result = await PingServer();
                 break;
             case "LOGIN":
-                await LogIn();
+                result = await GetMessage();
+                result = await LogIn(result);
                 break;
             case "FOOD":
-                await GetAllFood();
+                result = await GetAllFood();
                 break;
             case "History":
-                await GetAllHistory();
+                result = await GetMessage();
+                result = await GetAllHistory(result);
                 break;
             case "Update":
-                await UpdateFood();
+                result = await GetMessage();
+                result = await UpdateFood(result);
                 break;
             default:
-                Stop();
                 break;
         }
+        await Send(result);
+        await Stop();
     }
 
-    private async Task PingServer()
-    {
-        Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a ping");
-        string message = "SUCCESS\0";
-        await Send(message);
-        Stop();
-    }
 
-    private async Task ProcessImage(string? folderPath)
+
+    private async Task<string> GetMessage()
     {
         int bytesRead;
-        byte[] buffer = new byte[1024];
-        var response = new List<byte>();
-        string[] files = Directory.GetFiles(folderPath!);
-        int numberOfFiles = files.Length;
-        long sum = 0;
-
-        string? fileName = $"{MLFoodAnalyzerServer.store!.GetName()}_{numberOfFiles}.{MLFoodAnalyzerServer.store.GetFormat()}";
-        Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a picture \"{fileName}\"");
-
+        List<byte> response = [];
+        await Task.Delay(0);
         while ((bytesRead = stream.ReadByte()) != '\0')
             response.Add((byte)bytesRead);
-        string word = Encoding.UTF8.GetString(response.ToArray());
-        long sizeImage = long.Parse(word);
+        return Encoding.UTF8.GetString(response.ToArray());
+    }
 
-        string filePath = @$"{folderPath}\{fileName}";
+    private async Task<string> GetImage(string imageSize, string? folderPath)
+    {
+        int bytesRead;
+        string[] files = Directory.GetFiles(folderPath!);
+        int numberOfFiles = files.Length;
+        long size = long.Parse(imageSize);
+        long sum = 0;
+        byte[] buffer = new byte[1024];
+        string fileName = $"{store.GetName()}_{numberOfFiles}.{store.GetFormat()}";
+        string fileFullPath = @$"{folderPath}\{fileName}";
         FileStream? fileStream;
-        using (fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+        using (fileStream = new FileStream(fileFullPath, FileMode.Create, FileAccess.Write))
         {
             do
             {
                 bytesRead = stream.Read(buffer, 0, buffer.Length);
                 fileStream.Write(buffer, 0, bytesRead);
                 sum += bytesRead;
-            } while (sizeImage != sum);
+            } while (size != sum);
         }
-
-        MLFood mLFood = new();
-        string?[] message = mLFood.SetImage(filePath);
-        message = await MLFoodAnalyzerServer.database!.SelectDescriptionFood(message!);
-        await Send(message);
-        Stop();
+        await Task.Delay(0);
+        return fileFullPath;
     }
 
-    private async Task ProcessText()
-    {
-        Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a text");
+    private async Task Send(string? text) => await stream.WriteAsync(Encoding.UTF8.GetBytes(text + '\0'));
 
-        int bytesRead;
-        List<byte> response = [];
-        while ((bytesRead = stream.ReadByte()) != '\0')
-            response.Add((byte)bytesRead);
-        string word = Encoding.UTF8.GetString(response.ToArray());
-        MLFood mLFood = new();
-        string?[] message = mLFood.SetText(word);
-        message = await MLFoodAnalyzerServer.database!.SelectDescriptionFood(message!);
-        await Send(message);
-        Stop();
-    }
-
-    private void Stop()
+    private async Task Stop()
     {
         DateTime end = DateTime.Now;
         TimeSpan difference = end.Subtract(startUserOperation);
-        Console.WriteLine($"[{end}] Client {tcpClient.Client.RemoteEndPoint} disconnect and waste {difference} milliseconds");
+        Console.WriteLine($"[{end}] Client {tcpClient?.Client.RemoteEndPoint} disconnect and waste {difference} milliseconds");
         //DirectorySettings();
+        await Task.Delay(0);
         stream.Close();
     }
 
-    private async Task LogIn()
+    private async Task<string> PingServer()
     {
-        Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a login");
-
-        int bytesRead;
-        List<byte> response = [];
-        while ((bytesRead = stream.ReadByte()) != '\0')
-            response.Add((byte)bytesRead);
-        string word = Encoding.UTF8.GetString(response.ToArray());
-        
-        encryption = MLFoodAnalyzerServer.encryption;
-        word = encryption!.DecryptText(word);
-        string[] textSplit = word.Split('|');
-        string? message = await MLFoodAnalyzerServer.database!.DBLogIn(Encryption.ConvertToHash(textSplit[0]), Encryption.ConvertToHash(textSplit[1]));
-        message = encryption.EncryptText(message!);
-        await Send(message);
-        Stop();
+        await Task.Delay(0);
+        return "SUCCESS";
     }
 
-    private async Task GetAllFood()
+    private async Task<string?> ProcessImage(string fileFullPath)
     {
-        Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a foods");
-
-        string? message = await MLFoodAnalyzerServer.database!.FoodSelect();
-        await Send(message);
-        Stop();
-    }
-
-    private async Task GetAllHistory()
-    {
-        Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested a history");
-
-        int bytesRead;
-        List<byte> response = [];
-        while ((bytesRead = stream.ReadByte()) != '\0')
-            response.Add((byte)bytesRead);
-        string word = Encoding.UTF8.GetString(response.ToArray());
-        string? message = await MLFoodAnalyzerServer.database!.History(int.Parse(word));
-        await Send(message);
-        Stop();
-    }
-
-    private async Task UpdateFood()
-    {
-        Console.WriteLine($"[{DateTime.Now}] Client {tcpClient.Client.RemoteEndPoint} requested an update food");
-
-        int bytesRead;
-        List<byte> response = [];
-        while ((bytesRead = stream.ReadByte()) != '\0')
-            response.Add((byte)bytesRead);
-        string word = Encoding.UTF8.GetString(response.ToArray());
-        string[] textSplit = word.Split('|');
-        string? message = await MLFoodAnalyzerServer.database!.UpdateDescriptionFood(textSplit[0], int.Parse(textSplit[1]), textSplit[2]);
-        await Send(message);
-        Stop();
-    }
-
-    public string GetInfo() => $"IP: {ip}\nPort: {port}\nTimeout: {timeout} ms";
-
-    public IPAddress GetIp()
-    {
-        /*string Hostname = Environment.MachineName;
-        IPHostEntry Host = Dns.GetHostEntry(Hostname);
-
-        foreach (IPAddress IP in Host.AddressList)
+        MLFood mLFood = new()
         {
-            if (IP.AddressFamily == AddressFamily.InterNetwork)
-            {
-                return IP;
-            }
-        }
-        return IPAddress.Any;*/
+            Image = fileFullPath
+        };
+        string[] message = mLFood.PredictImage();
+        return await database.ExecuteQuery("CurrentDescription", message);
+    }
 
+    private async Task<string?> ProcessText(string message)
+    {
+        MLFood mLFood = new()
+        {
+            Text = message
+        };
+        string[] result = mLFood.PredictText();
+        return await database.ExecuteQuery("CurrentDescription", result);
+    }
 
+    private async Task<string> LogIn(string message)
+    {
+        message = encryption.DecryptText(message);
+        string[] textSplit = message.Split('|');
+        string? response = await database.ExecuteQuery("LogIn", Encryption.ConvertToHash(textSplit[0]), Encryption.ConvertToHash(textSplit[1]));
+        return encryption.EncryptText(response!);
+    }
+
+    private async Task<string?> GetAllFood() => await database.ExecuteQuery("AllFood");
+
+    private async Task<string?> GetAllHistory(string message) => await database.ExecuteQuery("History", message);
+
+    private async Task<string?> UpdateFood(string message)
+    {
+        string[] textSplit = message.Split('|');
+        return await database.ExecuteQuery("Update", textSplit);
+    }
+
+    public override string ToString() => $"IP: {Ip}\nPort: {port}\nTimeout: {timeout} ms";
+
+    private IPAddress GetIp()
+    {
         string Hostname = Environment.MachineName;
         IPHostEntry Host = Dns.GetHostEntry(Hostname);
         return Host.AddressList[^1];
     }
 
-
-    public string GetPort() => port.ToString();
-
-    public string GetTimeout() => timeout.ToString();
-
-
-    public string SetPort(string text) => IsValidPort(text) ? success : unsuccess;
-
-    public string SetTimeout(string text) => IsValidTimeout(text) ? success : unsuccess;
-
-
-    private bool IsValidPort(string text)
+    public int Port
     {
-        _ = int.TryParse($"{text:D}", out int outputParse);
-        if (outputParse >= 49152 && outputParse <= 65535)
+        get => port;
+        set
         {
-            port = outputParse;
-            return true;
+            _ = int.TryParse($"{value:D}", out int outputParse);
+            if (outputParse >= 49152 && outputParse <= 65535)
+            {
+                port = outputParse;
+                Console.WriteLine(success);
+            }
+            Console.WriteLine(unsuccess);
         }
-        return false;
     }
 
-    private bool IsValidTimeout(string text)
+    public int Timeout
     {
-        _ = int.TryParse($"{text:D}", out int outputParse);
-        if (outputParse >= 0 && outputParse <= 10_000_000)
+        get => timeout;
+        set
         {
-            timeout = outputParse;
-            return true;
+            _ = int.TryParse($"{value:D}", out int outputParse);
+            if (outputParse >= 0 && outputParse <= 10_000_000)
+            {
+                timeout = outputParse;
+                Console.WriteLine(success);
+            }
+            Console.WriteLine(unsuccess);
         }
-        return false;
     }
 }
 
