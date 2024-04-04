@@ -45,7 +45,9 @@ namespace MLFoodAnalyzerServer.Extension
         {
             get => SecurityKey;
             set => SecurityKey = value;
-        } 
+        }
+
+        public override string ToString() => $"Password: {Password}";
     }
 }
 

@@ -17,22 +17,20 @@ public class WorkJson
     public string SecurityKey { get; init; } = string.Empty;     // Encryption
 
     public string PathFolder { get; init; } = string.Empty;      // Store
-    public string NameFiles { get; init; } = string.Empty;       // Store
+    public string NameFile { get; init; } = string.Empty;        // Store
     public string ImageFormat { get; init; } = string.Empty;     // Store
-    public int Size { get; init; } = 0;                          // Store
 
     public int Port { get; init; } = 0;                          // TCPServer
     public int Timeout { get; init; } = 0;                       // TCPServer
 
     public WorkJson() { }
-    public WorkJson(string DatabaseName, string SecurityKey, string PathFolder, string NameFiles, string ImageFormat, int Size, int Port, int Timeout)
+    public WorkJson(string DatabaseName, string SecurityKey, string PathFolder, string NameFile, string ImageFormat, int Port, int Timeout)
     {
         this.DatabaseName = DatabaseName;
         this.SecurityKey = SecurityKey;
         this.PathFolder = PathFolder;
-        this.NameFiles = NameFiles;
+        this.NameFile = NameFile;
         this.ImageFormat = ImageFormat;
-        this.Size = Size;
         this.Port = Port;
         this.Timeout = Timeout;
     }
@@ -46,13 +44,14 @@ public class WorkJson
         if (deserialized == null) return;
         database = new(deserialized.DatabaseName);
         encryption = new(deserialized.SecurityKey);
-        store = new(pathFolder: deserialized.PathFolder, nameFiles: deserialized.NameFiles, imageFormat: deserialized.ImageFormat, size: deserialized.Size);
+        store = new(pathFolder: deserialized.PathFolder, nameFile: deserialized.NameFile, imageFormat: deserialized.ImageFormat);
         server = new(port: deserialized.Port, timeout: deserialized.Timeout);
     }
 
     public void SaveJS(WorkJson workJson, string filePath = "Settings.json")
     {
-        JsonSerializerOptions options = new() { WriteIndented = true };
+        JsonSerializerOptions jsonSerializerOptions = new() { WriteIndented = true };
+        JsonSerializerOptions options = jsonSerializerOptions;
         string jsonString = JsonSerializer.Serialize(workJson, options);
         if (File.Exists(filePath)) File.WriteAllText(filePath, jsonString);
     }

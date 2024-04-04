@@ -1,4 +1,6 @@
 ﻿using MLFoodAnalyzerServer.Extension;
+using QRCoder;
+using System.Net;
 
 namespace MLFoodAnalyzerServer;
 
@@ -15,7 +17,7 @@ internal class MLFoodAnalyzerServer
     {
         string[] Menu = ["Menu:", "1. Run server", "2. Settings", "3. Information", "4. Exit", "Please enter your selection: "];
         LoadSettings();
-        Console.Title = settings!.GetTitle();
+        Console.Title = settings?.Title ?? string.Empty;
         int selectedOption;
         do
         {
@@ -64,7 +66,7 @@ internal class MLFoodAnalyzerServer
                 Console.ReadLine();
                 break;
             case 4:
-                Console.WriteLine("Exiting...");
+                Console.WriteLine("Close server...");
                 break;
             default:
                 Console.WriteLine("Invalid selection. Please try again.");
@@ -79,9 +81,15 @@ internal class MLFoodAnalyzerServer
         int selectedOption;
         do
         {
-            string[] SettingsMenu = ["Settings:", $"1. Port. Default = \"{server.Port}\"", $"2. Timeout. Default = \"{server.Timeout}\" ms",
-                $"3. Store images. Default = \"{store.GetPath()}\"", $"4. Size of folder. Default = \"{store.GetSize()}\" GB", $"5. Name of image. Default = \"{store.GetName()}\"",
-                $"6. Format image. Default = \"{store.GetFormat()}\"", $"7. Width image. Default = \"{store.GetWidth()}\"", $"8. Height image. Default = \"{store.GetHeight()}\"",
+            string[] SettingsMenu = ["Settings:",
+                $"1. Ip. Current = \"{server.Ip}\"",
+                $"2. Port. Current = \"{server.Port}\"",
+                $"3. Timeout. Current = \"{server.Timeout}\" ms",
+                $"4. Name of image. Current = \"{store.NameFile}\"",
+                $"5. Format image. Current = \"{store.Format}\"",
+                $"6. Store images. Current = \"{store.PathFolder}\"",
+                $"7. Name database. Current = \"{database.DatabaseName}\"",
+                $"8. Password of encryption. Current = \"{encryption.Password}\"",
                 "10. Exit", "Please enter your selection: "];
             foreach (var item in SettingsMenu) Console.WriteLine(item);
             _ = int.TryParse(Console.ReadLine(), out selectedOption);
@@ -90,48 +98,42 @@ internal class MLFoodAnalyzerServer
             switch (selectedOption)
             {
                 case 1:
+                    Console.Write("ip: ");
+                    Console.Write(server.Ip = IPAddress.Parse(Console.ReadLine()!));
+                    break;
+                case 2:
                     Console.Write("port: ");
                     Console.Write(server.Port = int.Parse(Console.ReadLine()!));
                     break;
-                case 2:
+                case 3:
                     Console.Write("timeout: ");
                     Console.Write(server.Timeout = int.Parse(Console.ReadLine()!));
                     break;
-                case 3:
-                    Console.Write("path to store images: ");
-                    Console.Write(store.SetPath(Console.ReadLine()!));
-                    break;
                 case 4:
-                    Console.Write("size of folder: ");
-                    Console.Write(store.SetSize(Console.ReadLine()!));
+                    Console.Write("name of image: ");
+                    Console.Write(store.NameFile = Console.ReadLine()!);
                     break;
                 case 5:
-                    Console.Write("name of image: ");
-                    Console.Write(store.SetName(Console.ReadLine()!));
+                    Console.Write("format image: ");
+                    Console.Write(store.Format = Console.ReadLine()!);
                     break;
                 case 6:
-                    Console.Write("format image: ");
-                    Console.Write(store.SetFormat(Console.ReadLine()!));
+                    Console.Write("path to store images: ");
+                    Console.Write(store.PathFolder = Console.ReadLine()!);
                     break;
                 case 7:
-                    Console.Write("width image: ");
-                    Console.Write(store.SetWidth(Console.ReadLine()!));
+                    Console.Write("name of database: ");
+                    Console.Write(database.DatabaseName = Console.ReadLine()!);
                     break;
                 case 8:
-                    Console.Write("height image: ");
-                    Console.Write(store.SetHeight(Console.ReadLine()!));
-                    break;
-
-                    // password
-
-
-                case 10:
+                    Console.Write("password of encryption: ");
+                    Console.Write(encryption.Password = Console.ReadLine()!);
                     break;
                 default:
                     break;
             }
 
-            workJson = new(DatabaseName: "MLF3A7", SecurityKey: encryption.Password, Size: (int)store.GetSize(), Port: server.Port, Timeout: server.Timeout, PathFolder: store.GetPath(), ImageFormat: store.GetFormat(), NameFiles: store.GetName());
+            workJson = new(DatabaseName: database.DatabaseName, SecurityKey: encryption.Password, Port: server.Port, Timeout: server.Timeout, PathFolder: store.PathFolder, ImageFormat: store.Format, NameFile: store.NameFile);
             workJson.SaveJS(workJson);
             Console.Clear();
         } while (selectedOption != 10);
@@ -150,6 +152,11 @@ internal class MLFoodAnalyzerServer
     {
         Console.WriteLine("\rLoad Database.");
         database ??= new();
+        if (!database.Connect(database.DatabaseName).Result)
+        {
+            Console.WriteLine("Fail to connect to database!\nServer close");
+            return;
+        }
         _ = await database.ExecuteQuery("LogIn", "TEST", "TEST");
     }
 
@@ -176,12 +183,12 @@ internal class MLFoodAnalyzerServer
     private static void QRGenerate()
     {
         Console.WriteLine("\rGenerate QRCode.");
-        MessagingToolkit.QRCode.Codec.QRCodeEncoder encoder = new()
-        {
-            QRCodeScale = 8
-        };
-        System.Drawing.Bitmap bmp = encoder.Encode($"{server?.Ip}|{server?.Port}");
-        bmp.Save(filename: $"{store!.GetPath()}\\QRServer.png");
+        QRCodeGenerator qrGenerator = new();
+        QRCodeData qrCodeData = qrGenerator.CreateQrCode($"{server?.Ip}|{server?.Port}", QRCodeGenerator.ECCLevel.Q);
+        PngByteQRCode qrCode = new(qrCodeData);
+        byte[] qrCodeImage = qrCode.GetGraphic(20);
+        string filePath = $"{store!.PathFolder}\\QRServer.png";
+        File.WriteAllBytes(filePath, qrCodeImage);
     }
 }
 

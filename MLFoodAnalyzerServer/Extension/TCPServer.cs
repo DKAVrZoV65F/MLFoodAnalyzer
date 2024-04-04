@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Microsoft.ML.Runtime;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
@@ -6,12 +7,12 @@ namespace MLFoodAnalyzerServer.Extension;
 
 public class TCPServer
 {
+    private IPAddress ip;
     private int port;
     private int timeout;
-    public IPAddress Ip { get; init; }
     private TcpClient? tcpClient;
     private NetworkStream stream = null!;
-    private readonly TcpListener tcpListener;
+    private TcpListener tcpListener = null!;
     private static DateTime startUserOperation;
     private readonly string success = "Settings applied successfully";
     private readonly string unsuccess = "Settings applied unsuccessfully";
@@ -20,13 +21,31 @@ public class TCPServer
     private readonly Encryption encryption = MLFoodAnalyzerServer.encryption ??= new();
     private readonly Store store = MLFoodAnalyzerServer.store ??= new();
 
-    public TCPServer(int port = 55555, int timeout = 10000)
+    public TCPServer(int? port = null, int? timeout = null)
     {
-        Ip = GetIp();
-        this.port = port;
-        this.timeout = timeout;
-        tcpListener = new TcpListener(Ip, port);
+        ip = Ip;
+        this.port = port ?? 55555;
+        this.timeout = timeout ?? 10000;
     }
+
+    public IPAddress Ip
+    {
+        get 
+        {
+            if (ip is null)
+            {
+                string Hostname = Environment.MachineName;
+                IPHostEntry Host = Dns.GetHostEntry(Hostname);
+                ip = Host.AddressList[^1];
+            }
+            return ip;
+        }
+        set
+        {
+            Console.WriteLine(IPAddress.TryParse(value.ToString(), out _) ? success : unsuccess);
+        }
+    }
+
 
     protected void MyHandler(object sender, ConsoleCancelEventArgs args)
     {
@@ -40,6 +59,7 @@ public class TCPServer
 
     public async Task Run()
     {
+        tcpListener = new TcpListener(ip, port);
         Console.CancelKeyPress += new ConsoleCancelEventHandler(MyHandler!);
         try
         {
@@ -82,7 +102,7 @@ public class TCPServer
         {
             case "IMAGE":
                 result = await GetMessage();
-                result = await GetImage(result, store.GetPath());
+                result = await GetImage(result, store.PathFolder);
                 result = await ProcessImage(result);
                 break;
             case "TEXT":
@@ -134,7 +154,7 @@ public class TCPServer
         long size = long.Parse(imageSize);
         long sum = 0;
         byte[] buffer = new byte[1024];
-        string fileName = $"{store.GetName()}_{numberOfFiles}.{store.GetFormat()}";
+        string fileName = $"{store.NameFile}_{numberOfFiles}.{store.Format}";
         string fileFullPath = @$"{folderPath}\{fileName}";
         FileStream? fileStream;
         using (fileStream = new FileStream(fileFullPath, FileMode.Create, FileAccess.Write))
@@ -157,7 +177,6 @@ public class TCPServer
         DateTime end = DateTime.Now;
         TimeSpan difference = end.Subtract(startUserOperation);
         Console.WriteLine($"[{end}] Client {tcpClient?.Client.RemoteEndPoint} disconnect and waste {difference} milliseconds");
-        //DirectorySettings();
         await Task.Delay(0);
         stream.Close();
     }
@@ -207,13 +226,6 @@ public class TCPServer
     }
 
     public override string ToString() => $"IP: {Ip}\nPort: {port}\nTimeout: {timeout} ms";
-
-    private IPAddress GetIp()
-    {
-        string Hostname = Environment.MachineName;
-        IPHostEntry Host = Dns.GetHostEntry(Hostname);
-        return Host.AddressList[^1];
-    }
 
     public int Port
     {

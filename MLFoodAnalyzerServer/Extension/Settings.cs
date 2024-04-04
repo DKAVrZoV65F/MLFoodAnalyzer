@@ -2,17 +2,17 @@
 
 public class Settings
 {
-    private readonly int version = 100;
-    private readonly string title = "MLFoodServer";
-    private readonly string osPlatform = "Windows";
-    private readonly string indent = $"\n----------\n";
+    private const int version = 100;
+    private const string? title = "MLFoodServer";
+    private const string osPlatform = "Windows";
+    private const string indent = $"\n----------\n";
+
+    public Settings() { }
 
 
-    public Settings() {}
+    public override string ToString() => $"{title} for {osPlatform} {version:V#'.'#'.'#}";
 
-    
-
-    public string GetTitle() => title;
+    public string? Title{ get; init; }
 
     public string GetInfo() {
         Store store = MLFoodAnalyzerServer.store ??= new();
@@ -20,11 +20,12 @@ public class Settings
         Database database = MLFoodAnalyzerServer.database ??= new();
         Encryption encryption = MLFoodAnalyzerServer.encryption ??= new();
 
-        return $"Information.\nServer Info{indent}{tcpServer}{indent}" +
-            $"\nStore {indent}{store.GetInfo()}{indent}" +
-            $"\nDatabase{indent}{database}{indent}" +
-            $"\nEncryption{indent}Password: {encryption.Password}{indent}" +
-            $"\nApp info{indent}{title} for {osPlatform} {version:V#'.'#'.'#}{indent}" +
+        return $"Information.\n" +
+            $"\nServer Info{indent}{tcpServer}\n" +
+            $"\nStore {indent}{store}\n" +
+            $"\nDatabase{indent}{database}\n" +
+            $"\nEncryption{indent}{encryption}\n" +
+            $"\nApp info{indent}{ToString()}\n" +
             $"\nPress any button to continue.";
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using System.Data;
 using System.Text;
 
 namespace MLFoodAnalyzerServer.Extension;
@@ -8,16 +9,49 @@ public class Database
     private const string failExecute = "Error";
     private const string retUpdDesc = "success";
     private const string retDBLogIn = "0";
+    private const string defaultDBName = "MLF3A7";
 
     private string? databaseName = null;
     private string? connectionString = null;
+    private SqlConnection connection;
 
-    public Database() : this("MLF3A7") { }
+    public Database() : this(defaultDBName) { }
     public Database(string databaseName)
     {
         this.databaseName = databaseName;
         connectionString = $"Server=(localdb)\\Local;Database={this.databaseName};Trusted_Connection=True;";
+        connection ??= new(connectionString);
     }
+
+    public string DatabaseName
+    {
+        get => databaseName ?? defaultDBName;
+        set
+        {
+            if (Connect(value).Result)
+            {
+                databaseName = value;
+                connectionString = $"Server=(localdb)\\Local;Database={databaseName};Trusted_Connection=True;";
+                connection = new(connectionString);
+            }
+        }
+    }
+
+    public async Task<bool> Connect(string database)
+    {
+        connection = new($"Server=(localdb)\\Local;Database={database};Trusted_Connection=True;");
+        try
+        {
+            await connection.OpenAsync();
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    public override string ToString() => $"The database name: {databaseName}";
 
     public async Task<string?> ExecuteQuery(string command, params string[] parameters)
     {
@@ -41,14 +75,9 @@ public class Database
         return failExecute;
     }
 
-
-    public override string ToString() => $"The database name: {databaseName}";
-
     private async Task<string?> DBLogIn(string login, string password)
     {
         string sqlExpression = "SELECT TOP(1) Account.Nickname FROM Account INNER JOIN AccountProperty ON AccountProperty.Id = Account.Id WHERE AccountProperty.Login = @login and AccountProperty.Password = @password";
-
-        using SqlConnection connection = new(connectionString);
         await connection.OpenAsync();
 
         SqlCommand command = new(sqlExpression, connection);
@@ -80,8 +109,6 @@ public class Database
         {
             if (string.IsNullOrWhiteSpace(foodName)) results.Append("Nothing\n");
             string sqlExpression = "select Description from Food where Name = @foodName";
-
-            using SqlConnection connection = new(connectionString);
             await connection.OpenAsync();
 
             SqlCommand command = new(sqlExpression, connection);
@@ -107,8 +134,6 @@ public class Database
     private async Task<string?> FoodSelect()
     {
         string sqlExpression = "SELECT Id, Name, Description, DateUpdate FROM Food;";
-
-        using SqlConnection connection = new(connectionString);
         await connection.OpenAsync();
 
         SqlCommand command = new(sqlExpression, connection);
@@ -121,8 +146,6 @@ public class Database
     private async Task<string?> History(int count = 0)
     {
         string sqlExpression = "SELECT IdFood, NameFood, IdAccount, NickName, Old_Description, New_Description, LastUpdate FROM History ORDER BY LastUpdate DESC OFFSET @count ROWS FETCH FIRST 10 ROWS ONLY;";
-
-        using SqlConnection connection = new(connectionString);
         await connection.OpenAsync();
 
         SqlCommand command = new(sqlExpression, connection);
@@ -144,7 +167,6 @@ public class Database
             $"Insert into History (IdFood, NameFood, IdAccount, NickName, Old_Description, New_Description, LastUpdate) " +
             $"Values(@foodId, @NameFood, @accountId, @nickname, @Old_Description, @foodDescription, CURRENT_TIMESTAMP);";
 
-        using SqlConnection connection = new(connectionString);
         await connection.OpenAsync();
 
         SqlCommand command = new(sqlExpression, connection);
