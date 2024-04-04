@@ -82,9 +82,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Update="Resources\Strings\AppResources.en-US.resx">
-	    <Generator>PublicResXFileCodeGenerator</Generator>
-	  </EmbeddedResource>
 	  <EmbeddedResource Update="Resources\Strings\AppResources.resx">
 	    <Generator>ResXFileCodeGenerator</Generator>
 	    <LastGenOutput>AppResources.Designer.cs</LastGenOutput>
