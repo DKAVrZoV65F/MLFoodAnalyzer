@@ -13,7 +13,7 @@
     </ContentPage.Resources>
 
     <Grid RowDefinitions="50, Auto, *, 76, 50, 50, 50"
-          ColumnDefinitions="*, 50"
+          ColumnDefinitions="*, Auto"
           Margin="20, 40, 20, 0"
           BindingContext="{StaticResource settings}">
 
@@ -34,17 +34,19 @@
             Minimum="10"
             Maximum="30"
             Value="{Binding Path=FSize}"
+            ValueChanged="FontSizeSlider_ValueChanged"
             MinimumTrackColor="{AppThemeBinding Light={StaticResource Gray470}, Dark={StaticResource White100}}"
             MaximumTrackColor="{AppThemeBinding Light={StaticResource Gray980}, Dark={StaticResource White100}}"
             ThumbColor="{AppThemeBinding Light={StaticResource Gray980}, Dark={StaticResource White100}}"/>
 
         <!-- Font Value -->
         <Label
+            x:Name="FontSizeLabel"
             Grid.Row="1"
             Grid.Column="1"
             Margin="0, 0, 0, 20"
             FontFamily="RegularFont"
-            Text="{Binding Source={x:Reference Name=FontSizeSlider}, Path=Value, StringFormat='{0:f0}'}"
+            Text=""
             FontSize="{Binding Path=FSize}"
             TextColor="{AppThemeBinding Light={StaticResource Gray980}, Dark={StaticResource White100}}"/>
 

@@ -28,6 +28,7 @@ public partial class ThemePage : ContentPage
                 DefaultRadioButton.IsChecked = true;
                 break;
         }
+        FontSizeLabel.Text = ((AppShell.settings.FSize - FontSizeSlider.Minimum) / (FontSizeSlider.Maximum - FontSizeSlider.Minimum) * 100).ToString("f0") + '%';
     }
 
     private void Theme_Changed(object sender, CheckedChangedEventArgs e)
@@ -49,5 +50,10 @@ public partial class ThemePage : ContentPage
         Preferences.Set("FontSize", Convert.ToInt32(FontSizeSlider.Value));
         alert = new();
         alert.DisplayMessage(LocalizationResourceManager["ReloadApp"].ToString());
-    } 
+    }
+
+    private void FontSizeSlider_ValueChanged(object sender, ValueChangedEventArgs e)
+    {
+        if (FontSizeLabel is not null) FontSizeLabel.Text = ((FontSizeSlider.Value - FontSizeSlider.Minimum) / (FontSizeSlider.Maximum - FontSizeSlider.Minimum) * 100).ToString("f0") + '%';
+    }
 }
