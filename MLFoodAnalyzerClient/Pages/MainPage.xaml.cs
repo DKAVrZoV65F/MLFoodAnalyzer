@@ -9,7 +9,6 @@ public partial class MainPage : ContentPage
     public LocalizationResourceManager LocalizationResourceManager => LocalizationResourceManager.Instance;
     private AlertService? alert;
 
-
     private const string logo = """
                           ``
           `.              `ys
@@ -38,8 +37,7 @@ public partial class MainPage : ContentPage
             .hyyyyhNdyyyyyyymh/`
         """;
     private const string errorServer = "ErrorConToServ";
-    private string text = string.Empty;
-    private string textFromServer = string.Empty;
+    //private string textFromServer = string.Empty;
     private bool IsFlag = true;
     bool IsPolicyRead;
 
@@ -68,7 +66,7 @@ public partial class MainPage : ContentPage
             return;
         }
 
-        text = QueryEditor.Text;
+        string text = QueryEditor.Text;
         QueryEditor.Text = string.Empty;
         if (string.IsNullOrWhiteSpace(text) || !IsFlag) return;
 
@@ -81,16 +79,16 @@ public partial class MainPage : ContentPage
             await Command(text[1..]);
             SendTextButton.IsInProgress = false;
             SendPictureButton.IsInProgress = false;
-            text = string.Empty;
             IsFlag = true;
             return;
         }
 
         ResultEditor.Text += LocalizationResourceManager["AttachedAText"].ToString() + '\n';
 
-        await SendText(text);
+        Connection connection = new();
+        text = await connection.SendText(text) ?? string.Empty;
         ResultEditor.Text += LocalizationResourceManager["Server"].ToString();
-        foreach (var item in textFromServer)
+        foreach (var item in text)
         {
             ResultEditor.Text += item;
             await Task.Delay(rnd.Next(minValue, maxValue));
@@ -98,13 +96,12 @@ public partial class MainPage : ContentPage
 
         SendTextButton.IsInProgress = false;
         SendPictureButton.IsInProgress = false;
-        text = string.Empty;
         IsFlag = true;
     }
 
     private void QueryEditor_Changed(object sender, TextChangedEventArgs e)
     {
-        if (SendPictureButton == null || SendTextButton == null) return;
+        if (SendPictureButton is null || SendTextButton is null) return;
 
         SendPictureButton.IsVisible = string.IsNullOrWhiteSpace(QueryEditor.Text);
         SendTextButton.IsVisible = !string.IsNullOrWhiteSpace(QueryEditor.Text);
@@ -135,10 +132,10 @@ public partial class MainPage : ContentPage
         }
 
         ResultEditor.Text += LocalizationResourceManager["AttachedAPicture"].ToString() + '\n';
-        await SendPicture(path);
+        string text = await SendPicture(path) ?? string.Empty;
 
         ResultEditor.Text += LocalizationResourceManager["Server"].ToString();
-        foreach (var item in textFromServer)
+        foreach (var item in text)
         {
             ResultEditor.Text += item;
             await Task.Delay(rnd.Next(minValue, maxValue));
@@ -168,7 +165,7 @@ public partial class MainPage : ContentPage
 
     private async Task<string> GetPathToImage(FileResult? myPhoto)
     {
-        if (myPhoto == null) return string.Empty;
+        if (myPhoto is null) return string.Empty;
         string localFilePath = Path.Combine(FileSystem.CacheDirectory, myPhoto.FileName);
         using Stream sourceStream = await myPhoto.OpenReadAsync();
         using FileStream localFileStream = File.OpenWrite(localFilePath);
@@ -177,26 +174,19 @@ public partial class MainPage : ContentPage
         return localFilePath;
     }
 
-    private async Task SendPicture(string path)
+    private async Task<string?> SendPicture(string path)
     {
         string fileName = path;
         FileInfo fileInfo = new(fileName);
         long fileSize = fileInfo.Length;
 
-        if (fileSize >= 8_000_000)
-        {
-            alert ??= new();
-            alert.DisplayMessage($"{LocalizationResourceManager["LimitImage"]}{fileSize / 1_000_000} MB");
-            return;
-        }
+        if (fileSize >= 8_000_000) return $"{LocalizationResourceManager["LimitImage"]}{fileSize / 1_000_000} MB";
 
 
         using TcpClient tcpClient = new();
-        textFromServer = string.Empty;
         if (string.IsNullOrWhiteSpace(AppShell.settings.Ip) || AppShell.settings.Port == 0)
         {
-            textFromServer += LocalizationResourceManager[errorServer].ToString();
-            return;
+            return LocalizationResourceManager[errorServer].ToString();
         }
 
         await tcpClient.ConnectAsync(AppShell.settings.Ip, AppShell.settings.Port);
@@ -223,22 +213,18 @@ public partial class MainPage : ContentPage
         while ((bytesRead = stream.ReadByte()) != '\0') response.Add((byte)bytesRead);
 
         string translation = Encoding.UTF8.GetString(response.ToArray());
-        textFromServer = translation + '\n';
 
         response.Clear();
         networkStream.Close();
+        return translation + '\n';
     }
 
-    private async Task SendText(string text)
+    /*
+    private async Task<string?> SendText(string text)
     {
-        if (string.IsNullOrWhiteSpace(AppShell.settings.Ip))
-        {
-            textFromServer += LocalizationResourceManager[errorServer].ToString();
-            return;
-        }
+        if (string.IsNullOrWhiteSpace(AppShell.settings.Ip)) return LocalizationResourceManager[errorServer].ToString();
 
         using TcpClient tcpClient = new();
-        textFromServer = string.Empty;
         await tcpClient.ConnectAsync(AppShell.settings.Ip, AppShell.settings.Port);
         var stream = tcpClient.GetStream();
 
@@ -254,25 +240,26 @@ public partial class MainPage : ContentPage
             response.Add((byte)bytesRead);
 
         string translation = Encoding.UTF8.GetString(response.ToArray());
-        textFromServer = translation + '\n';
 
         response.Clear();
         networkStream.Close();
-    }
+        return translation + '\n';
+    }*/
 
     private async Task Command(string command)
     {
         switch (command)
         {
-            case ("clear"):
+            case "clear":
                 ResultEditor.Text = string.Empty;
                 break;
-            case ("Kamchatka"):
+            case "Kamchatka":
                 ResultEditor.FontFamily = "LogoFont";
                 ResultEditor.Text = logo;
+                ResultEditor.TextType = TextType.Text;
                 await Task.Delay(5000);
-                ResultEditor.Text = string.Empty;
                 ResultEditor.FontFamily = "RegularFont";
+                ResultEditor.TextType = TextType.Html;
                 break;
             default:
                 break;
