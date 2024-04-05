@@ -13,14 +13,14 @@ public class Database
 
     private string? databaseName = null;
     private string? connectionString = null;
-    private SqlConnection connection;
+    
 
     public Database() : this(defaultDBName) { }
     public Database(string databaseName)
     {
         this.databaseName = databaseName;
         connectionString = $"Server=(localdb)\\Local;Database={this.databaseName};Trusted_Connection=True;";
-        connection ??= new(connectionString);
+        //connection ??= new(connectionString);
     }
 
     public string DatabaseName
@@ -32,14 +32,13 @@ public class Database
             {
                 databaseName = value;
                 connectionString = $"Server=(localdb)\\Local;Database={databaseName};Trusted_Connection=True;";
-                connection = new(connectionString);
             }
         }
     }
 
     public async Task<bool> Connect(string database)
     {
-        connection = new($"Server=(localdb)\\Local;Database={database};Trusted_Connection=True;");
+        SqlConnection connection = new($"Server=(localdb)\\Local;Database={database};Trusted_Connection=True;");
         try
         {
             await connection.OpenAsync();
@@ -77,6 +76,7 @@ public class Database
 
     private async Task<string?> DBLogIn(string login, string password)
     {
+        SqlConnection connection = new(connectionString);
         string sqlExpression = "SELECT TOP(1) Account.Nickname FROM Account INNER JOIN AccountProperty ON AccountProperty.Id = Account.Id WHERE AccountProperty.Login = @login and AccountProperty.Password = @password";
         await connection.OpenAsync();
 
@@ -108,6 +108,8 @@ public class Database
         foreach (string foodName in message)
         {
             if (string.IsNullOrWhiteSpace(foodName)) results.Append("Nothing\n");
+
+            SqlConnection connection = new(connectionString);
             string sqlExpression = "select Description from Food where Name = @foodName";
             await connection.OpenAsync();
 
@@ -133,6 +135,7 @@ public class Database
 
     private async Task<string?> FoodSelect()
     {
+        SqlConnection connection = new(connectionString);
         string sqlExpression = "SELECT Id, Name, Description, DateUpdate FROM Food;";
         await connection.OpenAsync();
 
@@ -145,6 +148,7 @@ public class Database
 
     private async Task<string?> History(int count = 0)
     {
+        SqlConnection connection = new(connectionString);
         string sqlExpression = "SELECT IdFood, NameFood, IdAccount, NickName, Old_Description, New_Description, LastUpdate FROM History ORDER BY LastUpdate DESC OFFSET @count ROWS FETCH FIRST 10 ROWS ONLY;";
         await connection.OpenAsync();
 
@@ -167,6 +171,7 @@ public class Database
             $"Insert into History (IdFood, NameFood, IdAccount, NickName, Old_Description, New_Description, LastUpdate) " +
             $"Values(@foodId, @NameFood, @accountId, @nickname, @Old_Description, @foodDescription, CURRENT_TIMESTAMP);";
 
+        SqlConnection connection = new(connectionString);
         await connection.OpenAsync();
 
         SqlCommand command = new(sqlExpression, connection);
