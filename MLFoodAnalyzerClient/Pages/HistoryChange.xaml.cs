@@ -1,15 +1,14 @@
 using MLFoodAnalyzerClient.Extension;
 using System.Collections.ObjectModel;
-using System.Net.Sockets;
-using System.Text;
 
 namespace MLFoodAnalyzerClient.Pages;
 
 public partial class HistoryChange : ContentPage
 {
-    private ObservableCollection<History> Histories { get; set; } = new();
+    private ObservableCollection<History> Histories { get; set; } = [];
     public LocalizationResourceManager LocalizationResourceManager => LocalizationResourceManager.Instance;
     private AlertService? alert;
+    private Connection? connection;
 
     public HistoryChange()
     {
@@ -50,40 +49,19 @@ public partial class HistoryChange : ContentPage
             return;
         }
 
-        using TcpClient tcpClient = new();
-        string translation = string.Empty;
-        try
+        connection ??= new();
+        string result = await connection.History(count) ?? string.Empty;
+        string[] rows = result.Split('\n');
+
+        foreach (string row in rows)
         {
-            await tcpClient.ConnectAsync(AppShell.settings.Ip, AppShell.settings.Port);
-            var stream = tcpClient.GetStream();
-            var response = new List<byte>();
-            NetworkStream networkStream = tcpClient.GetStream();
+            if (string.IsNullOrWhiteSpace(row)) return;
 
-            int bytesRead = 10;
-            await stream.WriteAsync(Encoding.UTF8.GetBytes("History\0"));
-            await stream.WriteAsync(Encoding.UTF8.GetBytes($"{count}\0"));
-
-            while ((bytesRead = stream.ReadByte()) != '\0')
-                response.Add((byte)bytesRead);
-
-            translation = Encoding.UTF8.GetString(response.ToArray());
-            string[] rows = translation.Split('\n');
-
-            foreach (string row in rows)
-            {
-                string[] words = row.Split('\t');
-                DateTime dateTimeValue = DateTime.Now;
-                DateTime.TryParseExact(words[6], "M/d/yyyy h:mm:ss tt", null, System.Globalization.DateTimeStyles.None, out dateTimeValue);
-                History history = new(int.Parse(words[0]), $"{words[1][0].ToString().ToUpper()}{words[1][1..]}", int.Parse(words[2]), words[3], words[4], words[5], dateTimeValue);
-                Histories.Add(history);
-            }
-            response.Clear();
-            networkStream.Close();
-        }
-        catch { }
-        finally
-        {
-            tcpClient.Close();
+            string[] words = row.Split('\t');
+            DateTime dateTimeValue = DateTime.Now;
+            DateTime.TryParseExact(words[6], "M/d/yyyy h:mm:ss tt", null, System.Globalization.DateTimeStyles.None, out dateTimeValue);
+            History history = new(int.Parse(words[0]), $"{words[1][0].ToString().ToUpper()}{words[1][1..]}", int.Parse(words[2]), words[3], words[4], words[5], dateTimeValue);
+            Histories.Add(history);
         }
     }
 

@@ -1,7 +1,5 @@
 ﻿using MLFoodAnalyzerClient.Extension;
 using System.Collections.ObjectModel;
-using System.Net.Sockets;
-using System.Text;
 
 namespace MLFoodAnalyzerClient.Pages;
 
@@ -9,6 +7,7 @@ public partial class AdminStoragePage : ContentPage
 {
     public LocalizationResourceManager LocalizationResourceManager => LocalizationResourceManager.Instance;
     private AlertService? alert;
+    private Connection? connection;
 
     public ObservableCollection<Food> Foods { get; set; } = [];
 
@@ -53,38 +52,18 @@ public partial class AdminStoragePage : ContentPage
             return;
         }
 
-        using TcpClient tcpClient = new();
-        string translation = string.Empty;
-        try
+        connection ??= new();
+        string result = await connection.Food() ?? string.Empty;
+        string[] rows = result.Split('\n');
+        Foods.Clear();
+
+        foreach (string row in rows)
         {
-            await tcpClient.ConnectAsync(AppShell.settings.Ip, AppShell.settings.Port);
-            var stream = tcpClient.GetStream();
-            var response = new List<byte>();
-            NetworkStream networkStream = tcpClient.GetStream();
+            if (string.IsNullOrWhiteSpace(row)) return;
 
-            int bytesRead = 10;
-            await stream.WriteAsync(Encoding.UTF8.GetBytes("FOOD\0"));
-
-            while ((bytesRead = stream.ReadByte()) != '\0')
-                response.Add((byte)bytesRead);
-
-            translation = Encoding.UTF8.GetString(response.ToArray());
-            string[] rows = translation.Split('\n');
-
-            Foods.Clear();
-            foreach (string row in rows)
-            {
-                string[] words = row.Split('\t');
-                Food food = new(int.Parse(words[0]), $"{words[1][0].ToString().ToUpper()}{words[1][1..]}", words[2]);
-                Foods.Add(food);
-            }
-            response.Clear();
-            networkStream.Close();
-        }
-        catch { }
-        finally
-        {
-            tcpClient.Close();
+            string[] words = row.Split('\t');
+            Food food = new(int.Parse(words[0]), $"{words[1][0].ToString().ToUpper()}{words[1][1..]}", words[2]);
+            Foods.Add(food);
         }
     }
 }

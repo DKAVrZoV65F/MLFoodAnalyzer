@@ -54,6 +54,7 @@ public partial class ThemePage : ContentPage
 
     private void FontSizeSlider_ValueChanged(object sender, ValueChangedEventArgs e)
     {
-        if (FontSizeLabel is not null) FontSizeLabel.Text = ((FontSizeSlider.Value - FontSizeSlider.Minimum) / (FontSizeSlider.Maximum - FontSizeSlider.Minimum) * 100).ToString("f0") + '%';
+        if (FontSizeLabel is not null) FontSizeLabel.Text = ((FontSizeSlider.Value - FontSizeSlider.Minimum) / 
+                (FontSizeSlider.Maximum - FontSizeSlider.Minimum) * 100).ToString("f0") + '%';
     }
 }

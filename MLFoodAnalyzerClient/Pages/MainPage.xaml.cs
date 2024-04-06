@@ -1,6 +1,4 @@
 ﻿using MLFoodAnalyzerClient.Extension;
-using System.Net.Sockets;
-using System.Text;
 
 namespace MLFoodAnalyzerClient.Pages;
 
@@ -8,6 +6,7 @@ public partial class MainPage : ContentPage
 {
     public LocalizationResourceManager LocalizationResourceManager => LocalizationResourceManager.Instance;
     private AlertService? alert;
+    private Connection? connection;
 
     private const string logo = """
                           ``
@@ -36,8 +35,6 @@ public partial class MainPage : ContentPage
            `syyyyyyyhyyyyyyho.
             .hyyyyhNdyyyyyyymh/`
         """;
-    private const string errorServer = "ErrorConToServ";
-    //private string textFromServer = string.Empty;
     private bool IsFlag = true;
     bool IsPolicyRead;
 
@@ -71,40 +68,22 @@ public partial class MainPage : ContentPage
         if (string.IsNullOrWhiteSpace(text) || !IsFlag) return;
 
         IsFlag = false;
-        SendTextButton.IsInProgress = true;
-        SendPictureButton.IsInProgress = true;
+        SendTextButton.IsInProgress = SendPictureButton.IsInProgress = true;
 
         if (text[0].Equals('/'))
         {
             await Command(text[1..]);
-            SendTextButton.IsInProgress = false;
-            SendPictureButton.IsInProgress = false;
+            SendTextButton.IsInProgress = SendPictureButton.IsInProgress = false;
             IsFlag = true;
             return;
         }
 
-        ResultEditor.Text += LocalizationResourceManager["AttachedAText"].ToString() + '\n';
+        await Display(LocalizationResourceManager["AttachedAText"].ToString() + '\n');
 
-        Connection connection = new();
-        text = await connection.SendText(text) ?? string.Empty;
-        ResultEditor.Text += LocalizationResourceManager["Server"].ToString();
-        foreach (var item in text)
-        {
-            ResultEditor.Text += item;
-            await Task.Delay(rnd.Next(minValue, maxValue));
-        }
+        connection ??= new();
+        string results = await connection.SendText(text) ?? string.Empty;
 
-        SendTextButton.IsInProgress = false;
-        SendPictureButton.IsInProgress = false;
-        IsFlag = true;
-    }
-
-    private void QueryEditor_Changed(object sender, TextChangedEventArgs e)
-    {
-        if (SendPictureButton is null || SendTextButton is null) return;
-
-        SendPictureButton.IsVisible = string.IsNullOrWhiteSpace(QueryEditor.Text);
-        SendTextButton.IsVisible = !string.IsNullOrWhiteSpace(QueryEditor.Text);
+        await Display(results);
     }
 
     private async void SendPicture_Tapped(object sender, EventArgs e)
@@ -118,39 +97,47 @@ public partial class MainPage : ContentPage
 
         if (!IsFlag) return;
 
-        IsFlag = false;
-        SendTextButton.IsInProgress = true;
-        SendPictureButton.IsInProgress = true;
-
         string path = await GetPicturePath();
-        if (string.IsNullOrWhiteSpace(path))
-        {
-            SendTextButton.IsInProgress = false;
-            SendPictureButton.IsInProgress = false;
-            IsFlag = true;
-            return;
-        }
+        if (string.IsNullOrWhiteSpace(path)) return;
 
-        ResultEditor.Text += LocalizationResourceManager["AttachedAPicture"].ToString() + '\n';
-        string text = await SendPicture(path) ?? string.Empty;
+        IsFlag = false;
+        SendTextButton.IsInProgress = SendPictureButton.IsInProgress = true;
 
+        await Display(LocalizationResourceManager["AttachedAPicture"].ToString() + '\n');
+        
+        connection ??= new();
+        string results = await connection.SendPicture(path) ?? string.Empty;
+
+        await Display(results);
+    }
+
+    private async Task Display(string results)
+    {
         ResultEditor.Text += LocalizationResourceManager["Server"].ToString();
-        foreach (var item in text)
+        foreach (var result in results)
         {
-            ResultEditor.Text += item;
+            ResultEditor.Text += result;
             await Task.Delay(rnd.Next(minValue, maxValue));
         }
 
-        SendTextButton.IsInProgress = false;
-        SendPictureButton.IsInProgress = false;
+        SendTextButton.IsInProgress = SendPictureButton.IsInProgress = false;
         IsFlag = true;
+    }
+
+    private void QueryEditor_Changed(object sender, TextChangedEventArgs e)
+    {
+        if (SendPictureButton is null || SendTextButton is null) return;
+
+        SendPictureButton.IsVisible = string.IsNullOrWhiteSpace(QueryEditor.Text);
+        SendTextButton.IsVisible = !string.IsNullOrWhiteSpace(QueryEditor.Text);
     }
 
     private async Task<string> GetPicturePath()
     {
 #if ANDROID || IOS
         alert ??= new();
-        bool result = await alert.DisplayMessage(LocalizationResourceManager["SelectAnAction"].ToString(), LocalizationResourceManager["TakeAPicture"].ToString(), LocalizationResourceManager["Gallery"].ToString());
+        bool result = await alert.DisplayMessage(LocalizationResourceManager["SelectAnAction"].ToString(), 
+            LocalizationResourceManager["TakeAPicture"].ToString(), LocalizationResourceManager["Gallery"].ToString());
         string res = (result) ? await GetPicture() : await GetMedia();
         return res;
 #else
@@ -166,85 +153,15 @@ public partial class MainPage : ContentPage
     private async Task<string> GetPathToImage(FileResult? myPhoto)
     {
         if (myPhoto is null) return string.Empty;
+
         string localFilePath = Path.Combine(FileSystem.CacheDirectory, myPhoto.FileName);
         using Stream sourceStream = await myPhoto.OpenReadAsync();
         using FileStream localFileStream = File.OpenWrite(localFilePath);
         await sourceStream.CopyToAsync(localFileStream);
         localFileStream.Close();
+
         return localFilePath;
     }
-
-    private async Task<string?> SendPicture(string path)
-    {
-        string fileName = path;
-        FileInfo fileInfo = new(fileName);
-        long fileSize = fileInfo.Length;
-
-        if (fileSize >= 8_000_000) return $"{LocalizationResourceManager["LimitImage"]}{fileSize / 1_000_000} MB";
-
-
-        using TcpClient tcpClient = new();
-        if (string.IsNullOrWhiteSpace(AppShell.settings.Ip) || AppShell.settings.Port == 0)
-        {
-            return LocalizationResourceManager[errorServer].ToString();
-        }
-
-        await tcpClient.ConnectAsync(AppShell.settings.Ip, AppShell.settings.Port);
-        var stream = tcpClient.GetStream();
-
-        var response = new List<byte>();
-        NetworkStream networkStream = tcpClient.GetStream();
-
-        int bytesRead = 10;
-        await stream.WriteAsync(Encoding.UTF8.GetBytes("IMAGE\0"));
-        await stream.WriteAsync(Encoding.UTF8.GetBytes($"{fileSize}\0"));
-
-        byte[] buffer = new byte[1024];
-        int bytesReadImg;
-        string filePath = path;
-        FileStream fileStream = new(filePath, FileMode.Open, FileAccess.Read);
-
-        while ((bytesReadImg = fileStream.Read(buffer, 0, buffer.Length)) != 0)
-        {
-            tcpClient.GetStream().Write(buffer, 0, bytesReadImg);
-        }
-        fileStream.Close();
-
-        while ((bytesRead = stream.ReadByte()) != '\0') response.Add((byte)bytesRead);
-
-        string translation = Encoding.UTF8.GetString(response.ToArray());
-
-        response.Clear();
-        networkStream.Close();
-        return translation + '\n';
-    }
-
-    /*
-    private async Task<string?> SendText(string text)
-    {
-        if (string.IsNullOrWhiteSpace(AppShell.settings.Ip)) return LocalizationResourceManager[errorServer].ToString();
-
-        using TcpClient tcpClient = new();
-        await tcpClient.ConnectAsync(AppShell.settings.Ip, AppShell.settings.Port);
-        var stream = tcpClient.GetStream();
-
-        //  Buffer for incoming data
-        var response = new List<byte>();
-        NetworkStream networkStream = tcpClient.GetStream();
-
-        int bytesRead = 10; //  To read bytes from a stream
-        await stream.WriteAsync(Encoding.UTF8.GetBytes("TEXT\0"));
-        await stream.WriteAsync(Encoding.UTF8.GetBytes($"{text}\0"));
-
-        while ((bytesRead = stream.ReadByte()) != '\0')
-            response.Add((byte)bytesRead);
-
-        string translation = Encoding.UTF8.GetString(response.ToArray());
-
-        response.Clear();
-        networkStream.Close();
-        return translation + '\n';
-    }*/
 
     private async Task Command(string command)
     {
