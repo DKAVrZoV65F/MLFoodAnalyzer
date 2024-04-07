@@ -97,7 +97,7 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The picture has been sent to the server, wait for the results.
+        ///   Looks up a localized string similar to The picture has been sent to the server, wait for the results&lt;br/&gt;.
         /// </summary>
         internal static string AttachedAPicture {
             get {
@@ -106,7 +106,7 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The text has been sent to the server, wait for the results..
+        ///   Looks up a localized string similar to The text has been sent to the server, wait for the results.&lt;br/&gt;.
         /// </summary>
         internal static string AttachedAText {
             get {
@@ -237,7 +237,7 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error connecting to the server!.
+        ///   Looks up a localized string similar to Error connecting to the server!&lt;br/&gt;.
         /// </summary>
         internal static string ErrorConToServ {
             get {

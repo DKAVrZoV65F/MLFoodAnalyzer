@@ -28,29 +28,39 @@ public partial class AdminLogInPage : ContentPage
         _ = SecureStorage.SetAsync("SavedPassword", SavingCheckBox.IsChecked ? AppShell.settings.SavedPassword : string.Empty);
 
         if (string.IsNullOrWhiteSpace(AppShell.settings.Login) || string.IsNullOrWhiteSpace(AppShell.settings.SavedPassword) 
-            || string.IsNullOrEmpty(AppShell.settings.Password)) return;
+            || string.IsNullOrWhiteSpace(AppShell.settings.Password)) return;
 
         IsFlag = false;
         LogInButton.IsInProgress = true;
 
         connection ??= new();
-        string result = await connection.LogIn() ?? string.Empty;
+        string? result = await connection.LogIn();
 
         IsFlag = true;
         LogInButton.IsInProgress = false;
-        if (!string.IsNullOrWhiteSpace(result) && result.Equals("0"))
+        
+        if (string.IsNullOrWhiteSpace(result))
         {
-            alert ??= new();
-            alert.DisplayMessage(LocalizationResourceManager["ErrorLogIn"].ToString());
-            return;
+            Display(LocalizationResourceManager["DestinationHostUn"].ToString());
         }
-        else if (string.IsNullOrWhiteSpace(result))
+        else if (result.Equals('0'))
         {
-            alert ??= new();
-            alert.DisplayMessage(LocalizationResourceManager["DestinationHostUn"].ToString());
-            return;
+            Display(LocalizationResourceManager["ErrorLogIn"].ToString());
         }
-        AppShell.settings.NickName = result;
-        await Navigation.PushAsync(new AdminStoragePage());
+        else if (result.Equals(LocalizationResourceManager["ErrorConToServ"].ToString()))
+        {
+            Display(LocalizationResourceManager["ErrorConToServ"].ToString()?[..^5]);
+        }
+        else
+        {
+            AppShell.settings.NickName = result;
+            await Navigation.PushAsync(new AdminStoragePage());
+        }    
+    }
+
+    private void Display(string? message)
+    {
+        alert ??= new();
+        alert.DisplayMessage(message);
     }
 }

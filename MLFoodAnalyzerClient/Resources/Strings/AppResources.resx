@@ -130,10 +130,10 @@
     <value>MLFoodAnalyzer</value>
   </data>
   <data name="AttachedAPicture" xml:space="preserve">
-    <value>The picture has been sent to the server, wait for the results</value>
+    <value>The picture has been sent to the server, wait for the results&lt;br/&gt;</value>
   </data>
   <data name="AttachedAText" xml:space="preserve">
-    <value>The text has been sent to the server, wait for the results.</value>
+    <value>The text has been sent to the server, wait for the results.&lt;br/&gt;</value>
   </data>
   <data name="Back" xml:space="preserve">
     <value>Back</value>
@@ -193,7 +193,7 @@ This program is purely for informational purposes.</value>
     <value>Enter your username</value>
   </data>
   <data name="ErrorConToServ" xml:space="preserve">
-    <value>Error connecting to the server!</value>
+    <value>Error connecting to the server!&lt;br/&gt;</value>
   </data>
   <data name="ErrorLogIn" xml:space="preserve">
     <value>The entered username or password is incorrect</value>

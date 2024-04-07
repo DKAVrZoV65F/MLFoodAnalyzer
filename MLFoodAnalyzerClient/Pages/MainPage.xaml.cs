@@ -78,7 +78,7 @@ public partial class MainPage : ContentPage
             return;
         }
 
-        await Display(LocalizationResourceManager["AttachedAText"].ToString() + '\n');
+        ResultEditor.Text += LocalizationResourceManager["AttachedAText"].ToString();
 
         connection ??= new();
         string results = await connection.SendText(text) ?? string.Empty;
@@ -103,7 +103,7 @@ public partial class MainPage : ContentPage
         IsFlag = false;
         SendTextButton.IsInProgress = SendPictureButton.IsInProgress = true;
 
-        await Display(LocalizationResourceManager["AttachedAPicture"].ToString() + '\n');
+        ResultEditor.Text += LocalizationResourceManager["AttachedAPicture"].ToString();
         
         connection ??= new();
         string results = await connection.SendPicture(path) ?? string.Empty;
@@ -176,6 +176,7 @@ public partial class MainPage : ContentPage
                 ResultEditor.TextType = TextType.Text;
                 await Task.Delay(5000);
                 ResultEditor.FontFamily = "RegularFont";
+                ResultEditor.Text = string.Empty;
                 ResultEditor.TextType = TextType.Html;
                 break;
             default:

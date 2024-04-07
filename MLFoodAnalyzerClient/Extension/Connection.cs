@@ -25,7 +25,7 @@ internal class Connection
     public async Task<string?> LogIn()
     {
         string? result = await Send(op: Operation.LogIn, string.Empty) ?? string.Empty;
-        return DecryptText(result);
+        return (!result.Equals(LocalizationResourceManager[errorServer].ToString())) ? DecryptText(result) : LocalizationResourceManager[errorServer].ToString();
     }
 
     public async Task<string?> Food() => await Send(op: Operation.LoadFood, string.Empty);
@@ -41,33 +41,40 @@ internal class Connection
 
     private async Task<string?> Send(Operation op, string query)
     {
-        if (string.IsNullOrWhiteSpace(AppShell.settings.Ip) || AppShell.settings.Port == 0) return LocalizationResourceManager[errorServer].ToString();
-
-        using TcpClient tcpClient = new();
-        await tcpClient.ConnectAsync(AppShell.settings.Ip, AppShell.settings.Port);
-
-        NetworkStream stream = tcpClient.GetStream();
-        List<byte> response = [];
-        int bytesRead = 10;
-
-        _ = op switch
+        try
         {
-            Operation.Text => Text(stream, query),
-            Operation.Picture => Image(stream, tcpClient, query),
-            Operation.LogIn => LogIn(stream),
-            Operation.LoadFood => LoadFood(stream),
-            Operation.LoadHistory => LoadHistory(stream, int.Parse(query)),
-            Operation.UpdateFood => UpdateFood(stream, query),
-            Operation.Ping => Ping(stream),
-            _ => throw new NotImplementedException(),
-        };
+            if (string.IsNullOrWhiteSpace(AppShell.settings.Ip) || AppShell.settings.Port == 0) throw new Exception();
 
-        while ((bytesRead = stream.ReadByte()) != '\0') response.Add((byte)bytesRead);
+            using TcpClient tcpClient = new();
+            await tcpClient.ConnectAsync(AppShell.settings.Ip, AppShell.settings.Port);
 
-        string result = Encoding.UTF8.GetString(response.ToArray());
-        response.Clear();
-        tcpClient.Close();
-        return result;
+            NetworkStream stream = tcpClient.GetStream();
+            List<byte> response = [];
+            int bytesRead = 10;
+
+            _ = op switch
+            {
+                Operation.Text => Text(stream, query),
+                Operation.Picture => Image(stream, tcpClient, query),
+                Operation.LogIn => LogIn(stream),
+                Operation.LoadFood => LoadFood(stream),
+                Operation.LoadHistory => LoadHistory(stream, int.Parse(query)),
+                Operation.UpdateFood => UpdateFood(stream, query),
+                Operation.Ping => Ping(stream),
+                _ => throw new NotImplementedException(),
+            };
+
+            while ((bytesRead = stream.ReadByte()) != '\0') response.Add((byte)bytesRead);
+
+            string result = Encoding.UTF8.GetString(response.ToArray());
+            response.Clear();
+            tcpClient.Close();
+            return result;
+        }
+        catch (Exception)
+        {
+            return LocalizationResourceManager[errorServer].ToString();
+        }
     }
 
     private async Task Text(NetworkStream stream, string text)

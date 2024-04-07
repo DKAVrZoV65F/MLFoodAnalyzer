@@ -130,10 +130,10 @@
     <value>MLFoodAnalyzer</value>
   </data>
   <data name="AttachedAPicture" xml:space="preserve">
-    <value>Картинка отправлена на сервер, дождитесь результатов</value>
+    <value>Картинка отправлена на сервер, дождитесь результатов&lt;br/&gt;</value>
   </data>
   <data name="AttachedAText" xml:space="preserve">
-    <value>Текст отправлен на сервер, дождитесь результатов.</value>
+    <value>Текст отправлен на сервер, дождитесь результатов.&lt;br/&gt;</value>
   </data>
   <data name="Back" xml:space="preserve">
     <value>Назад</value>
@@ -193,7 +193,7 @@ DKAVrZoV65F владеет всеми правами, титулами и инт
     <value>Введите логин</value>
   </data>
   <data name="ErrorConToServ" xml:space="preserve">
-    <value>Ошибка при подключении к серверу!</value>
+    <value>Ошибка при подключении к серверу!&lt;br/&gt;</value>
   </data>
   <data name="ErrorLogIn" xml:space="preserve">
     <value>Введенное имя пользователя или пароль неверны</value>
