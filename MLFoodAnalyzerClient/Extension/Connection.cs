@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using System.Globalization;
+using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -35,9 +36,6 @@ internal class Connection
     public async Task<string?> Update(string data) => await Send(op: Operation.UpdateFood, data);
 
     public async Task<string?> PingServer() => await Send(op: Operation.Ping, string.Empty);
-
-
-
 
     private async Task<string?> Send(Operation op, string query)
     {
@@ -85,9 +83,11 @@ internal class Connection
 
     private async Task Image(NetworkStream stream, TcpClient tcpClient, string path)
     {
+        CultureInfo cultureInfo = new(AppShell.settings.Language);
         FileInfo fileInfo = new(path);
         long fileSize = fileInfo.Length;
         await stream.WriteAsync(Encoding.UTF8.GetBytes("IMAGE\0"));
+        await stream.WriteAsync(Encoding.UTF8.GetBytes(cultureInfo.TwoLetterISOLanguageName + '\0'));
         await stream.WriteAsync(Encoding.UTF8.GetBytes($"{fileSize}\0"));
 
         byte[] buffer = new byte[1024];

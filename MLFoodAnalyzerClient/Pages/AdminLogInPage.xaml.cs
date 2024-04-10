@@ -49,7 +49,7 @@ public partial class AdminLogInPage : ContentPage
         }
         else if (result.Equals(LocalizationResourceManager["ErrorConToServ"].ToString()))
         {
-            Display(LocalizationResourceManager["ErrorConToServ"].ToString()?[..^5]);
+            Display(LocalizationResourceManager["ErrorConToServ"].ToString());
         }
         else
         {

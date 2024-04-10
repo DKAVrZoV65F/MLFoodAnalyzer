@@ -97,7 +97,7 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The picture has been sent to the server, wait for the results&lt;br/&gt;.
+        ///   Looks up a localized string similar to The picture has been sent to the server, wait for the results.
         /// </summary>
         internal static string AttachedAPicture {
             get {
@@ -106,7 +106,7 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The text has been sent to the server, wait for the results.&lt;br/&gt;.
+        ///   Looks up a localized string similar to The text has been sent to the server, wait for the results..
         /// </summary>
         internal static string AttachedAText {
             get {
@@ -120,6 +120,15 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         internal static string Back {
             get {
                 return ResourceManager.GetString("Back", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benefit:.
+        /// </summary>
+        internal static string Benefit {
+            get {
+                return ResourceManager.GetString("Benefit", resourceCulture);
             }
         }
         
@@ -296,6 +305,15 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         internal static string Gallery {
             get {
                 return ResourceManager.GetString("Gallery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Harm:.
+        /// </summary>
+        internal static string Harm {
+            get {
+                return ResourceManager.GetString("Harm", resourceCulture);
             }
         }
         

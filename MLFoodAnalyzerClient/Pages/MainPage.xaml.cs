@@ -78,10 +78,10 @@ public partial class MainPage : ContentPage
             return;
         }
 
-        ResultEditor.Text += LocalizationResourceManager["AttachedAText"].ToString();
+        ResultEditor.Text = LocalizationResourceManager["AttachedAText"].ToString();
 
         connection ??= new();
-        string results = await connection.SendText(text) ?? string.Empty;
+        string results = await connection.SendText("text") ?? string.Empty;
 
         await Display(results);
     }
@@ -103,8 +103,8 @@ public partial class MainPage : ContentPage
         IsFlag = false;
         SendTextButton.IsInProgress = SendPictureButton.IsInProgress = true;
 
-        ResultEditor.Text += LocalizationResourceManager["AttachedAPicture"].ToString();
-        
+        ResultEditor.Text = LocalizationResourceManager["AttachedAPicture"].ToString();
+
         connection ??= new();
         string results = await connection.SendPicture(path) ?? string.Empty;
 
@@ -113,12 +113,42 @@ public partial class MainPage : ContentPage
 
     private async Task Display(string results)
     {
-        ResultEditor.Text += LocalizationResourceManager["Server"].ToString();
         foreach (var result in results)
         {
             ResultEditor.Text += result;
             await Task.Delay(rnd.Next(minValue, maxValue));
         }
+
+        string[] data = results.Split('|');
+
+        FormattedString formattedString = new();
+        formattedString.Spans.Add(new Span
+        {
+            Text = LocalizationResourceManager["Server"].ToString()
+        });
+        formattedString.Spans.Add(new Span
+        {
+            Text = data[0] + '\n'
+        });
+        formattedString.Spans.Add(new Span
+        {
+            Text = LocalizationResourceManager["Benefit"].ToString(),
+            TextColor = Colors.Green
+        });
+        formattedString.Spans.Add(new Span
+        {
+            Text = data[1]
+        });
+        formattedString.Spans.Add(new Span
+        {
+            Text = LocalizationResourceManager["Harm"].ToString(),
+            TextColor = Colors.Red
+        });
+        formattedString.Spans.Add(new Span
+        {
+            Text = data[2]
+        });
+        ResultEditor.FormattedText = formattedString;
 
         SendTextButton.IsInProgress = SendPictureButton.IsInProgress = false;
         IsFlag = true;
@@ -167,17 +197,15 @@ public partial class MainPage : ContentPage
     {
         switch (command)
         {
-            case "clear":
+            case "clean":
                 ResultEditor.Text = string.Empty;
                 break;
             case "Kamchatka":
                 ResultEditor.FontFamily = "LogoFont";
                 ResultEditor.Text = logo;
-                ResultEditor.TextType = TextType.Text;
                 await Task.Delay(5000);
                 ResultEditor.FontFamily = "RegularFont";
                 ResultEditor.Text = string.Empty;
-                ResultEditor.TextType = TextType.Html;
                 break;
             default:
                 break;

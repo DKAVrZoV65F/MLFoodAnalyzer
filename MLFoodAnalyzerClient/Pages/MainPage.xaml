@@ -35,7 +35,6 @@
             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}">
             <Label
                 x:Name="ResultEditor"
-                TextType="Html"
                 TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
                 FontFamily="RegularFont"
                 FontSize="{Binding Path=FSize}"
