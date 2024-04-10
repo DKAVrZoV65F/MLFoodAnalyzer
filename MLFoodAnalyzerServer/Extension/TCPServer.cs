@@ -100,8 +100,8 @@ public class TCPServer
         switch (query)
         {
             case "IMAGE":
-                result = await GetMessage();
                 string language = await GetMessage();
+                result = await GetMessage();
                 result = await GetImage(result, store.PathFolder);
                 result = await ProcessImage(language, result);
                 break;
