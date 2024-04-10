@@ -107,12 +107,12 @@ public class Database
         string language = data[0];
         data.Remove(data.Keys.First());
 
-        if (data == null || data.Count <= 0) return "Nothing\n";
+        if (data == null || data.Count <= 0) return ". - 0%|.|.\0";
 
         StringBuilder results = new();
         foreach (var food in data)
         {
-            if (string.IsNullOrWhiteSpace(food.Value)) results.Append("Nothing\n");
+            if (string.IsNullOrWhiteSpace(food.Value)) results.Append($"{food.Value} - {food.Key*100:f0}%|.|.\0");
 
             SqlConnection connection = new(connectionString);
             string sqlExpression = language.Equals(MLFood.RU) ? "select DescriptionRu from Food where Name = @foodName" : 
@@ -129,10 +129,10 @@ public class Database
                 await reader.ReadAsync();
                 object description = reader.GetValue(0);
                 await reader.CloseAsync();
-                results.Append($"\n{food.Value} - {food.Key*100:f0}%\n{description?.ToString()}\n");
+                results.Append($"{food.Value} - {food.Key*100:f0}%|{description?.ToString()}\n");
             }
             else
-                results.Append("Nothing\n");
+                results.Append($"{food.Value} - {food.Key * 100:f0}%|.|.\0");
             await reader.CloseAsync();
         }
 
