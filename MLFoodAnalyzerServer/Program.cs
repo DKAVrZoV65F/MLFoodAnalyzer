@@ -167,7 +167,7 @@ internal class MLFoodAnalyzerServer
         {
             Image = Path.GetFullPath("Extension\\apple.jpg")
         };
-        mLFood.PredictImage();
+        mLFood.PredictImage(string.Empty);
     }
 
     private static void LoadMLText()

@@ -1,6 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
-using System.Data;
-using System.Text;
+﻿using System.Text;
+using Microsoft.Data.SqlClient;
 
 namespace MLFoodAnalyzerServer.Extension;
 
@@ -13,14 +12,13 @@ public class Database
 
     private string? databaseName = null;
     private string? connectionString = null;
-    
+
 
     public Database() : this(defaultDBName) { }
     public Database(string databaseName)
     {
         this.databaseName = databaseName;
         connectionString = $"Server=(localdb)\\Local;Database={this.databaseName};Trusted_Connection=True;";
-        //connection ??= new(connectionString);
     }
 
     public string DatabaseName
@@ -61,12 +59,10 @@ public class Database
                 case SQLQuery.LogIn:
                     return await DBLogIn(parameters[0], parameters[1]);
                 case SQLQuery.Update:
-                    await UpdateDescriptionFood(parameters[0], int.Parse(parameters[1]), parameters[2]);
+                    await UpdateDescriptionFood(parameters[0], int.Parse(parameters[1]), parameters[2], parameters[3]);
                     break;
-                case SQLQuery.CurrentDescription:
-                    return await SelectDescriptionFood(parameters!);
                 case SQLQuery.AllFood:
-                    return await FoodSelect();
+                    return await AllFood();
                 case SQLQuery.History:
                     return await History(int.Parse(parameters[0]));
             }
@@ -74,10 +70,16 @@ public class Database
         return failExecute;
     }
 
+    public async Task<string?> ExecuteQuery(string command, Dictionary<float, string> parameters)
+    {
+        return await SelectDescriptionFood(parameters);
+    }
+
     private async Task<string?> DBLogIn(string login, string password)
     {
         SqlConnection connection = new(connectionString);
-        string sqlExpression = "SELECT TOP(1) Account.Nickname FROM Account INNER JOIN AccountProperty ON AccountProperty.Id = Account.Id WHERE AccountProperty.Login = @login and AccountProperty.Password = @password";
+        string sqlExpression = "SELECT TOP(1) Account.Nickname FROM Account INNER JOIN AccountProperty ON AccountProperty.Id = Account.Id " +
+            "WHERE AccountProperty.Login = @login and AccountProperty.Password = @password";
         await connection.OpenAsync();
 
         SqlCommand command = new(sqlExpression, connection);
@@ -100,21 +102,25 @@ public class Database
         return retDBLogIn;
     }
 
-    private async Task<string?> SelectDescriptionFood(string[] message)
+    private async Task<string?> SelectDescriptionFood(Dictionary<float, string> data)
     {
-        if (message == null || message.Length <= 0) return "Nothing\n";
+        string language = data[0];
+        data.Remove(data.Keys.First());
+
+        if (data == null || data.Count <= 0) return "Nothing\n";
 
         StringBuilder results = new();
-        foreach (string foodName in message)
+        foreach (var food in data)
         {
-            if (string.IsNullOrWhiteSpace(foodName)) results.Append("Nothing\n");
+            if (string.IsNullOrWhiteSpace(food.Value)) results.Append("Nothing\n");
 
             SqlConnection connection = new(connectionString);
-            string sqlExpression = "select Description from Food where Name = @foodName";
+            string sqlExpression = language.Equals(MLFood.RU) ? "select DescriptionRu from Food where Name = @foodName" : 
+                "select DescriptionEn from Food where Name = @foodName";
             await connection.OpenAsync();
 
             SqlCommand command = new(sqlExpression, connection);
-            SqlParameter foodNameParam = new("@foodName", foodName);
+            SqlParameter foodNameParam = new("@foodName", food.Value);
             command.Parameters.Add(foodNameParam);
             SqlDataReader reader = await command.ExecuteReaderAsync();
 
@@ -123,7 +129,7 @@ public class Database
                 await reader.ReadAsync();
                 object description = reader.GetValue(0);
                 await reader.CloseAsync();
-                results.Append(description?.ToString() + '\n');
+                results.Append($"\n{food.Value} - {food.Key*100:f0}%\n{description?.ToString()}\n");
             }
             else
                 results.Append("Nothing\n");
@@ -133,10 +139,10 @@ public class Database
         return results.ToString();
     }
 
-    private async Task<string?> FoodSelect()
+    private async Task<string?> AllFood()
     {
         SqlConnection connection = new(connectionString);
-        string sqlExpression = "SELECT Id, Name, Description, DateUpdate FROM Food;";
+        string sqlExpression = "SELECT Id, Name, DescriptionRu, DescriptionEn, DateUpdate FROM Food;";
         await connection.OpenAsync();
 
         SqlCommand command = new(sqlExpression, connection);
@@ -149,7 +155,8 @@ public class Database
     private async Task<string?> History(int count = 0)
     {
         SqlConnection connection = new(connectionString);
-        string sqlExpression = "SELECT IdFood, NameFood, IdAccount, NickName, Old_Description, New_Description, LastUpdate FROM History ORDER BY LastUpdate DESC OFFSET @count ROWS FETCH FIRST 10 ROWS ONLY;";
+        string sqlExpression = "SELECT IdFood, NameFood, IdAccount, NickName, Old_Description, New_Description, LastUpdate " +
+            "FROM History ORDER BY LastUpdate DESC OFFSET @count ROWS FETCH FIRST 10 ROWS ONLY;";
         await connection.OpenAsync();
 
         SqlCommand command = new(sqlExpression, connection);
@@ -161,27 +168,28 @@ public class Database
         return results;
     }
 
-    private async Task<string?> UpdateDescriptionFood(string nickname, int foodId, string foodDescription)
+    private async Task<string?> UpdateDescriptionFood(string nickname, int foodId, string foodDescriptionRu, string foodDescriptionEn)
     {
-        string sqlExpression = $"DECLARE @accountId INT;" +
-            $"DECLARE @Old_Description nvarchar(max);" +
-            $"DECLARE @NameFood Varchar(50);" +
-            $"SELECT @accountId = Id FROM Account WHERE NickName = @nickname;SELECT @Old_Description = Description FROM Food WHERE Id = @foodId;" +
-            $"SELECT @NameFood = Name FROM Food WHERE Id = @foodId;UPDATE Food SET Description = @foodDescription WHERE Id = @foodId;" +
-            $"Insert into History (IdFood, NameFood, IdAccount, NickName, Old_Description, New_Description, LastUpdate) " +
-            $"Values(@foodId, @NameFood, @accountId, @nickname, @Old_Description, @foodDescription, CURRENT_TIMESTAMP);";
+        string sqlExpression = $"DECLARE @accountId INT, @Old_Description nvarchar(max), @NameFood Varchar(50);" +
+            $"SELECT @accountId = Id FROM Account WHERE NickName = @nickname;" +
+            $"SELECT @Old_DescriptionRu = DescriptionRul, @Old_DescriptionEn = DescriptionEn, @NameFood = Name FROM Food WHERE Id = @foodId;" +
+            $"UPDATE Food SET DescriptionRu = @foodDescriptionRu, DescriptionEn = @foodDescriptionEn WHERE Id = @foodId;" +
+            $"Insert into History (IdFood, NameFood, IdAccount, NickName, Old_DescriptionRu, Old_DescriptionEn, New_DescriptionRu, New_DescriptionEn, LastUpdate) " +
+            $"Values(@foodId, @NameFood, @accountId, @nickname, @Old_DescriptionRu, @Old_DescriptionEn, @foodDescriptionRu, @foodDescriptionEn, CURRENT_TIMESTAMP);";
 
         SqlConnection connection = new(connectionString);
         await connection.OpenAsync();
 
         SqlCommand command = new(sqlExpression, connection);
-
         SqlParameter nicknameParam = new("@nickname", nickname);
-        command.Parameters.Add(nicknameParam);
         SqlParameter foodIdParam = new("@foodId", foodId);
+        SqlParameter foodDescriptionParamRu = new("@foodDescriptionRu", foodDescriptionRu);
+        SqlParameter foodDescriptionParamEn = new("@foodDescriptionEn", foodDescriptionEn);
+
+        command.Parameters.Add(nicknameParam);
         command.Parameters.Add(foodIdParam);
-        SqlParameter foodDescriptionParam = new("@foodDescription", foodDescription);
-        command.Parameters.Add(foodDescriptionParam);
+        command.Parameters.Add(foodDescriptionParamRu);
+        command.Parameters.Add(foodDescriptionParamEn);
 
         await command.ExecuteNonQueryAsync();
 

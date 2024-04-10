@@ -1,5 +1,4 @@
-﻿using Microsoft.ML.Runtime;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
@@ -30,7 +29,7 @@ public class TCPServer
 
     public IPAddress Ip
     {
-        get 
+        get
         {
             if (ip is null)
             {
@@ -102,8 +101,9 @@ public class TCPServer
         {
             case "IMAGE":
                 result = await GetMessage();
+                string language = await GetMessage();
                 result = await GetImage(result, store.PathFolder);
-                result = await ProcessImage(result);
+                result = await ProcessImage(language, result);
                 break;
             case "TEXT":
                 result = await GetMessage();
@@ -187,13 +187,13 @@ public class TCPServer
         return "SUCCESS";
     }
 
-    private async Task<string?> ProcessImage(string fileFullPath)
+    private async Task<string?> ProcessImage(string language, string fileFullPath)
     {
         MLFood mLFood = new()
         {
             Image = fileFullPath
         };
-        string[] message = mLFood.PredictImage();
+        Dictionary<float, string> message = mLFood.PredictImage(language);
         return await database.ExecuteQuery("CurrentDescription", message);
     }
 
@@ -203,7 +203,7 @@ public class TCPServer
         {
             Text = message
         };
-        string[] result = mLFood.PredictText();
+        Dictionary<float, string> result = mLFood.PredictText();
         return await database.ExecuteQuery("CurrentDescription", result);
     }
 

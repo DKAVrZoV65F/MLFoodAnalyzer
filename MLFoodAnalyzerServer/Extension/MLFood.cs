@@ -4,6 +4,8 @@ public class MLFood
 {
     private string text;
     private string filePath;
+    internal const string RU = "ru";
+    internal const string EN = "en";
 
     public MLFood()
     {
@@ -29,7 +31,7 @@ public class MLFood
         }
     }
 
-    public string[] PredictImage()
+    public Dictionary<float, string> PredictImage(string language)
     {
         var imageBytes = File.ReadAllBytes(filePath);
         Food.ModelInput sampleData = new()
@@ -38,10 +40,10 @@ public class MLFood
         };
 
         var sortedScoresWithLabel = Food.PredictAllLabels(sampleData);
-        return PredictResults(sortedScoresWithLabel);
+        return PredictResults(language, sortedScoresWithLabel);
     }
 
-    public string[] PredictText()
+    public Dictionary<float, string> PredictText()
     {
         string str = text;
         int engCount = 0;
@@ -54,11 +56,11 @@ public class MLFood
                 engCount++;
         }
 
-        if (rusCount > engCount) return PredictFoodRU();
+        if (rusCount > engCount) return PredictFoodRu();
         else return PredictFoodEn();
     }
 
-    private string[] PredictFoodEn()
+    private Dictionary<float, string> PredictFoodEn()
     {
         Query_EN.ModelInput sampleData = new()
         {
@@ -66,10 +68,10 @@ public class MLFood
         };
 
         var sortedScoresWithLabel = Query_EN.PredictAllLabels(sampleData);
-        return PredictResults(sortedScoresWithLabel);
+        return PredictResults(EN, sortedScoresWithLabel);
     }
 
-    private string[] PredictFoodRU()
+    private Dictionary<float, string> PredictFoodRu()
     {
         Query_RU.ModelInput sampleData = new()
         {
@@ -77,18 +79,19 @@ public class MLFood
         };
 
         var sortedScoresWithLabel = Query_RU.PredictAllLabels(sampleData);
-        return PredictResults(sortedScoresWithLabel);
+        return PredictResults(RU, sortedScoresWithLabel);
     }
 
-    private static string[] PredictResults(IOrderedEnumerable<KeyValuePair<string, float>> sortedScoresWithLabel)
+    private static Dictionary<float, string> PredictResults(string language, IOrderedEnumerable<KeyValuePair<string, float>> sortedScoresWithLabel)
     {
-        List<string> message = [];
+        Dictionary<float, string> message = [];
+        message.Add(0, language);
         foreach (var score in sortedScoresWithLabel)
         {
-            if (score.Value * 1000 >= 30) message.Add(score.Key);
+            if (score.Value * 100 >= 30) message.Add(score.Value, score.Key);
             else break;
         }
-        return [.. message];
+        return message;
     }
 }
 
