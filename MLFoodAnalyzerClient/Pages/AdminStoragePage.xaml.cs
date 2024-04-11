@@ -62,7 +62,7 @@ public partial class AdminStoragePage : ContentPage
             if (string.IsNullOrWhiteSpace(row)) return;
 
             string[] words = row.Split('\t');
-            Food food = new(int.Parse(words[0]), $"{words[1][0].ToString().ToUpper()}{words[1][1..]}", words[2]);
+            Food food = new(int.Parse(words[0]), $"{words[1][0].ToString().ToUpper()}{words[1][1..]}", words[2] + words[3]);
             Foods.Add(food);
         }
     }
