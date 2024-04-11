@@ -69,6 +69,7 @@ public partial class HistoryChange : ContentPage
 
         foreach (string row in rows)
         {
+            if (string.IsNullOrWhiteSpace(row)) continue;
             string[] words = row.Split('\t');
             DateTime dateTimeValue = DateTime.Now;
             DateTime.TryParseExact(words[8], "M/d/yyyy h:mm:ss tt", null, System.Globalization.DateTimeStyles.None, out dateTimeValue);

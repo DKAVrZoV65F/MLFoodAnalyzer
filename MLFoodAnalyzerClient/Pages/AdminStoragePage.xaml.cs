@@ -73,9 +73,8 @@ public partial class AdminStoragePage : ContentPage
 
         foreach (string row in rows)
         {
-            
-
-            instring[] words = row.Split('\t');
+            if (string.IsNullOrWhiteSpace(row)) continue;
+            string[] words = row.Split('\t');
             Food food = new(int.Parse(words[0]), LocalizationResourceManager[words[1]].ToString(), words[2] + "\n\n" + words[3]);
             Foods.Add(food);
         }
