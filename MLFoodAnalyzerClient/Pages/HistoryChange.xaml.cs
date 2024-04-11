@@ -57,17 +57,18 @@ public partial class HistoryChange : ContentPage
 
         connection ??= new();
         string result = await connection.History(count) ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(result))
+        {
+            historyListView.IsVisible = false;
+            infoLabel.IsVisible = true;
+            return;
+        }
+
         string[] rows = result.Split('\n');
+
 
         foreach (string row in rows)
         {
-            if (string.IsNullOrWhiteSpace(row))
-            {
-                historyListView.IsVisible = false;
-                infoLabel.IsVisible = true;
-                return;
-            }
-
             string[] words = row.Split('\t');
             DateTime dateTimeValue = DateTime.Now;
             DateTime.TryParseExact(words[8], "M/d/yyyy h:mm:ss tt", null, System.Globalization.DateTimeStyles.None, out dateTimeValue);

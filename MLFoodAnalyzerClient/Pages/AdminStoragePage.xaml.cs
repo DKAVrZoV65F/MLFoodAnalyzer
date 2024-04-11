@@ -60,19 +60,22 @@ public partial class AdminStoragePage : ContentPage
 
         connection ??= new();
         string result = await connection.Food() ?? string.Empty;
-        string[] rows = result.Split('|');
+        if (string.IsNullOrWhiteSpace(result))
+        {
+            foodListView.IsVisible = false;
+            infoLabel.IsVisible = true;
+            return;
+        }
+
+
+        string[] rows = result.Split('\n');
         Foods.Clear();
 
         foreach (string row in rows)
         {
-            if (string.IsNullOrWhiteSpace(row))
-            {
-                foodListView.IsVisible = false;
-                infoLabel.IsVisible = true;
-                return;
-            }
+            
 
-            string[] words = row.Split('\t');
+            instring[] words = row.Split('\t');
             Food food = new(int.Parse(words[0]), LocalizationResourceManager[words[1]].ToString(), words[2] + "\n\n" + words[3]);
             Foods.Add(food);
         }
