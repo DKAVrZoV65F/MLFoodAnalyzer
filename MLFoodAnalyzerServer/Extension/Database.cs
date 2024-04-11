@@ -70,7 +70,7 @@ public class Database
         return failExecute;
     }
 
-    public async Task<string?> ExecuteQuery(string command, Dictionary<float, string> parameters)
+    public async Task<string?> ExecuteQuery(Dictionary<float, string> parameters)
     {
         return await SelectDescriptionFood(parameters);
     }
@@ -107,12 +107,12 @@ public class Database
         string language = data[0];
         data.Remove(data.Keys.First());
 
-        if (data == null || data.Count <= 0) return ". - 0%|.|.\0";
+        if (data == null || data.Count <= 0) return ".|0%|.|.\0";
 
         StringBuilder results = new();
         foreach (var food in data)
         {
-            if (string.IsNullOrWhiteSpace(food.Value)) results.Append($"{food.Value} - {food.Key*100:f0}%|.|.\0");
+            if (string.IsNullOrWhiteSpace(food.Value)) results.Append($"{food.Value}|{food.Key*100:f0}%|.|.\0");
 
             SqlConnection connection = new(connectionString);
             string sqlExpression = language.Equals(MLFood.RU) ? "select DescriptionRu from Food where Name = @foodName" : 
@@ -129,10 +129,10 @@ public class Database
                 await reader.ReadAsync();
                 object description = reader.GetValue(0);
                 await reader.CloseAsync();
-                results.Append($"{food.Value} - {food.Key*100:f0}%|{description?.ToString()}\n");
+                results.Append($"{food.Value}|{food.Key*100:f0}%|{description?.ToString()}\n");
             }
             else
-                results.Append($"{food.Value} - {food.Key * 100:f0}%|.|.\0");
+                results.Append($"{food.Value}|{food.Key * 100:f0}%|.|.\0");
             await reader.CloseAsync();
         }
 
@@ -147,7 +147,7 @@ public class Database
 
         SqlCommand command = new(sqlExpression, connection);
         SqlDataReader reader = await command.ExecuteReaderAsync();
-        string? results = Result(reader, 3).Result;
+        string? results = Result(reader, 5).Result;
         await reader.CloseAsync();
         return results;
     }
@@ -155,7 +155,7 @@ public class Database
     private async Task<string?> History(int count = 0)
     {
         SqlConnection connection = new(connectionString);
-        string sqlExpression = "SELECT IdFood, NameFood, IdAccount, NickName, Old_Description, New_Description, LastUpdate " +
+        string sqlExpression = "SELECT IdFood, NameFood, IdAccount, NickName, Old_DescriptionRu, Old_DescriptionEn, New_DescriptionRu, New_DescriptionEn, LastUpdate " +
             "FROM History ORDER BY LastUpdate DESC OFFSET @count ROWS FETCH FIRST 10 ROWS ONLY;";
         await connection.OpenAsync();
 
@@ -163,7 +163,7 @@ public class Database
         SqlParameter countParam = new("@count", count);
         command.Parameters.Add(countParam);
         SqlDataReader reader = await command.ExecuteReaderAsync();
-        string? results = Result(reader, 7).Result;
+        string? results = Result(reader, 9).Result;
         await reader.CloseAsync();
         return results;
     }
@@ -219,7 +219,6 @@ public class Database
     {
         LogIn,
         Update,
-        CurrentDescription,
         AllFood,
         History
     }

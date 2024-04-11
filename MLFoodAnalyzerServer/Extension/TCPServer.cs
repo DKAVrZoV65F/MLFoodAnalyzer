@@ -194,7 +194,7 @@ public class TCPServer
             Image = fileFullPath
         };
         Dictionary<float, string> message = mLFood.PredictImage(language);
-        return await database.ExecuteQuery("CurrentDescription", message);
+        return await database.ExecuteQuery(message);
     }
 
     private async Task<string?> ProcessText(string message)
@@ -204,7 +204,7 @@ public class TCPServer
             Text = message
         };
         Dictionary<float, string> result = mLFood.PredictText();
-        return await database.ExecuteQuery("CurrentDescription", result);
+        return await database.ExecuteQuery(result);
     }
 
     private async Task<string> LogIn(string message)
