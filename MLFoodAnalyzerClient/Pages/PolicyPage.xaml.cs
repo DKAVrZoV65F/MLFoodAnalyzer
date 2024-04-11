@@ -39,10 +39,9 @@ public partial class PolicyPage : ContentPage
 
     private void GenerateData()
     {
-        //All Images
         _allImages = [];
 
-        for (var i = 1; i <= 18; i++)
+        for (var i = 1; i <= 50; i++)
         {
             _allImages.Add($"img{i:00}.jpg");
         }

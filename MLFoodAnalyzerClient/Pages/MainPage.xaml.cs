@@ -137,7 +137,7 @@ public partial class MainPage : ContentPage
         });
         formattedString.Spans.Add(new Span
         {
-            Text = data[1]
+            Text = data[1] + '\n'
         });
         formattedString.Spans.Add(new Span
         {
@@ -146,7 +146,7 @@ public partial class MainPage : ContentPage
         });
         formattedString.Spans.Add(new Span
         {
-            Text = data[2]
+            Text = data[2] + '\n'
         });
         ResultEditor.FormattedText = formattedString;
 
