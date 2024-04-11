@@ -128,7 +128,7 @@ public partial class MainPage : ContentPage
         });
         formattedString.Spans.Add(new Span
         {
-            Text = data[0] + '\n'
+            Text = $"{LocalizationResourceManager[data[0]]} - {data[1]}\n"
         });
         formattedString.Spans.Add(new Span
         {
@@ -137,7 +137,7 @@ public partial class MainPage : ContentPage
         });
         formattedString.Spans.Add(new Span
         {
-            Text = data[1] + '\n'
+            Text = data[2] + '\n'
         });
         formattedString.Spans.Add(new Span
         {
@@ -146,7 +146,7 @@ public partial class MainPage : ContentPage
         });
         formattedString.Spans.Add(new Span
         {
-            Text = data[2] + '\n'
+            Text = data[3] + '\n'
         });
         ResultEditor.FormattedText = formattedString;
 

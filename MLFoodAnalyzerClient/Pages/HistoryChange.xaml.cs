@@ -29,6 +29,12 @@ public partial class HistoryChange : ContentPage
         historyListView.ItemsSource = (foodSearch > 0) ? FoodSearch : Histories;
         historyListView.IsVisible = (searchLength == 0 || foodSearch > 0);
         infoLabel.IsVisible = (searchLength != 0 && foodSearch == 0);
+
+        if (Histories.Count == 0)
+        {
+            historyListView.IsVisible = false;
+            infoLabel.IsVisible = true;
+        }
     }
 
     private async void HistoryListView_ItemTapped(object sender, ItemTappedEventArgs e)
@@ -55,7 +61,12 @@ public partial class HistoryChange : ContentPage
 
         foreach (string row in rows)
         {
-            if (string.IsNullOrWhiteSpace(row)) return;
+            if (string.IsNullOrWhiteSpace(row))
+            {
+                historyListView.IsVisible = false;
+                infoLabel.IsVisible = true;
+                return;
+            }
 
             string[] words = row.Split('\t');
             DateTime dateTimeValue = DateTime.Now;

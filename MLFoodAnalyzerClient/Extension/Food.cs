@@ -10,10 +10,10 @@ public class Food
 
     public Food() {}
 
-    public Food(int id, string name, string description)
+    public Food(int id, string? name, string description)
     {
         Id = id;
-        Name = name;
+        Name = name ??= "NoResults";
         Description = description;
     }
 }

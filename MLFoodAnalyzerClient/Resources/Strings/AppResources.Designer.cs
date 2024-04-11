@@ -61,6 +61,15 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not found.
+        /// </summary>
+        internal static string _ {
+            get {
+                return ResourceManager.GetString(".", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Accept.
         /// </summary>
         internal static string Accept {
@@ -84,6 +93,15 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         internal static string Administration {
             get {
                 return ResourceManager.GetString("Administration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apple.
+        /// </summary>
+        internal static string apple {
+            get {
+                return ResourceManager.GetString("apple", resourceCulture);
             }
         }
         
@@ -115,6 +133,15 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Avocado.
+        /// </summary>
+        internal static string avocado {
+            get {
+                return ResourceManager.GetString("avocado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Back.
         /// </summary>
         internal static string Back {
@@ -124,11 +151,47 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Benefit:.
+        ///   Looks up a localized string similar to Banana.
+        /// </summary>
+        internal static string banana {
+            get {
+                return ResourceManager.GetString("banana", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Beetroot.
+        /// </summary>
+        internal static string beetroot {
+            get {
+                return ResourceManager.GetString("beetroot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benefit: .
         /// </summary>
         internal static string Benefit {
             get {
                 return ResourceManager.GetString("Benefit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cabbage.
+        /// </summary>
+        internal static string cabbage {
+            get {
+                return ResourceManager.GetString("cabbage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Carrot.
+        /// </summary>
+        internal static string carrot {
+            get {
+                return ResourceManager.GetString("carrot", resourceCulture);
             }
         }
         
@@ -147,6 +210,15 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         internal static string CheckTheConnection {
             get {
                 return ResourceManager.GetString("CheckTheConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cucumber.
+        /// </summary>
+        internal static string cucumber {
+            get {
+                return ResourceManager.GetString("cucumber", resourceCulture);
             }
         }
         
@@ -201,6 +273,15 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Eggplant.
+        /// </summary>
+        internal static string eggplant {
+            get {
+                return ResourceManager.GetString("eggplant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter the IP address.
         /// </summary>
         internal static string EnterTheIp {
@@ -246,7 +327,7 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error connecting to the server!&lt;br/&gt;.
+        ///   Looks up a localized string similar to Error connecting to the server!.
         /// </summary>
         internal static string ErrorConToServ {
             get {
@@ -291,6 +372,24 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Feijoa.
+        /// </summary>
+        internal static string feijoa {
+            get {
+                return ResourceManager.GetString("feijoa", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Figs.
+        /// </summary>
+        internal static string figs {
+            get {
+                return ResourceManager.GetString("figs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to for.
         /// </summary>
         internal static string For {
@@ -309,7 +408,16 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Harm:.
+        ///   Looks up a localized string similar to Grape.
+        /// </summary>
+        internal static string grape {
+            get {
+                return ResourceManager.GetString("grape", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Harm: .
         /// </summary>
         internal static string Harm {
             get {
@@ -435,11 +543,38 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Orange.
+        /// </summary>
+        internal static string orange {
+            get {
+                return ResourceManager.GetString("orange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password:.
         /// </summary>
         internal static string Password {
             get {
                 return ResourceManager.GetString("Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pear.
+        /// </summary>
+        internal static string pear {
+            get {
+                return ResourceManager.GetString("pear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Persimmon.
+        /// </summary>
+        internal static string persimmon {
+            get {
+                return ResourceManager.GetString("persimmon", resourceCulture);
             }
         }
         
@@ -498,11 +633,29 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pumpkin.
+        /// </summary>
+        internal static string pumpkin {
+            get {
+                return ResourceManager.GetString("pumpkin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please restart the application for the changes to take effect..
         /// </summary>
         internal static string ReloadApp {
             get {
                 return ResourceManager.GetString("ReloadApp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sapodilla.
+        /// </summary>
+        internal static string sapodilla {
+            get {
+                return ResourceManager.GetString("sapodilla", resourceCulture);
             }
         }
         
@@ -615,6 +768,15 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tangerine.
+        /// </summary>
+        internal static string tangerine {
+            get {
+                return ResourceManager.GetString("tangerine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chat, communication with the server.
         /// </summary>
         internal static string TipChat {
@@ -683,6 +845,15 @@ namespace MLFoodAnalyzerClient.Resources.Strings {
         internal static string Title {
             get {
                 return ResourceManager.GetString("Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tomato.
+        /// </summary>
+        internal static string tomato {
+            get {
+                return ResourceManager.GetString("tomato", resourceCulture);
             }
         }
         

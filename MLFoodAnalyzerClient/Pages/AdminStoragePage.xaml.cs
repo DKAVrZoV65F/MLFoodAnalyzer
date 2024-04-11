@@ -17,10 +17,10 @@ public partial class AdminStoragePage : ContentPage
 
         BindingContext = this;
         GetFruits();
-        fruitsListView.ItemsSource = Foods;
+        foodListView.ItemsSource = Foods;
     }
 
-    private async void FruitsListView_ItemTapped(object sender, ItemTappedEventArgs e)
+    private async void FoodListView_ItemTapped(object sender, ItemTappedEventArgs e)
     {
         if (e.Item is Food tappedUser)
         {
@@ -36,9 +36,15 @@ public partial class AdminStoragePage : ContentPage
         ObservableCollection<Food> FoodSearch = new(Foods.Where(x => string.Equals(x.Name, search, StringComparison.OrdinalIgnoreCase) || string.Equals(x.Id.ToString(), search, StringComparison.OrdinalIgnoreCase)));
 
         int foodSearch = FoodSearch.Count;
-        fruitsListView.ItemsSource = (foodSearch > 0) ? FoodSearch : Foods;
-        fruitsListView.IsVisible = (searchLength == 0 || foodSearch > 0);
+        foodListView.ItemsSource = (foodSearch > 0) ? FoodSearch : Foods;
+        foodListView.IsVisible = (searchLength == 0 || foodSearch > 0);
         infoLabel.IsVisible = (searchLength != 0 && foodSearch == 0);
+
+        if (Foods.Count == 0)
+        {
+            foodListView.IsVisible = false;
+            infoLabel.IsVisible = true;
+        }
     }
 
     private async void GoToHistory(object sender, EventArgs e) => await Navigation.PushAsync(new HistoryChange());
@@ -54,15 +60,20 @@ public partial class AdminStoragePage : ContentPage
 
         connection ??= new();
         string result = await connection.Food() ?? string.Empty;
-        string[] rows = result.Split('\n');
+        string[] rows = result.Split('|');
         Foods.Clear();
 
         foreach (string row in rows)
         {
-            if (string.IsNullOrWhiteSpace(row)) return;
+            if (string.IsNullOrWhiteSpace(row))
+            {
+                foodListView.IsVisible = false;
+                infoLabel.IsVisible = true;
+                return;
+            }
 
             string[] words = row.Split('\t');
-            Food food = new(int.Parse(words[0]), $"{words[1][0].ToString().ToUpper()}{words[1][1..]}", words[2] + words[3]);
+            Food food = new(int.Parse(words[0]), LocalizationResourceManager[words[1]].ToString(), words[2] + "\n\n" + words[3]);
             Foods.Add(food);
         }
     }

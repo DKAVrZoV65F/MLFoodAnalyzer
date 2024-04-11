@@ -44,7 +44,7 @@
             FontFamily="RegularFont"
             FontSize="{Binding Path=FSize}"/>
 
-        <Entry
+        <Editor
             x:Name="DescriptionEntry"
             Grid.Row="3"
             Margin="0, 10"

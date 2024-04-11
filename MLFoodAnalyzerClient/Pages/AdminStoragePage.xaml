@@ -74,10 +74,10 @@
                 <RoundRectangle CornerRadius="10" />
             </Border.StrokeShape>
             <ListView
-                x:Name="fruitsListView"
+                x:Name="foodListView"
                 Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
                 ItemsSource="{Binding foods}"
-                ItemTapped="FruitsListView_ItemTapped">
+                ItemTapped="FoodListView_ItemTapped">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

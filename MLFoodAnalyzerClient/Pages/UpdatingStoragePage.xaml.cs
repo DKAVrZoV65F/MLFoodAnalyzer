@@ -20,7 +20,7 @@ public partial class UpdatingStoragePage : ContentPage
 
         foodDetail = food;
         IDLabel.Text = $"ID: {foodDetail.Id}";
-        NameLabel.Text = $"{LocalizationResourceManager["Title"]} {foodDetail.Name[0].ToString().ToUpper()}{foodDetail.Name[1..]}";
+        NameLabel.Text = $"{LocalizationResourceManager["Title"]} {foodDetail.Name}";
         DescriptionEntry.Text = $"{foodDetail.Description}";
     }
 

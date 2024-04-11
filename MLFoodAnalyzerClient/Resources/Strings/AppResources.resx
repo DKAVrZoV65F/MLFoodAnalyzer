@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="." xml:space="preserve">
+    <value>Not found</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -125,6 +128,9 @@
   </data>
   <data name="Administration" xml:space="preserve">
     <value>Administration</value>
+  </data>
+  <data name="apple" xml:space="preserve">
+    <value>Apple</value>
   </data>
   <data name="AppName" xml:space="preserve">
     <value>MLFoodAnalyzer</value>
@@ -135,17 +141,35 @@
   <data name="AttachedAText" xml:space="preserve">
     <value>The text has been sent to the server, wait for the results.</value>
   </data>
+  <data name="avocado" xml:space="preserve">
+    <value>Avocado</value>
+  </data>
   <data name="Back" xml:space="preserve">
     <value>Back</value>
   </data>
+  <data name="banana" xml:space="preserve">
+    <value>Banana</value>
+  </data>
+  <data name="beetroot" xml:space="preserve">
+    <value>Beetroot</value>
+  </data>
   <data name="Benefit" xml:space="preserve">
-    <value>Benefit:</value>
+    <value>Benefit: </value>
+  </data>
+  <data name="cabbage" xml:space="preserve">
+    <value>Cabbage</value>
+  </data>
+  <data name="carrot" xml:space="preserve">
+    <value>Carrot</value>
   </data>
   <data name="ChatSettings" xml:space="preserve">
     <value>Chat Settings</value>
   </data>
   <data name="CheckTheConnection" xml:space="preserve">
     <value>Check the connection</value>
+  </data>
+  <data name="cucumber" xml:space="preserve">
+    <value>Cucumber</value>
   </data>
   <data name="DarkTheme" xml:space="preserve">
     <value>Dark theme</value>
@@ -180,6 +204,9 @@ This program is purely for informational purposes.</value>
   <data name="DestinationHostUn" xml:space="preserve">
     <value>Destination Host Unreachable</value>
   </data>
+  <data name="eggplant" xml:space="preserve">
+    <value>Eggplant</value>
+  </data>
   <data name="EnterTheIp" xml:space="preserve">
     <value>Enter the IP address</value>
   </data>
@@ -196,7 +223,7 @@ This program is purely for informational purposes.</value>
     <value>Enter your username</value>
   </data>
   <data name="ErrorConToServ" xml:space="preserve">
-    <value>Error connecting to the server!&lt;br/&gt;</value>
+    <value>Error connecting to the server!</value>
   </data>
   <data name="ErrorLogIn" xml:space="preserve">
     <value>The entered username or password is incorrect</value>
@@ -210,14 +237,23 @@ This program is purely for informational purposes.</value>
   <data name="ExampleText" xml:space="preserve">
     <value>Cleaning robots using artificial intelligence can automatically identify and remove garbage, which greatly simplifies the cleaning process and reduces the likelihood of environmental pollution.</value>
   </data>
+  <data name="feijoa" xml:space="preserve">
+    <value>Feijoa</value>
+  </data>
+  <data name="figs" xml:space="preserve">
+    <value>Figs</value>
+  </data>
   <data name="For" xml:space="preserve">
     <value>for</value>
   </data>
   <data name="Gallery" xml:space="preserve">
     <value>Gallery</value>
   </data>
+  <data name="grape" xml:space="preserve">
+    <value>Grape</value>
+  </data>
   <data name="Harm" xml:space="preserve">
-    <value>Harm:</value>
+    <value>Harm: </value>
   </data>
   <data name="Help" xml:space="preserve">
     <value>Help</value>
@@ -258,8 +294,17 @@ This program is purely for informational purposes.</value>
   <data name="NoResults" xml:space="preserve">
     <value>No results</value>
   </data>
+  <data name="orange" xml:space="preserve">
+    <value>Orange</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Password:</value>
+  </data>
+  <data name="pear" xml:space="preserve">
+    <value>Pear</value>
+  </data>
+  <data name="persimmon" xml:space="preserve">
+    <value>Persimmon</value>
   </data>
   <data name="PleaseWait" xml:space="preserve">
     <value>Please wait...</value>
@@ -279,8 +324,14 @@ This program is purely for informational purposes.</value>
   <data name="PSWDServer" xml:space="preserve">
     <value>The password for the server is saved</value>
   </data>
+  <data name="pumpkin" xml:space="preserve">
+    <value>Pumpkin</value>
+  </data>
   <data name="ReloadApp" xml:space="preserve">
     <value>Please restart the application for the changes to take effect.</value>
+  </data>
+  <data name="sapodilla" xml:space="preserve">
+    <value>Sapodilla</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
@@ -318,6 +369,9 @@ This program is purely for informational purposes.</value>
   <data name="TakeAPicture" xml:space="preserve">
     <value>Take a picture</value>
   </data>
+  <data name="tangerine" xml:space="preserve">
+    <value>Tangerine</value>
+  </data>
   <data name="TipChat" xml:space="preserve">
     <value>Chat, communication with the server</value>
   </data>
@@ -341,6 +395,9 @@ This program is purely for informational purposes.</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Title:</value>
+  </data>
+  <data name="tomato" xml:space="preserve">
+    <value>Tomato</value>
   </data>
   <data name="Upload" xml:space="preserve">
     <value>Upload</value>

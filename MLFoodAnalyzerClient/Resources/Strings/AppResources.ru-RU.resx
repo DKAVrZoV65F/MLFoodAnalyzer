@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="." xml:space="preserve">
+    <value>Не найдено</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Принимаю</value>
   </data>
@@ -125,6 +128,9 @@
   </data>
   <data name="Administration" xml:space="preserve">
     <value>Администрация</value>
+  </data>
+  <data name="apple" xml:space="preserve">
+    <value>Яблоко</value>
   </data>
   <data name="AppName" xml:space="preserve">
     <value>MLFoodAnalyzer</value>
@@ -135,17 +141,35 @@
   <data name="AttachedAText" xml:space="preserve">
     <value>Текст отправлен на сервер, дождитесь результатов.</value>
   </data>
+  <data name="avocado" xml:space="preserve">
+    <value>Авокадо</value>
+  </data>
   <data name="Back" xml:space="preserve">
     <value>Назад</value>
   </data>
+  <data name="banana" xml:space="preserve">
+    <value>Банан</value>
+  </data>
+  <data name="beetroot" xml:space="preserve">
+    <value>Свёкла</value>
+  </data>
   <data name="Benefit" xml:space="preserve">
-    <value>Польза:</value>
+    <value>Польза: </value>
+  </data>
+  <data name="cabbage" xml:space="preserve">
+    <value>Капуста</value>
+  </data>
+  <data name="carrot" xml:space="preserve">
+    <value>Морковка</value>
   </data>
   <data name="ChatSettings" xml:space="preserve">
     <value>Настройки чата</value>
   </data>
   <data name="CheckTheConnection" xml:space="preserve">
     <value>Проверить подключение</value>
+  </data>
+  <data name="cucumber" xml:space="preserve">
+    <value>Огурец</value>
   </data>
   <data name="DarkTheme" xml:space="preserve">
     <value>Тёмная тема</value>
@@ -180,6 +204,9 @@ DKAVrZoV65F владеет всеми правами, титулами и инт
   <data name="DestinationHostUn" xml:space="preserve">
     <value>Конечный узел недоступен</value>
   </data>
+  <data name="eggplant" xml:space="preserve">
+    <value>Баклажан</value>
+  </data>
   <data name="EnterTheIp" xml:space="preserve">
     <value>Введите IP-адрес</value>
   </data>
@@ -196,7 +223,7 @@ DKAVrZoV65F владеет всеми правами, титулами и инт
     <value>Введите логин</value>
   </data>
   <data name="ErrorConToServ" xml:space="preserve">
-    <value>Ошибка при подключении к серверу!&lt;br/&gt;</value>
+    <value>Ошибка при подключении к серверу!</value>
   </data>
   <data name="ErrorLogIn" xml:space="preserve">
     <value>Введенное имя пользователя или пароль неверны</value>
@@ -210,14 +237,23 @@ DKAVrZoV65F владеет всеми правами, титулами и инт
   <data name="ExampleText" xml:space="preserve">
     <value>Роботы-уборщики, использующие искусственный интеллект, могут автоматически определить и убрать мусор, что значительно упрощает процесс уборки и снижает вероятность загрязнения окружающей среды.</value>
   </data>
+  <data name="feijoa" xml:space="preserve">
+    <value>Фейхоа</value>
+  </data>
+  <data name="figs" xml:space="preserve">
+    <value>Инжир</value>
+  </data>
   <data name="For" xml:space="preserve">
     <value>для</value>
   </data>
   <data name="Gallery" xml:space="preserve">
     <value>Галерея</value>
   </data>
+  <data name="grape" xml:space="preserve">
+    <value>Виноград</value>
+  </data>
   <data name="Harm" xml:space="preserve">
-    <value>Вред:</value>
+    <value>Вред: </value>
   </data>
   <data name="Help" xml:space="preserve">
     <value>Помощь</value>
@@ -258,8 +294,17 @@ DKAVrZoV65F владеет всеми правами, титулами и инт
   <data name="NoResults" xml:space="preserve">
     <value>Нет результатов</value>
   </data>
+  <data name="orange" xml:space="preserve">
+    <value>Апельсин</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Пароль:</value>
+  </data>
+  <data name="pear" xml:space="preserve">
+    <value>Груша</value>
+  </data>
+  <data name="persimmon" xml:space="preserve">
+    <value>Хурма</value>
   </data>
   <data name="PleaseWait" xml:space="preserve">
     <value>Пожалуйста подождите...</value>
@@ -279,8 +324,14 @@ DKAVrZoV65F владеет всеми правами, титулами и инт
   <data name="PSWDServer" xml:space="preserve">
     <value>Пароль для сервера сохранен</value>
   </data>
+  <data name="pumpkin" xml:space="preserve">
+    <value>Тыква</value>
+  </data>
   <data name="ReloadApp" xml:space="preserve">
     <value>Пожалуйста, перезапустите приложение, чтобы изменения вступили в силу.</value>
+  </data>
+  <data name="sapodilla" xml:space="preserve">
+    <value>Саподилла</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Сохранить</value>
@@ -318,6 +369,9 @@ DKAVrZoV65F владеет всеми правами, титулами и инт
   <data name="TakeAPicture" xml:space="preserve">
     <value>Сфотографировать</value>
   </data>
+  <data name="tangerine" xml:space="preserve">
+    <value>Мандарин</value>
+  </data>
   <data name="TipChat" xml:space="preserve">
     <value>Чат, общение с сервером</value>
   </data>
@@ -341,6 +395,9 @@ DKAVrZoV65F владеет всеми правами, титулами и инт
   </data>
   <data name="Title" xml:space="preserve">
     <value>Название:</value>
+  </data>
+  <data name="tomato" xml:space="preserve">
+    <value>Помидор</value>
   </data>
   <data name="Upload" xml:space="preserve">
     <value>Подгрузить</value>
