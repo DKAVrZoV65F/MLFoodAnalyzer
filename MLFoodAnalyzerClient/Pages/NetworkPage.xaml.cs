@@ -19,6 +19,11 @@ public partial class NetworkPage : ContentPage
 
         TitleLabel.FontSize = AppShell.settings.FSize + 5;
         AppShell.settings = (Settings)Resources["settings"];
+
+        PSWDLb.IsVisible = Preferences.Get("IsAdminPanel", false);
+        PasswordEntry.IsVisible = Preferences.Get("IsAdminPanel", false);
+        ShowPSWD.IsVisible = Preferences.Get("IsAdminPanel", false);
+        PSWDBtn.IsVisible = Preferences.Get("IsAdminPanel", false);
     }
 
 

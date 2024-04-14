@@ -107,6 +107,7 @@
         
         <!-- Password text -->
         <Label
+            x:Name="PSWDLb"
             Grid.Row="4"
             Text="{x:Static strings:AppResources.Password}"
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White100}}"
@@ -136,6 +137,7 @@
 
         <!-- Save PSWD -->
         <HorizontalStackLayout
+            x:Name="ShowPSWD"
             Grid.Row="5"
             Grid.ColumnSpan="3"
             VerticalOptions="Fill"
@@ -154,6 +156,7 @@
 
         <!-- Save PSWD -->
         <Button
+            x:Name="PSWDBtn"
             Grid.Row="6"
             Grid.ColumnSpan="3"
             Margin="-10, 40"
