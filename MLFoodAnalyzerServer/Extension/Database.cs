@@ -105,7 +105,7 @@ public class Database
     private async Task<string?> SelectDescriptionFood(Dictionary<float, string> data)
     {
         string language = data[0];
-        data.Remove(data.Keys.First());
+        data.Remove(data.Keys.Last());
 
         if (data == null || data.Count <= 0) return ".|0%|.|.\0";
 

@@ -33,14 +33,18 @@ public class MLFood
 
     public Dictionary<float, string> PredictImage(string language)
     {
-        var imageBytes = File.ReadAllBytes(filePath);
+        byte[] imageBytes = File.ReadAllBytes(filePath);
         Food.ModelInput sampleData = new()
         {
             ImageSource = imageBytes,
         };
 
-        var sortedScoresWithLabel = Food.PredictAllLabels(sampleData);
-        return PredictResults(language, sortedScoresWithLabel);
+        IOrderedEnumerable<KeyValuePair<string, float>> sortedScoresWithLabel = Food.PredictAllLabels(sampleData)
+                                                                                        .Where(kvp => kvp.Value * 100 >= 30)
+                                                                                        .OrderByDescending(kvp => kvp.Value * 100);
+        Dictionary<float, string> results = sortedScoresWithLabel.ToDictionary(pair => pair.Value, pair => pair.Key);
+        results.Add(0, RU);
+        return results;
     }
 
     public Dictionary<float, string> PredictText()
@@ -67,8 +71,13 @@ public class MLFood
             Text = text,
         };
 
-        var sortedScoresWithLabel = Query_EN.PredictAllLabels(sampleData);
-        return PredictResults(EN, sortedScoresWithLabel);
+        IOrderedEnumerable<KeyValuePair<string, float>> sortedScoresWithLabel = Query_EN.PredictAllLabels(sampleData)
+                                                                                        .Where(kvp => kvp.Value * 100 >= 30)
+                                                                                        .OrderByDescending(kvp => kvp.Value * 100);
+
+        Dictionary<float, string> results = sortedScoresWithLabel.ToDictionary(pair => pair.Value, pair => pair.Key);
+        results.Add(0, EN);
+        return results;
     }
 
     private Dictionary<float, string> PredictFoodRu()
@@ -78,20 +87,13 @@ public class MLFood
             Text = text,
         };
 
-        var sortedScoresWithLabel = Query_RU.PredictAllLabels(sampleData);
-        return PredictResults(RU, sortedScoresWithLabel);
-    }
+        IOrderedEnumerable<KeyValuePair<string, float>> sortedScoresWithLabel = Query_RU.PredictAllLabels(sampleData)
+                                                                                        .Where(kvp => kvp.Value * 100 >= 30)
+                                                                                        .OrderByDescending(kvp => kvp.Value * 100);
 
-    private static Dictionary<float, string> PredictResults(string language, IOrderedEnumerable<KeyValuePair<string, float>> sortedScoresWithLabel)
-    {
-        Dictionary<float, string> message = [];
-        message.Add(0, language);
-        foreach (var score in sortedScoresWithLabel)
-        {
-            if (score.Value * 100 >= 30) message.Add(score.Value, score.Key);
-            else break;
-        }
-        return message;
+        Dictionary<float, string> results = sortedScoresWithLabel.ToDictionary(pair => pair.Value, pair => pair.Key);
+        results.Add(0, RU);
+        return results;
     }
 }
 

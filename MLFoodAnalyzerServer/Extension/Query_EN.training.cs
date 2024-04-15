@@ -14,9 +14,10 @@ namespace MLFoodAnalyzerServer
 {
     public partial class Query_EN
     {
-        public const string RetrainFilePath =  @"C:\Users\an0ni\OneDrive\Documentos\Test1EN.txt";
-        public const char RetrainSeparatorChar = ';';
+        public const string RetrainFilePath =  @"C:\Users\an0ni\OneDrive\Documentos\ML - TEXT\Final\train\En_FinalTrain.csv";
+        public const char RetrainSeparatorChar = ',';
         public const bool RetrainHasHeader =  true;
+        public const bool RetrainAllowQuoting =  true;
 
          /// <summary>
         /// Train a new model with the provided dataset.
@@ -25,11 +26,11 @@ namespace MLFoodAnalyzerServer
         /// <param name="inputDataFilePath">Path to the data file for training.</param>
         /// <param name="separatorChar">Separator character for delimited training file.</param>
         /// <param name="hasHeader">Boolean if training file has a header.</param>
-        public static void Train(string outputModelPath, string inputDataFilePath = RetrainFilePath, char separatorChar = RetrainSeparatorChar, bool hasHeader = RetrainHasHeader)
+        public static void Train(string outputModelPath, string inputDataFilePath = RetrainFilePath, char separatorChar = RetrainSeparatorChar, bool hasHeader = RetrainHasHeader, bool allowQuoting = RetrainAllowQuoting)
         {
             var mlContext = new MLContext();
 
-            var data = LoadIDataViewFromFile(mlContext, inputDataFilePath, separatorChar, hasHeader);
+            var data = LoadIDataViewFromFile(mlContext, inputDataFilePath, separatorChar, hasHeader, allowQuoting);
             var model = RetrainModel(mlContext, data);
             SaveModel(mlContext, model, data, outputModelPath);
         }
@@ -42,9 +43,9 @@ namespace MLFoodAnalyzerServer
         /// <param name="separatorChar">Separator character for delimited training file.</param>
         /// <param name="hasHeader">Boolean if training file has a header.</param>
         /// <returns>IDataView with loaded training data.</returns>
-        public static IDataView LoadIDataViewFromFile(MLContext mlContext, string inputDataFilePath, char separatorChar, bool hasHeader)
+        public static IDataView LoadIDataViewFromFile(MLContext mlContext, string inputDataFilePath, char separatorChar, bool hasHeader, bool allowQuoting)
         {
-            return mlContext.Data.LoadFromTextFile<ModelInput>(inputDataFilePath, separatorChar, hasHeader);
+            return mlContext.Data.LoadFromTextFile<ModelInput>(inputDataFilePath, separatorChar, hasHeader, allowQuoting: allowQuoting);
         }
 
 

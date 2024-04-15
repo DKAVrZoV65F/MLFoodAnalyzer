@@ -1,28 +1,25 @@
 ﻿{
   "Scenario": "TextClassification",
   "DataSource": {
+    "Version": 3,
+    "EscapeCharacter": "\"",
+    "ReadMultiLines": false,
+    "KeepDiacritics": false,
+    "KeepPunctuations": false,
+    "AllowQuoting": false,
     "Type": "TabularFile",
-    "Version": 1,
-    "FilePath": "C:\\Users\\an0ni\\OneDrive\\Documentos\\Test1RU.txt",
-    "Delimiter": ";",
+    "FilePath": "C:\\Users\\an0ni\\OneDrive\\Documentos\\ML - TEXT\\Final\\train\\Ru_FinalTrain.csv",
+    "Delimiter": ",",
     "DecimalMarker": ".",
     "HasHeader": true,
     "ColumnProperties": [
-      {
-        "ColumnName": "id",
-        "ColumnPurpose": "Ignore",
-        "ColumnDataFormat": "Single",
-        "IsCategorical": false,
-        "Type": "Column",
-        "Version": 4
-      },
       {
         "ColumnName": "text",
         "ColumnPurpose": "Text",
         "ColumnDataFormat": "String",
         "IsCategorical": false,
         "Type": "Column",
-        "Version": 4
+        "Version": 5
       },
       {
         "ColumnName": "label",
@@ -30,7 +27,7 @@
         "ColumnDataFormat": "String",
         "IsCategorical": false,
         "Type": "Column",
-        "Version": 4
+        "Version": 5
       }
     ]
   },
@@ -46,8 +43,8 @@
         "Version": 1,
         "Type": "Trial",
         "TrainerName": "TextClassificationMulti",
-        "Score": 0.125,
-        "RuntimeInSeconds": 22.555,
+        "Score": 0.032856259386871638,
+        "RuntimeInSeconds": 50.846,
         "Parameter": {
           "_SCHEMA_": "e0 * e1 * e2",
           "e0": {
@@ -81,17 +78,17 @@
     "ModelFilePath": "C:\\dev\\MLFoodAnalyzer\\MLFoodAnalyzerServer\\Extension\\Query_RU.mlnet"
   },
   "Type": "TrainingConfig",
-  "Version": 4,
+  "Version": 5,
   "TrainingOption": {
     "Version": 1,
     "Type": "TextClassficationTrainingOption",
-    "TrainingTime": 2147483647,
+    "TrainingTime": 10,
     "LabelColumn": "label",
     "TextColumn": "text",
     "ValidationOption": {
       "Version": 0,
-      "Type": "TrainValidateSplitValidationOption",
-      "SplitRatio": 0.1
+      "Type": "FileValidationOption",
+      "FilePath": "C:\\Users\\an0ni\\OneDrive\\Documentos\\ML - TEXT\\Final\\val\\Ru_FinalVal.csv"
     }
   }
 }

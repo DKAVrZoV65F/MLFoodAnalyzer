@@ -15,11 +15,11 @@ namespace MLFoodAnalyzerServer
         #region model input class
         public class ModelInput
         {
-            [LoadColumn(1)]
+            [LoadColumn(0)]
             [ColumnName(@"text")]
             public string Text { get; set; }
 
-            [LoadColumn(2)]
+            [LoadColumn(1)]
             [ColumnName(@"label")]
             public string Label { get; set; }
 
@@ -70,8 +70,7 @@ namespace MLFoodAnalyzerServer
         /// <returns><seealso cref=" ModelOutput"/></returns>
         public static IOrderedEnumerable<KeyValuePair<string, float>> PredictAllLabels(ModelInput input)
         {
-            var predEngine = PredictEngine.Value;
-            var result = predEngine.Predict(input);
+            var result = Predict(input);
             return GetSortedScoresWithLabels(result);
         }
 
@@ -127,7 +126,15 @@ namespace MLFoodAnalyzerServer
         public static ModelOutput Predict(ModelInput input)
         {
             var predEngine = PredictEngine.Value;
-            return predEngine.Predict(input);
+            var output = predEngine.Predict(input);
+            var scores = output.Score;
+
+            // To get scores sum up to 1
+            var exp = scores.Select(x => (float)Math.Exp(x));
+            var softMaxScores = exp.Select(x => x / exp.Sum()).ToArray();
+            output.Score = softMaxScores;
+            return output;
+
         }
     }
 }
