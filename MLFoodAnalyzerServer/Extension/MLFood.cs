@@ -9,8 +9,8 @@ public class MLFood
 
     public MLFood()
     {
-        filePath = "";
-        text = "";
+        filePath = string.Empty;
+        text = string.Empty;
     }
 
     public string Text
@@ -49,16 +49,8 @@ public class MLFood
 
     public Dictionary<float, string> PredictText()
     {
-        string str = text;
-        int engCount = 0;
-        int rusCount = 0;
-        foreach (char c in str)
-        {
-            if ((c > 'а' && c < 'я') || (c > 'А' && c < 'Я'))
-                rusCount++;
-            else if ((c > 'a' && c < 'z') || (c > 'A' && c < 'Z'))
-                engCount++;
-        }
+        string str = text.ToLower();
+        LanguageDetect(out int engCount, out int rusCount, ref str);
 
         if (rusCount > engCount) return PredictFoodRu();
         else return PredictFoodEn();
@@ -94,6 +86,18 @@ public class MLFood
         Dictionary<float, string> results = sortedScoresWithLabel.ToDictionary(pair => pair.Value, pair => pair.Key);
         results.Add(0, RU);
         return results;
+    }
+
+    private void LanguageDetect(out int engCount, out int rusCount, ref string text)
+    {
+        engCount = rusCount = 0;
+        foreach (char c in text)
+        {
+            if (c > 'а' && c < 'я')
+                rusCount++;
+            else if (c > 'a' && c < 'z')
+                engCount++;
+        }
     }
 }
 
