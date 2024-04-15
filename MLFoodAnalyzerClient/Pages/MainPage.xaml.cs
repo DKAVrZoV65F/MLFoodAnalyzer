@@ -81,7 +81,7 @@ public partial class MainPage : ContentPage
         ResultEditor.Text = LocalizationResourceManager["AttachedAText"].ToString();
 
         connection ??= new();
-        string results = await connection.SendText("text") ?? string.Empty;
+        string results = await connection.SendText(text) ?? string.Empty;
 
         await Display(results);
     }
