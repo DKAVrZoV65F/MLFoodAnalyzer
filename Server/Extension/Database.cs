@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Microsoft.Data.SqlClient;
 
-namespace MLFoodAnalyzerServer.Extension;
+namespace Server.Extension;
 
 public class Database
 {

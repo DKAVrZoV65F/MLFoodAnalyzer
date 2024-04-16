@@ -1,17 +1,17 @@
-﻿using MLFoodAnalyzerServer.Extension;
+﻿using Server.Extension;
 using QRCoder;
 using System.Net;
 
-namespace MLFoodAnalyzerServer;
+namespace Server;
 
-internal class MLFoodAnalyzerServer
+internal class Server
 {
-    public static Settings? settings;
+    public static AppInfo? settings;
     public static Database? database;
     public static Encryption? encryption;
     public static TCPServer? server;
-    public static Store? store;
-    public static WorkJson workJson = new();
+    public static ImageStore? store;
+    public static Settings workJson = new();
 
     private static async Task Main()
     {
@@ -31,10 +31,10 @@ internal class MLFoodAnalyzerServer
     private static void LoadSettings()
     {
         workJson.LoadJS();
-        database = WorkJson.database ??= new();
-        encryption = WorkJson.encryption ??= new();
-        server = WorkJson.server ??= new();
-        store = WorkJson.store ??= new();
+        database = Extension.Settings.database ??= new();
+        encryption = Extension.Settings.encryption ??= new();
+        server = Extension.Settings.server ??= new();
+        store = Extension.Settings.store ??= new();
         settings ??= new();
     }
 
@@ -76,7 +76,7 @@ internal class MLFoodAnalyzerServer
         Console.Clear();
     }
 
-    private static void Settings(Database database, Encryption encryption, TCPServer server, Store store)
+    private static void Settings(Database database, Encryption encryption, TCPServer server, ImageStore store)
     {
         int selectedOption;
         do

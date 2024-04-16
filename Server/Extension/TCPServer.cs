@@ -2,7 +2,7 @@
 using System.Net.Sockets;
 using System.Text;
 
-namespace MLFoodAnalyzerServer.Extension;
+namespace Server.Extension;
 
 public class TCPServer
 {
@@ -16,9 +16,9 @@ public class TCPServer
     private readonly string success = "Settings applied successfully";
     private readonly string unsuccess = "Settings applied unsuccessfully";
 
-    private readonly Database database = MLFoodAnalyzerServer.database ??= new();
-    private readonly Encryption encryption = MLFoodAnalyzerServer.encryption ??= new();
-    private readonly Store store = MLFoodAnalyzerServer.store ??= new();
+    private readonly Database database = Server.database ??= new();
+    private readonly Encryption encryption = Server.encryption ??= new();
+    private readonly ImageStore store = Server.store ??= new();
 
     public TCPServer(int? port = null, int? timeout = null)
     {

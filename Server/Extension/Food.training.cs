@@ -9,7 +9,7 @@ using Microsoft.ML.Data;
 using Microsoft.ML.Vision;
 using Microsoft.ML;
 
-namespace MLFoodAnalyzerServer
+namespace Server
 {
     public partial class Food
     {

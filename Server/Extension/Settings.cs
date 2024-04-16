@@ -1,13 +1,13 @@
 ﻿using System.Text.Json;
 
-namespace MLFoodAnalyzerServer.Extension;
+namespace Server.Extension;
 
-public class WorkJson
+public class Settings
 {
     public static Database? database;
     public static Encryption? encryption;
     public static TCPServer? server;
-    public static Store? store;
+    public static ImageStore? store;
 
 
     private readonly string filePath = Path.GetFullPath("Settings.json");
@@ -23,8 +23,8 @@ public class WorkJson
     public int Port { get; init; } = 0;                          // TCPServer
     public int Timeout { get; init; } = 0;                       // TCPServer
 
-    public WorkJson() { }
-    public WorkJson(string DatabaseName, string SecurityKey, string PathFolder, string NameFile, string ImageFormat, int Port, int Timeout)
+    public Settings() { }
+    public Settings(string DatabaseName, string SecurityKey, string PathFolder, string NameFile, string ImageFormat, int Port, int Timeout)
     {
         this.DatabaseName = DatabaseName;
         this.SecurityKey = SecurityKey;
@@ -39,7 +39,7 @@ public class WorkJson
     {
         if (!File.Exists(filePath)) return;
         string json = File.ReadAllText(filePath);
-        WorkJson? deserialized = JsonSerializer.Deserialize<WorkJson>(json);
+        Settings? deserialized = JsonSerializer.Deserialize<Settings>(json);
 
         if (deserialized == null) return;
         database = new(deserialized.DatabaseName);
@@ -48,7 +48,7 @@ public class WorkJson
         server = new(port: deserialized.Port, timeout: deserialized.Timeout);
     }
 
-    public void SaveJS(WorkJson workJson, string filePath = "Settings.json")
+    public void SaveJS(Settings workJson, string filePath = "Settings.json")
     {
         JsonSerializerOptions jsonSerializerOptions = new() { WriteIndented = true };
         JsonSerializerOptions options = jsonSerializerOptions;

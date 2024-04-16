@@ -10,14 +10,14 @@ using Microsoft.ML.TorchSharp;
 using Microsoft.ML.Trainers;
 using Microsoft.ML;
 
-namespace MLFoodAnalyzerServer
+namespace Server
 {
-    public partial class Query_EN
+    public partial class Query_RU
     {
-        public const string RetrainFilePath =  @"C:\Users\an0ni\OneDrive\Documentos\ML - TEXT\Final\train\En_FinalTrain.csv";
+        public const string RetrainFilePath =  @"C:\Users\an0ni\OneDrive\Documentos\ML - TEXT\Final\train\Ru_FinalTrain.csv";
         public const char RetrainSeparatorChar = ',';
         public const bool RetrainHasHeader =  true;
-        public const bool RetrainAllowQuoting =  true;
+        public const bool RetrainAllowQuoting =  false;
 
          /// <summary>
         /// Train a new model with the provided dataset.

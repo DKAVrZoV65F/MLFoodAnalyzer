@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Security.Cryptography;
 
-namespace MLFoodAnalyzerServer.Extension
+namespace Server.Extension
 {
     public class Encryption(string SecurityKey = "QWERTY")
     {

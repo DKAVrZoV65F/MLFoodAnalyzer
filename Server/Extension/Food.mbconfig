@@ -48,7 +48,7 @@
     },
     "Schema": "e0 * e1 * e2",
     "MetricName": "MicroAccuracy",
-    "ModelFilePath": "C:\\dev\\MLFoodAnalyzer\\MLFoodAnalyzerServer\\Extension\\Food.mlnet"
+    "ModelFilePath": "C:\\dev\\MLFoodAnalyzer\\Server\\Extension\\Food.mlnet"
   },
   "Type": "TrainingConfig",
   "Version": 5,

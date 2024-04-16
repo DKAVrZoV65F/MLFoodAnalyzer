@@ -1,4 +1,4 @@
-using MLFoodAnalyzerServer.Extension;
+using Server.Extension;
 
 namespace xU_Server;
 
@@ -14,14 +14,14 @@ public class UnitTest
     [Fact]
     public void TestOnCreateSettings()
     {
-        Settings settings = new();
+        AppInfo settings = new();
         Assert.NotNull(settings);
     }
 
     [Fact]
     public void TestOnCreateStore()
     {
-        Store store = new();
+        ImageStore store = new();
         Assert.NotNull(store);
     }
 

@@ -1,9 +1,9 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
-namespace MLFoodAnalyzerServer.Extension;
+namespace Server.Extension;
 
-public class Store(string? pathFolder = null, string? nameFile = null, string? imageFormat = null)
+public class ImageStore(string? pathFolder = null, string? nameFile = null, string? imageFormat = null)
 {
     private string nameFile = nameFile ?? "img";
     private string imageFormat = imageFormat ?? "png";

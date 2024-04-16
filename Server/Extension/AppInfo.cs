@@ -1,13 +1,13 @@
-﻿namespace MLFoodAnalyzerServer.Extension;
+﻿namespace Server.Extension;
 
-public class Settings
+public class AppInfo
 {
-    private const int version = 100;
+    private const int version = 200;
     private const string? title = "MLFoodServer";
     private const string osPlatform = "Windows";
     private const string indent = $"\n----------\n";
 
-    public Settings() { }
+    public AppInfo() { }
 
 
     public override string ToString() => $"{title} for {osPlatform} {version:V#'.'#'.'#}";
@@ -15,10 +15,10 @@ public class Settings
     public string? Title{ get; init; }
 
     public string GetInfo() {
-        Store store = MLFoodAnalyzerServer.store ??= new();
-        TCPServer tcpServer = MLFoodAnalyzerServer.server ??= new();
-        Database database = MLFoodAnalyzerServer.database ??= new();
-        Encryption encryption = MLFoodAnalyzerServer.encryption ??= new();
+        ImageStore store = Server.store ??= new();
+        TCPServer tcpServer = Server.server ??= new();
+        Database database = Server.database ??= new();
+        Encryption encryption = Server.encryption ??= new();
 
         return $"Information.\n" +
             $"\nServer Info{indent}{tcpServer}\n" +

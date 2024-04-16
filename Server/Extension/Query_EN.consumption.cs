@@ -5,12 +5,12 @@ using System;
 using System.Linq;
 using System.IO;
 using System.Collections.Generic;
-namespace MLFoodAnalyzerServer
+namespace Server
 {
-    public partial class Query_RU
+    public partial class Query_EN
     {
         /// <summary>
-        /// model input class for Query_RU.
+        /// model input class for Query_EN.
         /// </summary>
         #region model input class
         public class ModelInput
@@ -28,7 +28,7 @@ namespace MLFoodAnalyzerServer
         #endregion
 
         /// <summary>
-        /// model output class for Query_RU.
+        /// model output class for Query_EN.
         /// </summary>
         #region model output class
         public class ModelOutput
@@ -49,7 +49,7 @@ namespace MLFoodAnalyzerServer
 
         #endregion
 
-        private static string MLNetModelPath = Path.GetFullPath("Extension\\Query_RU.mlnet");
+        private static string MLNetModelPath = Path.GetFullPath("Extension\\Query_EN.mlnet");
 
         public static readonly Lazy<PredictionEngine<ModelInput, ModelOutput>> PredictEngine = new Lazy<PredictionEngine<ModelInput, ModelOutput>>(() => CreatePredictEngine(), true);
 

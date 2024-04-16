@@ -1,4 +1,4 @@
-﻿namespace MLFoodAnalyzerServer.Extension;
+﻿namespace Server.Extension;
 
 public class MLFood
 {

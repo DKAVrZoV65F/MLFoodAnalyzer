@@ -5,39 +5,39 @@ using System;
 using System.Linq;
 using System.IO;
 using System.Collections.Generic;
-namespace MLFoodAnalyzerServer
+namespace Server
 {
-    public partial class Food
+    public partial class Query_RU
     {
         /// <summary>
-        /// model input class for Food.
+        /// model input class for Query_RU.
         /// </summary>
         #region model input class
         public class ModelInput
         {
             [LoadColumn(0)]
-            [ColumnName(@"Label")]
-            public string Label { get; set; }
+            [ColumnName(@"text")]
+            public string Text { get; set; }
 
             [LoadColumn(1)]
-            [ColumnName(@"ImageSource")]
-            public byte[] ImageSource { get; set; }
+            [ColumnName(@"label")]
+            public string Label { get; set; }
 
         }
 
         #endregion
 
         /// <summary>
-        /// model output class for Food.
+        /// model output class for Query_RU.
         /// </summary>
         #region model output class
         public class ModelOutput
         {
-            [ColumnName(@"Label")]
-            public uint Label { get; set; }
+            [ColumnName(@"text")]
+            public string Text { get; set; }
 
-            [ColumnName(@"ImageSource")]
-            public byte[] ImageSource { get; set; }
+            [ColumnName(@"label")]
+            public uint Label { get; set; }
 
             [ColumnName(@"PredictedLabel")]
             public string PredictedLabel { get; set; }
@@ -49,7 +49,7 @@ namespace MLFoodAnalyzerServer
 
         #endregion
 
-        private static string MLNetModelPath = Path.GetFullPath("Extension\\Food.mlnet");
+        private static string MLNetModelPath = Path.GetFullPath("Extension\\Query_RU.mlnet");
 
         public static readonly Lazy<PredictionEngine<ModelInput, ModelOutput>> PredictEngine = new Lazy<PredictionEngine<ModelInput, ModelOutput>>(() => CreatePredictEngine(), true);
 
@@ -57,6 +57,8 @@ namespace MLFoodAnalyzerServer
         private static PredictionEngine<ModelInput, ModelOutput> CreatePredictEngine()
         {
             var mlContext = new MLContext();
+            mlContext.GpuDeviceId = 0;
+            mlContext.FallbackToCpu = false;
             ITransformer mlModel = mlContext.Model.Load(MLNetModelPath, out var _);
             return mlContext.Model.CreatePredictionEngine<ModelInput, ModelOutput>(mlModel);
         }
@@ -68,8 +70,7 @@ namespace MLFoodAnalyzerServer
         /// <returns><seealso cref=" ModelOutput"/></returns>
         public static IOrderedEnumerable<KeyValuePair<string, float>> PredictAllLabels(ModelInput input)
         {
-            var predEngine = PredictEngine.Value;
-            var result = predEngine.Predict(input);
+            var result = Predict(input);
             return GetSortedScoresWithLabels(result);
         }
 
@@ -105,10 +106,10 @@ namespace MLFoodAnalyzerServer
         {
             var schema = PredictEngine.Value.OutputSchema;
 
-            var labelColumn = schema.GetColumnOrNull("Label");
+            var labelColumn = schema.GetColumnOrNull("label");
             if (labelColumn == null)
             {
-                throw new Exception("Label column not found. Make sure the name searched for matches the name in the schema.");
+                throw new Exception("label column not found. Make sure the name searched for matches the name in the schema.");
             }
 
             // Key values contains an ordered array of the possible labels. This allows us to map the results to the correct label value.
@@ -125,7 +126,15 @@ namespace MLFoodAnalyzerServer
         public static ModelOutput Predict(ModelInput input)
         {
             var predEngine = PredictEngine.Value;
-            return predEngine.Predict(input);
+            var output = predEngine.Predict(input);
+            var scores = output.Score;
+
+            // To get scores sum up to 1
+            var exp = scores.Select(x => (float)Math.Exp(x));
+            var softMaxScores = exp.Select(x => x / exp.Sum()).ToArray();
+            output.Score = softMaxScores;
+            return output;
+
         }
     }
 }
