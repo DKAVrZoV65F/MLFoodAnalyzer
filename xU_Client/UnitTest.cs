@@ -1,4 +1,4 @@
-using MLFoodAnalyzerClient.Extension;
+using Client.Extension;
 
 namespace xU_Client;
 
