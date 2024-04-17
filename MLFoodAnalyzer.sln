@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34407.89
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MLFoodAnalyzerClient", "MLFoodAnalyzerClient\MLFoodAnalyzerClient.csproj", "{9B0A8A03-2AE1-4FBE-93A2-099BF216FDF5}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xU_Client", "xU_Client\xU_Client.csproj", "{E573C819-581B-4955-9B6A-921B940501F8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csproj", "{BDF231D5-C226-401E-9D26-C16E9124C4F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xU_Server", "xU_Server\xU_Server.csproj", "{82663C24-35D0-4108-98BC-42002ACD8B22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xU_Server", "xU_Server\xU_Server.csproj", "{82663C24-35D0-4108-98BC-42002ACD8B22}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csproj", "{B28CE4C9-84CC-4116-99C4-01107773A1A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,12 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9B0A8A03-2AE1-4FBE-93A2-099BF216FDF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9B0A8A03-2AE1-4FBE-93A2-099BF216FDF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9B0A8A03-2AE1-4FBE-93A2-099BF216FDF5}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{9B0A8A03-2AE1-4FBE-93A2-099BF216FDF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9B0A8A03-2AE1-4FBE-93A2-099BF216FDF5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9B0A8A03-2AE1-4FBE-93A2-099BF216FDF5}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{E573C819-581B-4955-9B6A-921B940501F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E573C819-581B-4955-9B6A-921B940501F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E573C819-581B-4955-9B6A-921B940501F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -35,6 +29,12 @@ Global
 		{82663C24-35D0-4108-98BC-42002ACD8B22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82663C24-35D0-4108-98BC-42002ACD8B22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82663C24-35D0-4108-98BC-42002ACD8B22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B28CE4C9-84CC-4116-99C4-01107773A1A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B28CE4C9-84CC-4116-99C4-01107773A1A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B28CE4C9-84CC-4116-99C4-01107773A1A9}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{B28CE4C9-84CC-4116-99C4-01107773A1A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B28CE4C9-84CC-4116-99C4-01107773A1A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B28CE4C9-84CC-4116-99C4-01107773A1A9}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
