@@ -12,21 +12,6 @@ public class ImageStore(string? pathFolder = null, string? nameFile = null, stri
     private readonly string success = "Settings applied successfully";
     private readonly string unsuccess = "Settings applied unsuccessfully";
 
-    private static void ClearDirectory(string path)
-    {
-        var files = Directory.EnumerateFiles(path);
-        foreach (var file in files)
-        {
-            File.Delete(file);
-        }
-
-        var directories = Directory.EnumerateDirectories(path);
-        foreach (var directory in directories)
-        {
-            ClearDirectory(directory);
-        }
-    }
-
     public override string ToString() => $"Name: {nameFile}\nFormat: {imageFormat}\nPath: {pathFolder}";
 
     public string PathFolder
@@ -54,9 +39,11 @@ public class ImageStore(string? pathFolder = null, string? nameFile = null, stri
                 if (value.Equals(item))
                 {
                     imageFormat = value;
+                    Console.WriteLine(unsuccess);
                     return;
                 }
             }
+            Console.WriteLine(success);
         }
     }
 

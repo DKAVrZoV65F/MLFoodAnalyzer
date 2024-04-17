@@ -59,8 +59,7 @@ public class Database
                 case SQLQuery.LogIn:
                     return await DBLogIn(parameters[0], parameters[1]);
                 case SQLQuery.Update:
-                    await UpdateDescriptionFood(parameters[0], int.Parse(parameters[1]), parameters[2], parameters[3]);
-                    break;
+                    return await UpdateDescriptionFood(parameters[0], int.Parse(parameters[1]), parameters[2], parameters[3]);
                 case SQLQuery.AllFood:
                     return await AllFood();
                 case SQLQuery.History:
@@ -170,9 +169,9 @@ public class Database
 
     private async Task<string?> UpdateDescriptionFood(string nickname, int foodId, string foodDescriptionRu, string foodDescriptionEn)
     {
-        string sqlExpression = $"DECLARE @accountId INT, @Old_Description nvarchar(max), @NameFood Varchar(50);" +
+        string sqlExpression = $"DECLARE @accountId INT, @Old_DescriptionRu nvarchar(max), @Old_DescriptionEn nvarchar(max), @NameFood Varchar(50);" +
             $"SELECT @accountId = Id FROM Account WHERE NickName = @nickname;" +
-            $"SELECT @Old_DescriptionRu = DescriptionRul, @Old_DescriptionEn = DescriptionEn, @NameFood = Name FROM Food WHERE Id = @foodId;" +
+            $"SELECT @Old_DescriptionRu = DescriptionRu, @Old_DescriptionEn = DescriptionEn, @NameFood = Name FROM Food WHERE Id = @foodId;" +
             $"UPDATE Food SET DescriptionRu = @foodDescriptionRu, DescriptionEn = @foodDescriptionEn WHERE Id = @foodId;" +
             $"Insert into History (IdFood, NameFood, IdAccount, NickName, Old_DescriptionRu, Old_DescriptionEn, New_DescriptionRu, New_DescriptionEn, LastUpdate) " +
             $"Values(@foodId, @NameFood, @accountId, @nickname, @Old_DescriptionRu, @Old_DescriptionEn, @foodDescriptionRu, @foodDescriptionEn, CURRENT_TIMESTAMP);";

@@ -43,7 +43,7 @@ public class MLFood
                                                                                         .Where(kvp => kvp.Value * 100 >= 30)
                                                                                         .OrderByDescending(kvp => kvp.Value * 100);
         Dictionary<float, string> results = sortedScoresWithLabel.ToDictionary(pair => pair.Value, pair => pair.Key);
-        results.Add(0, RU);
+        results.Add(0, language);
         return results;
     }
 

@@ -1,18 +1,15 @@
 ﻿namespace Server.Extension;
 
-public class AppInfo
+public class AppInfo()
 {
     private const int version = 200;
-    private const string? title = "MLFoodServer";
+    private const string title = "MLFoodServer";
     private const string osPlatform = "Windows";
     private const string indent = $"\n----------\n";
 
-    public AppInfo() { }
-
-
     public override string ToString() => $"{title} for {osPlatform} {version:V#'.'#'.'#}";
 
-    public string? Title{ get; init; }
+    public string? Title { get => title; }
 
     public string GetInfo() {
         ImageStore store = Server.store ??= new();
