@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 63.93 64.04">
+  <defs>
+    <style>
+      .cls-1 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8 {
+        isolation: isolate;
+      }
+
+      .cls-1, .cls-2, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8 {
+        font-family: Cunia-Bold, Cunia;
+        font-weight: 700;
+      }
+
+      .cls-1, .cls-5 {
+        font-size: 8.75px;
+      }
+
+      .cls-2 {
+        letter-spacing: -.08em;
+      }
+
+      .cls-2, .cls-4, .cls-6 {
+        font-size: 38.26px;
+      }
+
+      .cls-9 {
+        fill: none;
+        stroke-width: 0px;
+      }
+
+      .cls-4 {
+        letter-spacing: -.1em;
+      }
+
+      .cls-7 {
+        letter-spacing: -.01em;
+      }
+
+      .cls-7, .cls-8 {
+        font-size: 17.49px;
+      }
+    </style>
+  </defs>
+  <text class="cls-6" transform="translate(6.67 35.45)"><tspan x="0" y="0">M</tspan></text>
+  <g class="cls-3">
+    <text class="cls-2" transform="translate(6.67 35.45)"><tspan x="0" y="0">M</tspan></text>
+    <text class="cls-4" transform="translate(34.67 35.45)"><tspan x="0" y="0">L</tspan></text>
+    <text class="cls-4" transform="translate(34.67 35.45)"><tspan x="0" y="0">L</tspan></text>
+  </g>
+  <text class="cls-7" transform="translate(8.38 48.01)"><tspan x="0" y="0">F</tspan></text>
+  <text class="cls-8" transform="translate(19.16 48.01)"><tspan x="0" y="0">OOD</tspan></text>
+  <text class="cls-5" transform="translate(9.43 54.43)"><tspan x="0" y="0">ANA</tspan></text>
+  <text class="cls-1" transform="translate(28.33 54.43)"><tspan x="0" y="0">L</tspan></text>
+  <text class="cls-5" transform="translate(32.7 54.43)"><tspan x="0" y="0">YZER</tspan></text>
+  <rect class="cls-9" width="3.43" height="3.43"/>
+  <rect class="cls-9" x="60.5" y="60.61" width="3.43" height="3.43"/>
+</svg>
