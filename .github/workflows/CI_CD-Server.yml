@@ -1,0 +1,72 @@
+name: CI/CD Server 🧪🚀
+
+on:
+  push:
+    branches: [ "master" ]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.gitignore'
+      - '**/*.gitattributes'
+  pull_request:
+    branches: [ "master" ]
+env:
+  DOTNET_INSTALL_DIR: '.\.dotnet'
+
+concurrency:
+  group: CI/CD-Server-🧪🚀
+  cancel-in-progress: true
+jobs:
+  CI-CD:
+    continue-on-error: false
+    strategy:
+      matrix:
+        os: [ windows-latest, ubuntu-latest, macos-latest ]
+      fail-fast: false
+      max-parallel: 1
+    runs-on: ${{ matrix.os }}
+    steps:
+        - uses: actions/checkout@v4.1.1
+        - name: Cache .NET 📦
+          id: cache-dotnet
+          uses: actions/cache@v4.0.1
+          with:
+            path: ${{ env.DOTNET_INSTALL_DIR }}
+            key: Dotnet-8
+            restore-keys: Dotnet-8
+        
+        - name: Display Cache .NET 📦
+          run: echo '${{ toJSON(steps.cache-dotnet.outputs) }}'
+          
+        # - name: Setup .NET 📦
+        #   if: ${{ steps.cache-dotnet.outputs.cache-hit != 'true' }}
+        #   uses: actions/setup-dotnet@v4.0.0
+        #   with:
+        #     dotnet-version: 8.0.x
+        
+        - name: Install Dependencies 📂
+          run: |
+            dotnet workload restore
+            dotnet restore MLFoodAnalyzerServer/MLFoodAnalyzerServer.csproj
+          
+        - name: Build 🧱
+          run: dotnet build MLFoodAnalyzerServer/MLFoodAnalyzerServer.csproj -c release --no-restore
+
+        - name: Test 🧪
+          run: dotnet test xU_Server --logger "trx;LogFileName=test-results-server-{{ matrix.os }}.trx" || true
+
+        - name: Publish Test Result 🧪
+          uses: dorny/test-reporter@v1
+          if: always()
+          with:
+            name: Report Tests {{ matrix.os }} 💾
+            path: "**/test-results-server-{{ matrix.os }}.trx"
+            reporter: dotnet-trx
+            fail-on-error: true
+
+        - name: Upload a Build Artifact 🚀
+          uses: actions/upload-artifact@v4.3.0
+          with:
+              name: Artifact-${{ matrix.os }}
+              path: ./MLFoodAnalyzerServer/bin/Release/net8.0/*
+              fail-on-error: true
+

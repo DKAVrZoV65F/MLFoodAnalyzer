@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="Client.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Client.Pages"
+    xmlns:extension="clr-namespace:Client.Extension"
+    xmlns:strings="clr-namespace:Client.Resources.Strings"
+    Shell.BackgroundColor="Black"
+    FlyoutIcon="menu.png"
+    Shell.FlyoutWidth="270">
+
+    <Shell.FlyoutHeader> 
+        <Grid>
+            <Border Stroke="{AppThemeBinding Default={StaticResource Black}, Light={StaticResource White200}, Dark={StaticResource Black}}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="0, 0, 20, 20" />
+                </Border.StrokeShape>
+                <Image Source="fruits.jpeg" Opacity="0.8"/>
+            </Border>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <FlyoutItem Title="{Binding LocalizationResourceManager[MLModel], Mode=OneWay}" FlyoutIcon="ai_page.png">
+        <ShellContent ContentTemplate="{DataTemplate local:MainPage}"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="{Binding LocalizationResourceManager[Settings], Mode=OneWay}" Icon="settings_page.png">
+        <ShellContent ContentTemplate="{DataTemplate local:SettingsPage}"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="{Binding LocalizationResourceManager[Administration], Mode=OneWay}" Icon="profile_security_page.png">
+        <ShellContent
+            x:Name="AdminPanel"
+            ContentTemplate="{DataTemplate local:AdminLogInPage}"/>
+    </FlyoutItem>
+
+</Shell>
