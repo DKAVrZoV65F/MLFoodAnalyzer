@@ -44,7 +44,13 @@ namespace Server.Extension
         public string Password
         {
             get => SecurityKey;
-            set => SecurityKey = value;
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(value)) 
+                {
+                    SecurityKey = value;
+                }
+            }
         }
 
         public override string ToString() => $"Password: {Password}";

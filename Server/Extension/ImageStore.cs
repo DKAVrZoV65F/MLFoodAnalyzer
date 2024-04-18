@@ -52,7 +52,7 @@ public class ImageStore(string? pathFolder = null, string? nameFile = null, stri
         get => nameFile;
         set
         {
-            string pattern = @"^[a-zA-Z0-9]*$";
+            string pattern = @"[a-zA-Z0-9]";
             nameFile = Regex.IsMatch(value, pattern) ? value : nameFile;
         }
     }

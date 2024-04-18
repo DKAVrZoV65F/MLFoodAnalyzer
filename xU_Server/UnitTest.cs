@@ -1,4 +1,8 @@
-﻿using Server.Extension;
+﻿using ICSharpCode.SharpZipLib.Core;
+using Server.Extension;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Threading;
 
 namespace xU_Server;
 
@@ -456,7 +460,7 @@ public class UnitTest
 
     [Theory]
     [InlineData("qwerty")]
-    [InlineData("")]
+    [InlineData("1234")]
     [InlineData("MLF3A7")]
     [InlineData("qe213z")]
     [InlineData("WE/'.")]
@@ -471,7 +475,7 @@ public class UnitTest
 
     [Theory]
     [InlineData("qwerty")]
-    [InlineData("")]
+    [InlineData("12345")]
     [InlineData("MLF3A7")]
     [InlineData("qe213z")]
     [InlineData("WE/'.")]
@@ -612,7 +616,7 @@ public class UnitTest
 
     [Theory]
     [InlineData("qwerty")]
-    [InlineData("")]
+    [InlineData("1234")]
     [InlineData("MLF3A7")]
     [InlineData("qe213z")]
     [InlineData("WE/'.")]
@@ -1142,6 +1146,470 @@ public class UnitTest
 
         // Assert
         Assert.NotEqual(actual, result);
+    }
+    #endregion
+
+    #region MLFood
+
+    [Fact]
+    public void Create_Class_MLFood_Default()
+    {
+        // Arrange
+        MLFood mlFood = new();
+
+        // Assert
+        Assert.NotNull(mlFood);
+    }
+
+    [Theory]
+    [InlineData("C:\\dev\\MLFoodAnalyzer\\Server\\bin\\Debug\\net8.0\\Extension\\apple.jpg", "ASDF")]
+    public void Create_Class_MLFood_Change(string text, string filePath)
+    {
+        // Arrange
+        MLFood mlFood = new()
+        {
+            //Act
+            Text = text,
+            Image = filePath
+        };
+
+        // Assert
+        Assert.NotNull(mlFood);
+    }
+
+    [Theory]
+    [InlineData("C:\\dev\\MLFoodAnalyzer\\Server\\bin\\Debug\\net8.0\\Extension\\apple.jpg")]
+    public void Create_Class_MLFood_Change_Path(string filePath)
+    {
+        // Arrange
+        MLFood mlFood = new()
+        {
+            //Act
+            Image = filePath
+        };
+        string result = mlFood.Image;
+
+        // Assert
+        Assert.Equal(filePath, result);
+    }
+
+    [Theory]
+    [InlineData("ASDF")]
+    public void Create_Class_MLFood_Change_Text(string text)
+    {
+        // Arrange
+        MLFood mlFood = new()
+        {
+            //Act
+            Text = text
+        };
+        string result = mlFood.Text;
+        text = text.ToLower();
+
+        // Assert
+        Assert.Equal(text, result);
+    }
+
+    [Theory]
+    [InlineData("C:\\dev\\MLFoodAnalyzer\\Server\\bin\\Debug\\net8.0\\Extension\\apple.png", "ru", "apple", 0.5f, 1f)]
+    public void Function_MLFood_PredictImage(string imagePath, string language, string expected, float min, float max)
+    {
+        // Arrange
+        MLFood mlFood = new()
+        {
+            Image = imagePath
+        };
+
+        // Act
+        Dictionary<float, string> result = mlFood.PredictImage(language);
+        result.Remove(result.Keys.Last());
+
+        // Assert
+        Assert.True(result.Keys.Last() > min && result.Keys.Last() < max);
+        Assert.Equal(expected, result.Values.Last());
+    }
+
+    [Theory]
+    [InlineData("Very tasty fruit - its apple!")]
+    [InlineData("Очень вкусный фрукт - яблоко!")]
+    [InlineData("Very tasty fruit - это яблоко!")]
+    public void Function_MLFood_PredictText(string text)
+    {
+        // Arrange
+        MLFood mlFood = new()
+        {
+            Text = text
+        };
+
+        // Act
+        Dictionary<float, string> result = mlFood.PredictText();
+
+        // Assert
+        Assert.NotEmpty(result);
+    }
+
+    [Fact]
+    public void Fail_Create_Class_MLFood_Default()
+    {
+        // Arrange
+        MLFood mlFood = new();
+
+        // Act
+        mlFood = null!;
+
+        // Assert
+        Assert.Null(mlFood);
+    }
+
+    [Theory]
+    [InlineData("C:\\dev\\MLFoodAnalyzer\\Server\\bin\\Debug\\net8.0\\Extension\\apple.jpg", "ASDF")]
+    public void Fail_Create_Class_MLFood_Change(string text, string filePath)
+    {
+        // Arrange
+        MLFood mlFood = new()
+        {
+            //Act
+            Text = text,
+            Image = filePath
+        };
+        mlFood = null!;
+
+        // Assert
+        Assert.Null(mlFood);
+    }
+
+    [Theory]
+    [InlineData("")]
+    public void Fail_Create_Class_MLFood_Change_Path(string filePath)
+    {
+        // Arrange
+        MLFood mlFood = new()
+        {
+            //Act
+            Image = filePath
+        };
+        string result = mlFood.Image;
+
+        // Assert
+        Assert.Empty(result);
+    }
+
+    [Theory]
+    [InlineData("     ")]
+    public void Fail_Create_Class_MLFood_Change_Text(string text)
+    {
+        // Arrange
+        MLFood mlFood = new()
+        {
+            //Act
+            Text = text
+        };
+        string result = mlFood.Text;
+
+        // Assert
+        Assert.Empty(result);
+    }
+
+    [Theory]
+    [InlineData("C:\\dev\\MLFoodAnalyzer\\Server\\bin\\Debug\\net8.0\\Extension\\apple.png", "ru", "orange", 0f, 0.3f)]
+    public void Fail_Function_MLFood_PredictImage(string imagePath, string language, string expected, float min, float max)
+    {
+        // Arrange
+        MLFood mlFood = new()
+        {
+            Image = imagePath
+        };
+
+        // Act
+        Dictionary<float, string> result = mlFood.PredictImage(language);
+        result.Remove(result.Keys.Last());
+
+        // Assert
+        Assert.False(result.Keys.Last() > min && result.Keys.Last() < max);
+        Assert.NotEqual(expected, result.Values.Last());
+    }
+
+    [Theory]
+    [InlineData("Very tasty fruit - its apple!")]
+    [InlineData("Очень вкусный фрукт - яблоко!")]
+    [InlineData("Very tasty fruit - это яблоко!")]
+    public void Fail_Function_MLFood_PredictText(string text)
+    {
+        // Arrange
+        MLFood mlFood = new()
+        {
+            Text = text
+        };
+
+        // Act
+        Dictionary<float, string> result = mlFood.PredictText();
+
+        // Assert
+        Assert.NotEmpty(result);
+    }
+    #endregion
+
+    #region Settings
+
+    [Fact]
+    public void Create_Class_Settings_Default()
+    {
+        // Arrange
+        Settings settings = new();
+
+        // Assert
+        Assert.NotNull(settings);
+    }
+
+    [Theory]
+    [InlineData("ML", "zxcv", "C:\\dev\\", "images", "jpg", 10101, 1000)]
+    public void Create_Class_Settings_Current_Full(string databaseName, string password, string pathFolder, string nameFile, string imageFormat, int port, int timeout)
+    {
+        // Arrange
+        Settings settings = new()
+        {
+            //Act
+            DatabaseName = databaseName,
+            Password = password,
+            PathFolder = pathFolder,
+            NameFile = nameFile,
+            ImageFormat = imageFormat,
+            Port = port,
+            Timeout = timeout
+        };
+
+        // Assert
+        Assert.Equal(databaseName, settings.DatabaseName);
+        Assert.Equal(password, settings.Password);
+        Assert.Equal(pathFolder, settings.PathFolder);
+        Assert.Equal(nameFile, settings.NameFile);
+        Assert.Equal(imageFormat, settings.ImageFormat);
+        Assert.Equal(port, settings.Port);
+        Assert.Equal(timeout, settings.Timeout);
+    }
+
+    [Theory]
+    [InlineData("zxcv", "images", 10101)]
+    public void Create_Class_Settings_Current_Partially(string password, string nameFile, int port)
+    {
+        // Arrange
+        Settings settings = new()
+        {
+            //Act
+            Password = password,
+            NameFile = nameFile,
+            Port = port
+        };
+
+        // Assert
+        Assert.Equal(password, settings.Password);
+        Assert.Equal(nameFile, settings.NameFile);
+        Assert.Equal(port, settings.Port);
+    }
+
+    [Theory]
+    [InlineData("MLF3A7", "QWERTY", "C:\\Users\\an0ni\\SFVPicture", "img", "png", 55555, 10000)]
+    public void Function_Settings_LoadSettings(string databaseName, string password, string pathFolder, string nameFile, string imageFormat, int port, int timeout)
+    {
+        // Arrange
+        Settings settings = new();
+
+        // Act
+        settings.LoadSettings();
+
+        // Assert
+        Assert.Equal(databaseName, settings.DatabaseName);
+        Assert.Equal(password, settings.Password);
+        Assert.Equal(pathFolder, settings.PathFolder);
+        Assert.Equal(nameFile, settings.NameFile);
+        Assert.Equal(imageFormat, settings.ImageFormat);
+        Assert.Equal(port, settings.Port);
+        Assert.Equal(timeout, settings.Timeout);
+    }
+
+    [Fact]
+    public void Function_Settings_SaveSettings()
+    {
+        // Arrange
+        Settings settings = new();
+
+        // Act
+        settings.SaveSettings(settings);
+        bool result = File.Exists(Path.GetFullPath("Settings.json"));
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void Fail_Create_Class_Settings_Default()
+    {
+        // Arrange
+        Settings settings = new();
+
+        // Act
+        settings = null!;
+
+        // Assert
+        Assert.Null(settings);
+    }
+
+    [Theory]
+    [InlineData("", "", "C:/dev\\", "_", "123", 9999999, -5)]
+    public void Fail_Create_Class_Settings_Current_Full(string databaseName, string password, string pathFolder, string nameFile, string imageFormat, int port, int timeout)
+    {
+        // Arrange
+        Settings settings = new()
+        {
+            //Act
+            DatabaseName = databaseName,
+            Password = password,
+            PathFolder = pathFolder,
+            NameFile = nameFile,
+            ImageFormat = imageFormat,
+            Port = port,
+            Timeout = timeout
+        };
+        settings = null!;
+
+        // Assert
+        Assert.Null(settings);
+    }
+
+    [Theory]
+    [InlineData("zxcv", "images", 10101)]
+    public void Fail_Create_Class_Settings_Current_Partially(string password, string nameFile, int port)
+    {
+        // Arrange
+        Settings settings = new()
+        {
+            //Act
+            Password = password,
+            NameFile = nameFile,
+            Port = port
+        };
+        settings = null!;
+
+        // Assert
+        Assert.Null(settings);
+    }
+
+    [Theory]
+    [InlineData("a", "b", "c", "d", "e", 5, 1)]
+    public void Fail_Function_Settings_LoadSettings(string databaseName, string password, string pathFolder, string nameFile, string imageFormat, int port, int timeout)
+    {
+        // Arrange
+        Settings settings = new();
+
+        // Act
+        settings.LoadSettings();
+
+        // Assert
+        Assert.NotEqual(databaseName, settings.DatabaseName);
+        Assert.NotEqual(password, settings.Password);
+        Assert.NotEqual(pathFolder, settings.PathFolder);
+        Assert.NotEqual(nameFile, settings.NameFile);
+        Assert.NotEqual(imageFormat, settings.ImageFormat);
+        Assert.NotEqual(port, settings.Port);
+        Assert.NotEqual(timeout, settings.Timeout);
+    }
+
+    [Fact]
+    public void Fail_Function_Settings_SaveSettings()
+    {
+        // Arrange
+        Settings settings = new();
+
+        // Act
+        settings = null!;
+        settings?.SaveSettings(null!);
+
+        // Assert
+        Assert.Null(settings);
+    }
+    #endregion
+
+    #region TCPServer
+
+    [Fact]
+    public void Create_Class_TCPServer_Default()
+    {
+        // Arrange
+        TCPServer server = new();
+
+        // Assert
+        Assert.NotNull(server);
+    }
+
+    [Theory]
+    [InlineData(10101, 1000)]
+    public void Create_Class_TCPServer_Current(int port, int timeout)
+    {
+        // Arrange
+        TCPServer server = new(port: port, timeout: timeout);
+
+        // Assert
+        Assert.NotNull(server);
+    }
+
+    [Theory]
+    [InlineData(10101, 1000)]
+    public void Create_Class_TCPServer_Change(int port, int timeout)
+    {
+        // Arrange
+        TCPServer server = new()
+        {
+            Port = port,
+            Timeout = timeout
+        };
+
+        // Assert
+        Assert.NotNull(server);
+    }
+
+    [Fact]
+    public void Fail_Create_Class_TCPServer_Default()
+    {
+        // Arrange
+        TCPServer server = new();
+
+        //Act
+        server = null!;
+
+        // Assert
+        Assert.Null(server);
+    }
+
+    [Theory]
+    [InlineData(10101, 1000)]
+    public void Fail_Create_Class_TCPServer_Current(int port, int timeout)
+    {
+        // Arrange
+        TCPServer server = new(port: port, timeout: timeout);
+
+        //Act
+        server = null!;
+
+        // Assert
+        Assert.Null(server);
+    }
+
+    [Theory]
+    [InlineData(10101, 1000)]
+    public void Fail_Create_Class_TCPServer_Change(int port, int timeout)
+    {
+        // Arrange
+        TCPServer server = new()
+        {
+            Port = port,
+            Timeout = timeout
+        };
+
+        //Act
+        server = null!;
+
+        // Assert
+        Assert.Null(server);
     }
     #endregion
 }

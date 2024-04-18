@@ -6,18 +6,18 @@ namespace Server;
 
 internal class Server
 {
-    public static AppInfo? settings;
+    public static AppInfo? appinfo;
     public static Database? database;
     public static Encryption? encryption;
     public static TCPServer? server;
     public static ImageStore? store;
-    public static Settings workJson = new();
+    public static Settings settings = new();
 
     private static async Task Main()
     {
         string[] Menu = ["Menu:", "1. Run server", "2. Settings", "3. Information", "4. Exit", "Please enter your selection: "];
         LoadSettings();
-        Console.Title = settings?.Title ?? string.Empty;
+        Console.Title = appinfo?.Title ?? string.Empty;
         int selectedOption;
         do
         {
@@ -30,12 +30,15 @@ internal class Server
 
     private static void LoadSettings()
     {
-        workJson.LoadJS();
-        database = Extension.Settings.database ??= new();
-        encryption = Extension.Settings.encryption ??= new();
-        server = Extension.Settings.server ??= new();
-        store = Extension.Settings.store ??= new();
-        settings ??= new();
+        bool result = settings.LoadSettings();
+        if (!result) settings.SaveSettings(settings);
+
+
+        database = Extension.Settings.database;
+        encryption = Extension.Settings.encryption;
+        server = Extension.Settings.server;
+        store = Extension.Settings.store;
+        appinfo ??= new();
     }
 
     private static async Task SelectOption(int index)
@@ -62,7 +65,7 @@ internal class Server
                 Settings(database!, encryption!, server!, store!);
                 break;
             case 3:
-                Console.WriteLine(settings?.GetInfo());
+                Console.WriteLine(appinfo?.GetInfo());
                 Console.ReadLine();
                 break;
             case 4:
@@ -133,8 +136,8 @@ internal class Server
                     break;
             }
 
-            workJson = new(DatabaseName: database.DatabaseName, SecurityKey: encryption.Password, Port: server.Port, Timeout: server.Timeout, PathFolder: store.PathFolder, ImageFormat: store.Format, NameFile: store.NameFile);
-            workJson.SaveJS(workJson);
+            settings = new(DatabaseName: database.DatabaseName, Password: encryption.Password, Port: server.Port, Timeout: server.Timeout, PathFolder: store.PathFolder, ImageFormat: store.Format, NameFile: store.NameFile);
+            settings.SaveSettings(settings);
             Console.Clear();
         } while (selectedOption != 10);
     }
