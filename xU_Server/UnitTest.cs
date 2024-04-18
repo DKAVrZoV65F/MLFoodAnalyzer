@@ -1,8 +1,4 @@
-﻿using ICSharpCode.SharpZipLib.Core;
-using Server.Extension;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Threading;
+﻿using Server.Extension;
 
 namespace xU_Server;
 
@@ -1222,6 +1218,7 @@ public class UnitTest
 
         // Act
         Dictionary<float, string> result = mlFood.PredictImage(language);
+        Assert.Equal(language, result.Values.Last());
         result.Remove(result.Keys.Last());
 
         // Assert

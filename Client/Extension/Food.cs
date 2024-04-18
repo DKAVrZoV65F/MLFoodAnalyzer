@@ -8,7 +8,7 @@ public class Food
 
     public string Description { get; set; } = string.Empty;
 
-    public Food() {}
+    public Food() : this(0, "_", "_") { }
 
     public Food(int id, string? name, string description)
     {

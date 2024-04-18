@@ -10,7 +10,7 @@ public class History
     public string New_Description { get; set; } = string.Empty;
 
     public DateTime LastUpdate { get; init; } = DateTime.Now;
-    public History() { }
+    public History() : this(0, "_", 0, "_", "_", "_", DateTime.Now) { }
 
     public History(int idFood, string nameFood, int idAccount, string nickName, string oldDescription, string newDescription, DateTime lastUpdate)
     {
