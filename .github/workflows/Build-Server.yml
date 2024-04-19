@@ -1,0 +1,48 @@
+name: Build Server 🚀
+
+on:
+  push:
+    branches: [ "master" ]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.gitignore'
+      - '**/*.gitattributes'
+  pull_request:
+    branches: [ "master" ]
+env:
+  DOTNET_INSTALL_DIR: '.\.dotnet'
+
+concurrency:
+  group: Build-Server-🚀
+  cancel-in-progress: true
+jobs:
+  Build:
+    continue-on-error: false
+    strategy:
+      matrix:
+        os: [ windows-latest, ubuntu-latest, macos-latest ]
+      fail-fast: false
+      max-parallel: 1
+    runs-on: ${{ matrix.os }}
+    steps:
+        - uses: actions/checkout@v4.1.1
+        - name: Setup .NET 📦
+          uses: actions/setup-dotnet@v4.0.0
+          with:
+            dotnet-version: 8.0.x
+        
+        - name: Install Dependencies 📂
+          run: |
+            dotnet workload restore
+            dotnet restore Server/Server.csproj
+          
+        - name: Build 🧱
+          run: dotnet build Server/Server.csproj -c release --no-restore
+
+        - name: Upload a Build Artifact 🚀
+          uses: actions/upload-artifact@v4.3.0
+          with:
+              name: Artifact-${{ matrix.os }}
+              path: ./Server/bin/Release/net8.0/*
+              fail-on-error: true
+
