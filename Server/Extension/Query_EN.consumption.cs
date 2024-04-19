@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.IO;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 namespace Server
 {
     public partial class Query_EN
@@ -49,7 +50,7 @@ namespace Server
 
         #endregion
 
-        private static string MLNetModelPath = Path.GetFullPath("Extension\\Query_EN.mlnet");
+        private static string MLNetModelPath = Path.GetFullPath(RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? "Extension/Query_EN.mlnet" : "Extension\\Query_EN.mlnet");
 
         public static readonly Lazy<PredictionEngine<ModelInput, ModelOutput>> PredictEngine = new Lazy<PredictionEngine<ModelInput, ModelOutput>>(() => CreatePredictEngine(), true);
 

@@ -1,6 +1,7 @@
-﻿using Server.Extension;
-using QRCoder;
+﻿using QRCoder;
+using Server.Extension;
 using System.Net;
+using System.Runtime.InteropServices;
 
 namespace Server;
 
@@ -32,7 +33,6 @@ internal class Server
     {
         bool result = settings.LoadSettings();
         if (!result) settings.SaveSettings(settings);
-
 
         database = Extension.Settings.database;
         encryption = Extension.Settings.encryption;
@@ -168,9 +168,9 @@ internal class Server
         Console.WriteLine("\rLoad ML Image.");
         MLFood? mLFood = new()
         {
-            Image = Path.GetFullPath("Extension\\apple.jpg")
+            Image = Path.GetFullPath(RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? "Extension/apple.jpg" : "Extension\\apple.jpg")
         };
-        mLFood.PredictImage(string.Empty);
+        mLFood.PredictImage("ru");
     }
 
     private static void LoadMLText()
@@ -190,7 +190,7 @@ internal class Server
         QRCodeData qrCodeData = qrGenerator.CreateQrCode($"{server?.Ip}|{server?.Port}", QRCodeGenerator.ECCLevel.Q);
         PngByteQRCode qrCode = new(qrCodeData);
         byte[] qrCodeImage = qrCode.GetGraphic(20);
-        string filePath = $"{store!.PathFolder}\\QRServer.png";
+        string filePath = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? $"{store!.PathFolder}/QRServer.png" : $"{store!.PathFolder}\\QRServer.png";
         File.WriteAllBytes(filePath, qrCodeImage);
     }
 }
