@@ -1,0 +1,9 @@
+{
+  "Port": 55555,
+  "Timeout": 10000,
+  "PathFolder": "/home/app",
+  "NameFile": "img",
+  "ImageFormat": "png",
+  "DatabaseName": "MLF3A7",
+  "Password": "QWERTY"
+}
