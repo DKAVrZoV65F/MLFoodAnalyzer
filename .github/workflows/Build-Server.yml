@@ -20,6 +20,7 @@ jobs:
     continue-on-error: false
     strategy:
       matrix:
+        #os: [ windows-latest, ubuntu-latest, macos-latest ]
         os: [ windows-latest, ubuntu-latest, macos-latest ]
       fail-fast: false
       max-parallel: 1
@@ -31,16 +32,16 @@ jobs:
           with:
             dotnet-version: 8.0.x
         
-        - name: Install Dependencies 📂
-          run: dotnet restore Server/Server.csproj
+        #- name: Install Dependencies 📂
+        #  run: dotnet restore Server/Server.csproj
           
         - name: Build 🧱
           run: dotnet build Server/Server.csproj -c release --no-restore
 
-        - name: Upload a Build Artifact 🚀
-          uses: actions/upload-artifact@v4.3.0
-          with:
-              name: Artifact-${{ matrix.os }}
-              path: ./Server/bin/Release/net8.0/*
-              fail-on-error: true
+        # - name: Upload a Build Artifact 🚀
+        #   uses: actions/upload-artifact@v4.3.0
+        #   with:
+        #       name: Artifact-${{ matrix.os }}
+        #       path: ./Server/bin/Release/net8.0/*
+        #       fail-on-error: true
 
