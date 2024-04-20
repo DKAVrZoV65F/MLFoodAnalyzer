@@ -14,7 +14,7 @@ public class TCPServer
     private TcpListener tcpListener = null!;
     private static DateTime startUserOperation;
     private readonly string success = "Settings applied successfully";
-    private readonly string unsuccess = "Settings applied unsuccessfully";
+    private readonly string unsuccess = "Settings applied unsuccessfully tcp";
 
     private readonly Database database = Server.database ??= new();
     private readonly Encryption encryption = Server.encryption ??= new();
@@ -41,7 +41,7 @@ public class TCPServer
         }
         set
         {
-            Console.WriteLine(IPAddress.TryParse(value.ToString(), out _) ? success : unsuccess);
+            Console.WriteLine(IPAddress.TryParse(value.ToString(), out ip!) ? success : unsuccess);
         }
     }
 
@@ -76,8 +76,8 @@ public class TCPServer
                 startUserOperation = DateTime.Now;
                 Console.WriteLine($"[{startUserOperation}] Client {tcpClient.Client.RemoteEndPoint} connected to server");
                 stream = tcpClient.GetStream();
-                //stream.ReadTimeout = timeout;
-                //stream.WriteTimeout = timeout;
+                stream.ReadTimeout = timeout;
+                stream.WriteTimeout = timeout;
                 _ = Task.Run(GetCommand);
             }
         }
@@ -237,6 +237,7 @@ public class TCPServer
             {
                 port = outputParse;
                 Console.WriteLine(success);
+                return;
             }
             Console.WriteLine(unsuccess);
         }
@@ -252,6 +253,7 @@ public class TCPServer
             {
                 timeout = outputParse;
                 Console.WriteLine(success);
+                return;
             }
             Console.WriteLine(unsuccess);
         }

@@ -103,34 +103,42 @@ internal class Server
                 case 1:
                     Console.Write("ip: ");
                     Console.Write(server.Ip = IPAddress.Parse(Console.ReadLine()!));
+                    Console.ReadLine();
                     break;
                 case 2:
                     Console.Write("port: ");
                     Console.Write(server.Port = int.Parse(Console.ReadLine()!));
+                    Console.ReadLine();
                     break;
                 case 3:
                     Console.Write("timeout: ");
                     Console.Write(server.Timeout = int.Parse(Console.ReadLine()!));
+                    Console.ReadLine();
                     break;
                 case 4:
                     Console.Write("name of image: ");
                     Console.Write(store.NameFile = Console.ReadLine()!);
+                    Console.ReadLine();
                     break;
                 case 5:
                     Console.Write("format image: ");
                     Console.Write(store.Format = Console.ReadLine()!);
+                    Console.ReadLine();
                     break;
                 case 6:
                     Console.Write("path to store images: ");
                     Console.Write(store.PathFolder = Console.ReadLine()!);
+                    Console.ReadLine();
                     break;
                 case 7:
                     Console.Write("name of database: ");
                     Console.Write(database.DatabaseName = Console.ReadLine()!);
+                    Console.ReadLine();
                     break;
                 case 8:
                     Console.Write("password of encryption: ");
                     Console.Write(encryption.Password = Console.ReadLine()!);
+                    Console.ReadLine();
                     break;
                 default:
                     break;

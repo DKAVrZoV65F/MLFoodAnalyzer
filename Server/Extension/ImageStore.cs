@@ -8,9 +8,9 @@ public class ImageStore(string? pathFolder = null, string? nameFile = null, stri
     private string nameFile = nameFile ?? "img";
     private string imageFormat = imageFormat ?? "png";
     private static readonly string[] formats = ["png", "jpeg", "jpg"];
-    private string pathFolder = pathFolder ?? (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? "/home/{Environment.UserName}" : $"C:\\Users\\{Environment.UserName}\\SFVPicture");
+    private string pathFolder = pathFolder ?? (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? $"/home/{Environment.UserName}" : $"C:\\Users\\{Environment.UserName}\\SFVPicture");
     private readonly string success = "Settings applied successfully";
-    private readonly string unsuccess = "Settings applied unsuccessfully";
+    private readonly string unsuccess = "Settings applied unsuccessfully img";
 
     public override string ToString() => $"Name: {nameFile}\nFormat: {imageFormat}\nPath: {pathFolder}";
 
@@ -39,11 +39,11 @@ public class ImageStore(string? pathFolder = null, string? nameFile = null, stri
                 if (value.Equals(item))
                 {
                     imageFormat = value;
-                    Console.WriteLine(unsuccess);
+                    Console.WriteLine(success);
                     return;
                 }
             }
-            Console.WriteLine(success);
+            Console.WriteLine(unsuccess);
         }
     }
 

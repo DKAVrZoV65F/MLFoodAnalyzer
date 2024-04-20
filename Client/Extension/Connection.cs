@@ -9,7 +9,7 @@ internal class Connection
 {
     public LocalizationResourceManager LocalizationResourceManager => LocalizationResourceManager.Instance;
     private const string errorServer = "ErrorConToServ";
-
+    private const int timeout = 10000;
 
     public async Task<string?> SendText(string text) => await Send(op: Operation.Text, text) + '\n';
 
@@ -47,6 +47,8 @@ internal class Connection
             await tcpClient.ConnectAsync(AppShell.settings.Ip, AppShell.settings.Port);
 
             NetworkStream stream = tcpClient.GetStream();
+            stream.ReadTimeout = timeout;
+            stream.WriteTimeout = timeout;
             List<byte> response = [];
             int bytesRead = 10;
 
