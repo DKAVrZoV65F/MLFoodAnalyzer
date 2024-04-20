@@ -32,9 +32,7 @@ jobs:
             dotnet-version: 8.0.x
         
         - name: Install Dependencies 📂
-          run: |
-            dotnet workload restore
-            dotnet restore Server/Server.csproj
+          run: dotnet restore Server/Server.csproj
           
         - name: Build 🧱
           run: dotnet build Server/Server.csproj -c release --no-restore
