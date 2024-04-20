@@ -9,8 +9,6 @@ on:
       - '**/*.gitattributes'
   pull_request:
     branches: [ "master" ]
-env:
-  DOTNET_INSTALL_DIR: '.\.dotnet'
 
 concurrency:
   group: Build-Server-🚀
@@ -32,8 +30,11 @@ jobs:
           with:
             dotnet-version: 8.0.x
         
-        #- name: Install Dependencies 📂
-        #  run: dotnet restore Server/Server.csproj
+        - name: Install Dependencies 📂
+          run: |
+            cd Server
+            dotnet workload restore
+            dotnet restore Server.csproj
           
         - name: Build 🧱
           run: dotnet build Server/Server.csproj -c release
