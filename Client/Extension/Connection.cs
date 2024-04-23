@@ -44,6 +44,8 @@ internal class Connection
             if (string.IsNullOrWhiteSpace(AppShell.settings.Ip) || AppShell.settings.Port == 0) throw new Exception();
 
             using TcpClient tcpClient = new();
+            tcpClient.ReceiveTimeout = timeout;
+            tcpClient.SendTimeout = timeout;
             await tcpClient.ConnectAsync(AppShell.settings.Ip, AppShell.settings.Port);
 
             NetworkStream stream = tcpClient.GetStream();

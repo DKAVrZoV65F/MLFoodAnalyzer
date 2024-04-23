@@ -119,6 +119,15 @@ public partial class MainPage : ContentPage
             await Task.Delay(rnd.Next(minValue, maxValue));
         }
 
+        if (!results.Contains('|'))
+        {
+            ResultEditor.Text = results;
+
+            IsFlag = true;
+            SendTextButton.IsInProgress = SendPictureButton.IsInProgress = false;
+            return;
+        }
+
         string[] data = results.Split('|');
 
         FormattedString formattedString = new();
@@ -137,7 +146,7 @@ public partial class MainPage : ContentPage
         });
         formattedString.Spans.Add(new Span
         {
-            Text = data[2] + '\n'
+            Text = data[2].Replace("\\r\\n", "\n") + '\n'
         });
         formattedString.Spans.Add(new Span
         {
@@ -146,12 +155,12 @@ public partial class MainPage : ContentPage
         });
         formattedString.Spans.Add(new Span
         {
-            Text = data[3] + '\n'
+            Text = data[3].Replace("\\r\\n", "\n") + '\n'
         });
         ResultEditor.FormattedText = formattedString;
 
-        SendTextButton.IsInProgress = SendPictureButton.IsInProgress = false;
         IsFlag = true;
+        SendTextButton.IsInProgress = SendPictureButton.IsInProgress = false;
     }
 
     private void QueryEditor_Changed(object sender, TextChangedEventArgs e)
