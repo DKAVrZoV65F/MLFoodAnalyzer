@@ -1207,7 +1207,7 @@ public class UnitTest
     }
 
     [Theory]
-    [InlineData("C:\\dev\\MLFoodAnalyzer\\Server\\bin\\Debug\\net8.0\\Extension\\apple.png", "ru", "apple", 0.5f, 1f)]
+    [InlineData("C:\\dev\\MLFoodAnalyzer\\xU_Server\\bin\\Debug\\net8.0\\Extension\\apple.jpg", "ru", "apple", 0.5f, 1f)]
     public void Function_MLFood_PredictImage(string imagePath, string language, string expected, float min, float max)
     {
         // Arrange
@@ -1308,7 +1308,7 @@ public class UnitTest
     }
 
     [Theory]
-    [InlineData("C:\\dev\\MLFoodAnalyzer\\Server\\bin\\Debug\\net8.0\\Extension\\apple.png", "ru", "orange", 0f, 0.3f)]
+    [InlineData("C:\\dev\\MLFoodAnalyzer\\Server\\bin\\Debug\\net8.0\\Extension\\apple.jpg", "ru", "orange", 0f, 0.3f)]
     public void Fail_Function_MLFood_PredictImage(string imagePath, string language, string expected, float min, float max)
     {
         // Arrange

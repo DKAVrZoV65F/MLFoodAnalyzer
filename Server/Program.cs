@@ -189,6 +189,8 @@ internal class Server
             Text = "apple"
         };
         mLFood.PredictText();
+        mLFood.Text = "яблоко";
+        mLFood.PredictText();
     }
 
     private static void QRGenerate()
