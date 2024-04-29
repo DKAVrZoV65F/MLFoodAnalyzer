@@ -5,7 +5,7 @@
 <h1 align="center">
   
   An open-source, .NET MAUI.<br/>
-  **English** · [Russian](./README.ru-RU.md) · [Report Bug](https://github.com/DKAVrZoV65F/MLFoodAnalyzer/issues) · [Request Feature](https://github.com/DKAVrZoV65F/MLFoodAnalyzer/issues)
+  **English** · [Русский](./README.ru-RU.md) · [Report Bug](https://github.com/DKAVrZoV65F/MLFoodAnalyzer/issues) · [Request Feature](https://github.com/DKAVrZoV65F/MLFoodAnalyzer/issues)
   
   <!-- SHIELD GROUP -->
   ![https://github.com/DKAVrZoV65F/MLFoodAnalyzer/releases](https://img.shields.io/github/v/release/DKAVrZoV65F/MLFoodAnalyzer?color=369eff&labelColor=black&logo=github&style=flat-square)
@@ -20,19 +20,19 @@
 
 
 # Description
-MLFoodAnalyzer - программа, которая выдаёт информацию, какие овощи или фрукты несут пользу или вред здоровью.
-Используется машинное обучение для распознования текста и картинок с помощью технологии ML.NET.
-Написана программа на языке C#, где серверная часть - консольное приложение, а клиентская часть - мобильное или десктопное приложение написанная на фреймворке .NET MAUI.
+MLFoodAnalyzer is a program that provides information about which vegetables or fruits are beneficial or harmful to health.
+Machine learning is used to recognize text and images using technology ML.NET .
+The program is written in C#, where the server part is a console application, and the client part is a mobile or desktop application written in a framework.NET MAUI.
 
 # Application management for clients
-1. Установить приложение на Windows/MacOS/Android, подключитесь к серверу через "Настройки" -> "Сеть", указав "IP" и "Порт".
-2. После успешного подключения к серверу, можно отправлять текст с фруктами или овощами или отправить картинку.
+1. Install the application on Windows/macOS/Android, connect to the server through "Settings" -> "Network", specifying "IP" and "Port".
+2. After successfully connecting to the server, you can send a text with fruits or vegetables or send a picture.
 
 # Application management for server
-1. Установите Microsoft SQL Server 2019, запустите скрипт для добавления необходимых таблиц и полей.
-2. Установить последней версии драйвера на видеокарту.
-3. Распакуйте архив.
-4. Запустите "Server".
+1. Install Microsoft SQL Server 2019, run the script to add the necessary tables and fields.
+2. Install the latest driver version on the graphics card.
+3. Unzip the archive.
+4. Start the "Server".
 
 # Requirements
 Server: 
