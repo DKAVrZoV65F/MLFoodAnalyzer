@@ -18,6 +18,11 @@ public partial class AdminStoragePage : ContentPage
         BindingContext = this;
         GetFruits();
         foodListView.ItemsSource = Foods;
+
+        MessagingCenter.Subscribe<UpdatingStoragePage>(this, "Update", (sender) =>
+        {
+            Button_Update(null!, null!);
+        });
     }
 
     private async void FoodListView_ItemTapped(object sender, ItemTappedEventArgs e)
@@ -47,7 +52,10 @@ public partial class AdminStoragePage : ContentPage
         }
     }
 
-    private async void GoToHistory(object sender, EventArgs e) => await Navigation.PushAsync(new HistoryChange());
+    private async void GoToHistory(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new HistoryChange());
+    }
 
     private async void GetFruits()
     {
@@ -78,5 +86,12 @@ public partial class AdminStoragePage : ContentPage
             Food food = new(int.Parse(words[0]), LocalizationResourceManager[words[1]].ToString(), words[2] + "\n\n" + words[3]);
             Foods.Add(food);
         }
+    }
+
+    private void Button_Update(object sender, EventArgs e)
+    {
+        SearchEntry.Text = string.Empty;
+        Foods.Clear();
+        GetFruits();
     }
 }

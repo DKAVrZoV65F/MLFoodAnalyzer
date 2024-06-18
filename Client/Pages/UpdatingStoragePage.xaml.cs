@@ -38,6 +38,10 @@ public partial class UpdatingStoragePage : ContentPage
         SavingButton.IsInProgress = false;
         alert ??= new();
         alert.DisplayMessage(result.Equals("success") ? LocalizationResourceManager["SuccessUpdateDescr"].ToString() : (result.Equals("error") ? LocalizationResourceManager["ErrorUpdateDescr"].ToString() : LocalizationResourceManager["ErrorWithIPOrPort"].ToString()));
-        if (result.Equals("success")) await Navigation.PopAsync();
+        if (result.Equals("success"))
+        {
+            MessagingCenter.Send(this, "Update");
+            await Navigation.PopAsync();
+        }
     }
 }

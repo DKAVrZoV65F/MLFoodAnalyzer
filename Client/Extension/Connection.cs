@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Client.Pages;
+using System.Globalization;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
@@ -10,6 +11,7 @@ internal class Connection
     public LocalizationResourceManager LocalizationResourceManager => LocalizationResourceManager.Instance;
     private const string errorServer = "ErrorConToServ";
     private const int timeout = 10000;
+    public AdminStoragePage AdminStoragePage { get; set; }
 
     public async Task<string?> SendText(string text) => await Send(op: Operation.Text, text) + '\n';
 
@@ -120,8 +122,10 @@ internal class Connection
     private async Task UpdateFood(NetworkStream stream, string data)
     {
         string[] rows = data.Split('|');
+        string[] textRows = rows[2].Split("\n");
+
         await stream.WriteAsync(Encoding.UTF8.GetBytes("Update\0"));
-        await stream.WriteAsync(Encoding.UTF8.GetBytes($"{rows[0]}|{rows[1]}|{rows[2]}\0"));
+        await stream.WriteAsync(Encoding.UTF8.GetBytes($"{rows[0]}|{rows[1]}|{textRows[0]}|{textRows[2]}\0"));
     }
 
     private async Task Ping(NetworkStream stream) => await stream.WriteAsync(Encoding.UTF8.GetBytes("PING\0"));

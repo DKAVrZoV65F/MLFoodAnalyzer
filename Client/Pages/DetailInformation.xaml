@@ -48,7 +48,7 @@
             FontSize="{Binding Path=FSize}"/>
 
         <!-- Old Description -->
-        <Entry
+        <Editor
             x:Name="oldDescription"
             Grid.Row="2"
             Grid.ColumnSpan="2"
@@ -57,10 +57,13 @@
             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
             FontFamily="RegularFont"
             FontSize="{Binding Path=FSize}"
-            IsReadOnly="True"/>
+            IsReadOnly="True"
+            Keyboard="Text"
+            IsSpellCheckEnabled="True"
+            IsTextPredictionEnabled="True"/>
 
         <!-- New Description -->
-        <Entry
+        <Editor
             x:Name="newDescription"
             Grid.Row="3"
             Grid.ColumnSpan="2"
@@ -69,7 +72,10 @@
             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray970}}"
             FontFamily="RegularFont"
             FontSize="{Binding Path=FSize}"
-            IsReadOnly="True"/>
+            IsReadOnly="True"
+            Keyboard="Text"
+            IsSpellCheckEnabled="True"
+            IsTextPredictionEnabled="True"/>
 
         <!-- Back -->
         <Button

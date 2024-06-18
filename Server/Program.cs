@@ -18,6 +18,7 @@ internal class Server
     {
         string[] Menu = ["Menu:", "1. Run server", "2. Settings", "3. Information", "4. Exit", "Please enter your selection: "];
         LoadSettings();
+        Console.Clear();
         Console.Title = appinfo?.Title ?? string.Empty;
         int selectedOption;
         do
@@ -153,6 +154,7 @@ internal class Server
     private static void LoadAll()
     {
         LoadSettings();
+        Console.Clear();
         QRGenerate();
         LoadMLImage();
         LoadMLText();

@@ -115,7 +115,7 @@ namespace Client.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The picture has been sent to the server, wait for the results.
+        ///   Looks up a localized string similar to The picture has been sent to the server, wait for the results .
         /// </summary>
         internal static string AttachedAPicture {
             get {
@@ -854,6 +854,15 @@ namespace Client.Resources.Strings {
         internal static string tomato {
             get {
                 return ResourceManager.GetString("tomato", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update.
+        /// </summary>
+        internal static string Update {
+            get {
+                return ResourceManager.GetString("Update", resourceCulture);
             }
         }
         

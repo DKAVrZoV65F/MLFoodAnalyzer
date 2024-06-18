@@ -129,6 +129,17 @@ public partial class MainPage : ContentPage
         }
 
         string[] data = results.Split('|');
+        string[] newData2 = data[2].Split("\\r\\n");
+
+        int dataCount = data[2].Split("\\r\\n").Count();
+        string start = "";
+
+        for (int i = 0; i < dataCount - 1; i++)
+        {
+            if (i == 0) start += newData2[i];
+            else start += '\n'+ newData2[i];
+        }
+        string end = newData2[dataCount - 1].Replace("\\", string.Empty);
 
         FormattedString formattedString = new();
         formattedString.Spans.Add(new Span
@@ -146,7 +157,7 @@ public partial class MainPage : ContentPage
         });
         formattedString.Spans.Add(new Span
         {
-            Text = data[2].Replace("\\r\\n", "\n") + '\n'
+            Text = start + '\n'
         });
         formattedString.Spans.Add(new Span
         {
@@ -155,7 +166,7 @@ public partial class MainPage : ContentPage
         });
         formattedString.Spans.Add(new Span
         {
-            Text = data[3].Replace("\\r\\n", "\n") + '\n'
+            Text = end + '\n'
         });
         ResultEditor.FormattedText = formattedString;
 

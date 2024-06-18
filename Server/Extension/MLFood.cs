@@ -6,7 +6,6 @@ public class MLFood
     private string filePath;
     internal const string RU = "ru";
     internal const string EN = "en";
-
     public MLFood()
     {
         filePath = string.Empty;
@@ -15,8 +14,8 @@ public class MLFood
 
     public string Text
     {
-        get => text; 
-        set 
+        get => text;
+        set
         {
             if (!string.IsNullOrWhiteSpace(value)) text = value.ToLower();
         }
@@ -39,11 +38,13 @@ public class MLFood
             ImageSource = imageBytes,
         };
 
-        IOrderedEnumerable<KeyValuePair<string, float>> sortedScoresWithLabel = Food.PredictAllLabels(sampleData)
-                                                                                        .Where(kvp => kvp.Value * 100 >= 30)
-                                                                                        .OrderByDescending(kvp => kvp.Value * 100);
-        Dictionary<float, string> results = sortedScoresWithLabel.ToDictionary(pair => pair.Value, pair => pair.Key);
-        results.Add(0, language);
+        KeyValuePair<string, float> firstPair = Food.PredictAllLabels(sampleData).FirstOrDefault();
+        Dictionary<float, string> results = new()
+        {
+            { firstPair.Value, firstPair.Key },
+            { 0, language }
+        };
+
         return results;
     }
 
@@ -63,12 +64,13 @@ public class MLFood
             Text = text,
         };
 
-        IOrderedEnumerable<KeyValuePair<string, float>> sortedScoresWithLabel = Query_EN.PredictAllLabels(sampleData)
-                                                                                        .Where(kvp => kvp.Value * 100 >= 30)
-                                                                                        .OrderByDescending(kvp => kvp.Value * 100);
+        KeyValuePair<string, float> firstPair = Query_EN.PredictAllLabels(sampleData).FirstOrDefault();
+        Dictionary<float, string> results = new()
+        {
+            { firstPair.Value, firstPair.Key },
+            { 0, EN }
+        };
 
-        Dictionary<float, string> results = sortedScoresWithLabel.ToDictionary(pair => pair.Value, pair => pair.Key);
-        results.Add(0, EN);
         return results;
     }
 
@@ -79,12 +81,13 @@ public class MLFood
             Text = text,
         };
 
-        IOrderedEnumerable<KeyValuePair<string, float>> sortedScoresWithLabel = Query_RU.PredictAllLabels(sampleData)
-                                                                                        .Where(kvp => kvp.Value * 100 >= 30)
-                                                                                        .OrderByDescending(kvp => kvp.Value * 100);
+        KeyValuePair<string, float> firstPair = Query_RU.PredictAllLabels(sampleData).FirstOrDefault();
+        Dictionary<float, string> results = new()
+        {
+            { firstPair.Value, firstPair.Key },
+            { 0, RU }
+        };
 
-        Dictionary<float, string> results = sortedScoresWithLabel.ToDictionary(pair => pair.Value, pair => pair.Key);
-        results.Add(0, RU);
         return results;
     }
 

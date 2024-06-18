@@ -83,4 +83,11 @@ public partial class HistoryChange : ContentPage
         SearchEntry.Text = string.Empty;
         GetHistory(Histories.Count);
     }
+
+    private void Button_Update(object sender, EventArgs e)
+    {
+        SearchEntry.Text = string.Empty;
+        Histories.Clear();
+        GetHistory(0);
+    }
 }
