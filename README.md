@@ -1,49 +1,106 @@
-<h1 align="center">
-    <img src="https://readme-typing-svg.herokuapp.com/?font=Righteous&size=35&center=true&vCenter=true&width=500&height=70&duration=5000&color=F7F7F7FF&background=00000055&lines=MLFoodAnalyzer;" />
-</h1>
+# MLFoodAnalyzer
 
-<h1 align="center">
-  
-  An open-source, .NET MAUI.<br/>
-  **English** · [Русский](./README.ru-RU.md) · [Report Bug](https://github.com/DKAVrZoV65F/MLFoodAnalyzer/issues) · [Request Feature](https://github.com/DKAVrZoV65F/MLFoodAnalyzer/issues)
-  
-  <!-- SHIELD GROUP -->
-  ![https://github.com/DKAVrZoV65F/MLFoodAnalyzer/releases](https://img.shields.io/github/v/release/DKAVrZoV65F/MLFoodAnalyzer?color=369eff&labelColor=black&logo=github&style=flat-square)
-  ![https://github.com/DKAVrZoV65F/MLFoodAnalyzer/releases](https://img.shields.io/github/release-date/DKAVrZoV65F/MLFoodAnalyzer?labelColor=black&style=flat-square)
-  ![https://github.com/DKAVrZoV65F/MLFoodAnalyzer/graphs/contributors](https://img.shields.io/github/contributors/DKAVrZoV65F/MLFoodAnalyzer?color=c4f042&labelColor=black&style=flat-square)
-  ![https://github.com/DKAVrZoV65F/MLFoodAnalyzer/network/members](https://img.shields.io/github/forks/DKAVrZoV65F/MLFoodAnalyzer?color=8ae8ff&labelColor=black&style=flat-square)
-  ![https://github.com/DKAVrZoV65F/MLFoodAnalyzer/network/stargazers](https://img.shields.io/github/stars/DKAVrZoV65F/MLFoodAnalyzer?color=ffcb47&labelColor=black&style=flat-square)
-  ![https://github.com/DKAVrZoV65F/MLFoodAnalyzer/issues](https://img.shields.io/github/issues/DKAVrZoV65F/MLFoodAnalyzer?color=ff80eb&labelColor=black&style=flat-square)
-  ![https://github.com/DKAVrZoV65F/MLFoodAnalyzer/blob/main/LICENSE](https://img.shields.io/github/license/DKAVrZoV65F/MLFoodAnalyzer?color=white&labelColor=black&style=flat-square)
-</h1>
+**MLFoodAnalyzer** — это открытый проект, разработанный с использованием .NET MAUI, предназначенный для анализа пищевых продуктов с применением методов машинного обучения.
 
+## Описание
 
+MLFoodAnalyzer предоставляет пользователям возможность анализировать пищевые продукты, используя современные технологии машинного обучения. Приложение разработано с использованием .NET MAUI, что обеспечивает кроссплатформенную поддержку и современный интерфейс.
 
-# Description
-MLFoodAnalyzer is a program that provides information about which vegetables or fruits are beneficial or harmful to health.
-Machine learning is used to recognize text and images using technology ML.NET .
-The program is written in C#, where the server part is a console application, and the client part is a mobile or desktop application written in a framework.NET MAUI.
+## Функциональные возможности
 
-# Application management for clients
-1. Install the application on Windows/macOS/Android, connect to the server through "Settings" -> "Network", specifying "IP" and "Port".
-2. After successfully connecting to the server, you can send a text with fruits or vegetables or send a picture.
+- **Анализ пищевых продуктов**: Определение состава и питательной ценности продуктов.
+- **Рекомендации по питанию**: Предоставление рекомендаций на основе анализа.
+- **История анализов**: Хранение и просмотр предыдущих результатов.
 
-# Application management for server
-1. Install Microsoft SQL Server 2019, run the script to add the necessary tables and fields.
-2. Install the latest driver version on the graphics card.
-3. Unzip the archive.
-4. Start the "Server".
+## Структура проекта
 
-# Requirements
-Server: 
-  1. Microsoft SQL Server 2019
-  2. Drivers for video card
+Проект состоит из следующих основных компонентов:
 
-Client:
-1. Allow access to camera and storage
+- **Server/**: Серверная часть приложения, обрабатывающая запросы и выполняющая анализ данных.
+- **Client/**: Клиентская часть приложения с пользовательским интерфейсом для взаимодействия с сервером.
+- **.github/workflows/**: Конфигурации для GitHub Actions, обеспечивающие автоматизацию процессов CI/CD.
 
-# Testing
-· Android 12 - Client<br/>
-· MacOS 14 - Client<br/>
-· Windows 11 - Client/Server(with Nvidea)<br/>
-· Linux (Ubuntu) - Server(with Nvidea)<br/>
+## Установка
+
+Для запуска проекта локально выполните следующие шаги:
+
+1. **Клонируйте репозиторий**:
+
+   ```bash
+   git clone https://github.com/DKAVrZoV65F/ml-food-analyzer.git
+   ```
+
+2. **Перейдите в директорию проекта**:
+
+   ```bash
+   cd ml-food-analyzer
+   ```
+
+3. **Соберите серверную часть**:
+
+   ```bash
+   cd Server
+   dotnet build
+   ```
+
+4. **Соберите клиентскую часть**:
+
+   ```bash
+   cd ../Client
+   dotnet build
+   ```
+
+5. **Запустите сервер**:
+
+   ```bash
+   cd ../Server
+   dotnet run
+   ```
+
+6. **Запустите клиент**:
+
+   ```bash
+   cd ../Client
+   dotnet run
+   ```
+
+## Использование
+
+После запуска приложения вы сможете:
+
+- **Анализировать продукты**: Введите данные о продукте для получения анализа.
+- **Просматривать историю**: Получить доступ к предыдущим анализам.
+
+## CI/CD
+
+Проект использует GitHub Actions для автоматизации процессов непрерывной интеграции и доставки. Конфигурации находятся в директории `.github/workflows/`. Каждый push в репозиторий инициирует сборку и тестирование проекта, обеспечивая стабильность и качество кода.
+
+## Вклад в проект
+
+Мы приветствуем вклад сообщества! Если вы хотите внести свой вклад:
+
+1. **Сделайте форк репозитория**.
+2. **Создайте ветку** для вашей функции или исправления:
+
+   ```bash
+   git checkout -b feature/YourFeatureName
+   ```
+
+3. **Внесите изменения** и **зафиксируйте их**:
+
+   ```bash
+   git commit -m 'Добавлена новая функция: YourFeatureName'
+   ```
+
+4. **Отправьте изменения** в ваш форк:
+
+   ```bash
+   git push origin feature/YourFeatureName
+   ```
+
+5. **Создайте Pull Request** через GitHub.
+
+## Лицензия
+
+Этот проект лицензируется на условиях лицензии MIT. Подробности см. в файле [LICENSE](LICENSE).
+
